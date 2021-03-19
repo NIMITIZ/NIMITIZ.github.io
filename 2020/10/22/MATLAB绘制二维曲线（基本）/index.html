@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-bounce.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.nimitiz.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":"ture","trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"./public/search.xml"};
+  </script>
+
+  <meta name="description" content="简单记录一下(ﾉ∀&#96;*)。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MATLAB绘制二维曲线（基本）">
+<meta property="og:url" content="https://www.nimitiz.cn/2020/10/22/MATLAB%E7%BB%98%E5%88%B6%E4%BA%8C%E7%BB%B4%E6%9B%B2%E7%BA%BF%EF%BC%88%E5%9F%BA%E6%9C%AC%EF%BC%89/index.html">
+<meta property="og:site_name" content="小浣熊的技术小站">
+<meta property="og:description" content="简单记录一下(ﾉ∀&#96;*)。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.nimitiz.cn/images/MATLAB%E7%BB%98%E5%88%B6%E4%BA%8C%E7%BB%B4%E6%9B%B2%E7%BA%BF%EF%BC%88%E5%9F%BA%E6%9C%AC%EF%BC%89/plot(y0).png">
+<meta property="og:image" content="https://www.nimitiz.cn/images/MATLAB%E7%BB%98%E5%88%B6%E4%BA%8C%E7%BB%B4%E6%9B%B2%E7%BA%BF%EF%BC%88%E5%9F%BA%E6%9C%AC%EF%BC%89/plot(y1).png">
+<meta property="og:image" content="https://www.nimitiz.cn/images/MATLAB%E7%BB%98%E5%88%B6%E4%BA%8C%E7%BB%B4%E6%9B%B2%E7%BA%BF%EF%BC%88%E5%9F%BA%E6%9C%AC%EF%BC%89/plot(x0,y0).png">
+<meta property="og:image" content="https://www.nimitiz.cn/images/MATLAB%E7%BB%98%E5%88%B6%E4%BA%8C%E7%BB%B4%E6%9B%B2%E7%BA%BF%EF%BC%88%E5%9F%BA%E6%9C%AC%EF%BC%89/1.png">
+<meta property="og:image" content="https://www.nimitiz.cn/images/MATLAB%E7%BB%98%E5%88%B6%E4%BA%8C%E7%BB%B4%E6%9B%B2%E7%BA%BF%EF%BC%88%E5%9F%BA%E6%9C%AC%EF%BC%89/axis.png">
+<meta property="og:image" content="https://www.nimitiz.cn/images/MATLAB%E7%BB%98%E5%88%B6%E4%BA%8C%E7%BB%B4%E6%9B%B2%E7%BA%BF%EF%BC%88%E5%9F%BA%E6%9C%AC%EF%BC%89/grid.png">
+<meta property="og:image" content="https://www.nimitiz.cn/images/MATLAB%E7%BB%98%E5%88%B6%E4%BA%8C%E7%BB%B4%E6%9B%B2%E7%BA%BF%EF%BC%88%E5%9F%BA%E6%9C%AC%EF%BC%89/box.png">
+<meta property="og:image" content="https://www.nimitiz.cn/images/MATLAB%E7%BB%98%E5%88%B6%E4%BA%8C%E7%BB%B4%E6%9B%B2%E7%BA%BF%EF%BC%88%E5%9F%BA%E6%9C%AC%EF%BC%89/%E5%9B%BE%E5%BD%A2%E4%BF%9D%E6%8C%81.png">
+<meta property="og:image" content="https://www.nimitiz.cn/images/MATLAB%E7%BB%98%E5%88%B6%E4%BA%8C%E7%BB%B4%E6%9B%B2%E7%BA%BF%EF%BC%88%E5%9F%BA%E6%9C%AC%EF%BC%89/%E5%A4%9A%E4%B8%AA%E5%9B%BE%E5%BD%A2%E7%BB%98%E5%88%B6.png">
+<meta property="article:published_time" content="2020-10-22T04:34:27.000Z">
+<meta property="article:modified_time" content="2020-10-22T04:46:43.420Z">
+<meta property="article:author" content="NIMITIZ">
+<meta property="article:tag" content="MATLAB">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.nimitiz.cn/images/MATLAB%E7%BB%98%E5%88%B6%E4%BA%8C%E7%BB%B4%E6%9B%B2%E7%BA%BF%EF%BC%88%E5%9F%BA%E6%9C%AC%EF%BC%89/plot(y0).png">
+
+<link rel="canonical" href="https://www.nimitiz.cn/2020/10/22/MATLAB%E7%BB%98%E5%88%B6%E4%BA%8C%E7%BB%B4%E6%9B%B2%E7%BA%BF%EF%BC%88%E5%9F%BA%E6%9C%AC%EF%BC%89/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>MATLAB绘制二维曲线（基本） | 小浣熊的技术小站</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+  
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">小浣熊的技术小站</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-友链">
+
+    <a href="/links/" rel="section"><i class="fa fa-link fa-fw"></i>友链</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/NIMITIZ" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.nimitiz.cn/2020/10/22/MATLAB%E7%BB%98%E5%88%B6%E4%BA%8C%E7%BB%B4%E6%9B%B2%E7%BA%BF%EF%BC%88%E5%9F%BA%E6%9C%AC%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="NIMITIZ">
+      <meta itemprop="description" content="生命不息，折腾不止">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小浣熊的技术小站">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          MATLAB绘制二维曲线（基本）
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-10-22 12:34:27 / 修改时间：12:46:43" itemprop="dateCreated datePublished" datetime="2020-10-22T12:34:27+08:00">2020-10-22</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/10/22/MATLAB%E7%BB%98%E5%88%B6%E4%BA%8C%E7%BB%B4%E6%9B%B2%E7%BA%BF%EF%BC%88%E5%9F%BA%E6%9C%AC%EF%BC%89/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/10/22/MATLAB%E7%BB%98%E5%88%B6%E4%BA%8C%E7%BB%B4%E6%9B%B2%E7%BA%BF%EF%BC%88%E5%9F%BA%E6%9C%AC%EF%BC%89/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2.5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>简单记录一下(ﾉ∀`*)。</p>
+<a id="more"></a>
+
+<h2 id="绘图基本函数"><a href="#绘图基本函数" class="headerlink" title="绘图基本函数"></a>绘图基本函数</h2><p>在MATLAB语言中，最基本且应用最广泛的绘图函数是绘制曲线函数<code>plot</code>，利用它可在二维平面上绘制不同的曲线。<code>plot</code>函数的用法如下：</p>
+<h3 id="plot-y"><a href="#plot-y" class="headerlink" title="plot(y)"></a>plot(y)</h3><p>绘制以<code>y</code>为纵坐标的二维曲线。</p>
+<h4 id="y为向量时的plot-y"><a href="#y为向量时的plot-y" class="headerlink" title="y为向量时的plot(y)"></a>y为向量时的plot(y)</h4><p>当<code>y</code>为长度为<code>n</code>的向量时，则纵坐标为<code>y</code>，MATLAB根据<code>y</code>向量的元素序号自动生成横坐标，为<code>1:n</code>的向量。</p>
+<h5 id="举个栗子"><a href="#举个栗子" class="headerlink" title="举个栗子"></a>举个栗子</h5><figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">&gt;&gt; y0=[<span class="number">0</span> <span class="number">1</span> <span class="number">0</span> <span class="number">1</span> <span class="number">0</span> <span class="number">1</span> <span class="number">0</span> <span class="number">1</span> <span class="number">0</span> <span class="number">1</span> <span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">y0 =</span><br><span class="line"></span><br><span class="line">     <span class="number">0</span>     <span class="number">1</span>     <span class="number">0</span>     <span class="number">1</span>     <span class="number">0</span>     <span class="number">1</span>     <span class="number">0</span>     <span class="number">1</span>     <span class="number">0</span>     <span class="number">1</span>     <span class="number">0</span></span><br><span class="line"></span><br><span class="line">&gt;&gt; plot(y0)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/MATLAB%E7%BB%98%E5%88%B6%E4%BA%8C%E7%BB%B4%E6%9B%B2%E7%BA%BF%EF%BC%88%E5%9F%BA%E6%9C%AC%EF%BC%89/plot(y0).png" alt></p>
+<h4 id="y为矩阵时的plot-y"><a href="#y为矩阵时的plot-y" class="headerlink" title="y为矩阵时的plot(y)"></a>y为矩阵时的plot(y)</h4><p>当<code>y</code>为<code>m*n</code>矩阵时，<code>plot(y)</code>则将矩阵的每一列画一条曲线，共<code>n</code>条曲线，每条曲线自动用不同颜色表示，每条曲线横坐标为向量<code>1:m</code>，<code>m</code>为矩阵的行数。</p>
+<h5 id="举个栗子-1"><a href="#举个栗子-1" class="headerlink" title="举个栗子"></a>举个栗子</h5><figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">&gt;&gt; y1=[<span class="number">4</span> <span class="number">5</span> <span class="number">6</span>;<span class="number">1</span> <span class="number">2</span> <span class="number">3</span>;<span class="number">4</span> <span class="number">5</span> <span class="number">6</span>]</span><br><span class="line"></span><br><span class="line">y1 =</span><br><span class="line"></span><br><span class="line">     <span class="number">4</span>     <span class="number">5</span>     <span class="number">6</span></span><br><span class="line">     <span class="number">1</span>     <span class="number">2</span>     <span class="number">3</span></span><br><span class="line">     <span class="number">4</span>     <span class="number">5</span>     <span class="number">6</span></span><br><span class="line"></span><br><span class="line">&gt;&gt; plot(y1)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/MATLAB%E7%BB%98%E5%88%B6%E4%BA%8C%E7%BB%B4%E6%9B%B2%E7%BA%BF%EF%BC%88%E5%9F%BA%E6%9C%AC%EF%BC%89/plot(y1).png" alt></p>
+<h3 id="plot-x-y"><a href="#plot-x-y" class="headerlink" title="plot(x,y)"></a>plot(x,y)</h3><p>绘制以<code>x</code>为横坐标，<code>y</code>为纵坐标的二维曲线。</p>
+<h4 id="x和y都为向量时的plot-x-y"><a href="#x和y都为向量时的plot-x-y" class="headerlink" title="x和y都为向量时的plot(x,y)"></a>x和y都为向量时的plot(x,y)</h4><p><code>x</code>和<code>y</code>的长度必须相等。</p>
+<h5 id="举个栗子-2"><a href="#举个栗子-2" class="headerlink" title="举个栗子"></a>举个栗子</h5><figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">&gt;&gt; x0=[<span class="number">0</span> <span class="number">1</span> <span class="number">1</span> <span class="number">2</span> <span class="number">2</span> <span class="number">3</span> <span class="number">3</span> <span class="number">4</span> <span class="number">4</span> <span class="number">5</span> <span class="number">5</span>];</span><br><span class="line">&gt;&gt; y0=[<span class="number">1</span> <span class="number">1</span> <span class="number">0</span> <span class="number">0</span> <span class="number">1</span> <span class="number">1</span> <span class="number">0</span> <span class="number">0</span> <span class="number">1</span> <span class="number">1</span> <span class="number">0</span>];</span><br><span class="line">&gt;&gt; plot(x0,y0)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/MATLAB%E7%BB%98%E5%88%B6%E4%BA%8C%E7%BB%B4%E6%9B%B2%E7%BA%BF%EF%BC%88%E5%9F%BA%E6%9C%AC%EF%BC%89/plot(x0,y0).png" alt></p>
+<h4 id="x为向量、y为矩阵时的plot-x-y"><a href="#x为向量、y为矩阵时的plot-x-y" class="headerlink" title="x为向量、y为矩阵时的plot(x,y)"></a>x为向量、y为矩阵时的plot(x,y)</h4><p><code>x</code>的长度必须和<code>y</code>的行数或列数相等。</p>
+<p>当向量<code>x</code>的长度和矩阵<code>y</code>的行数相等时，向量<code>x</code>和<code>y</code>的每一列向量画一条曲线；</p>
+<p>当向量<code>x</code>的长度和矩阵<code>y</code>的列数相等时，向量<code>x</code>和<code>y</code>的每一行向量画一条曲线；</p>
+<p>若<code>y</code>为方阵，<code>x</code>和<code>y</code>的行数、列数都相等，向量<code>x</code>和<code>y</code>的每一列向量画一条曲线。</p>
+<h4 id="x为矩阵、y为向量时的plot-x-y"><a href="#x为矩阵、y为向量时的plot-x-y" class="headerlink" title="x为矩阵、y为向量时的plot(x,y)"></a>x为矩阵、y为向量时的plot(x,y)</h4><p><code>x</code>的行数或列数必须和<code>y</code>的长度相等。绘制方法与上一种情况类似。</p>
+<h4 id="x和y都为矩阵时的plot-x-y"><a href="#x和y都为矩阵时的plot-x-y" class="headerlink" title="x和y都为矩阵时的plot(x,y)"></a>x和y都为矩阵时的plot(x,y)</h4><p><code>x</code>和<code>y</code>的大小必须相等，<code>x</code>的每一列与<code>y</code>对应的每一列画一条曲线。</p>
+<h2 id="线性图格式设置"><a href="#线性图格式设置" class="headerlink" title="线性图格式设置"></a>线性图格式设置</h2><h3 id="设置曲线的线型、颜色和数据点标识"><a href="#设置曲线的线型、颜色和数据点标识" class="headerlink" title="设置曲线的线型、颜色和数据点标识"></a>设置曲线的线型、颜色和数据点标识</h3><p>为了便于曲线比较，MATLAB语言提供了一些绘图选项，可以控制所绘的曲线的线型、颜色和数据点的标识符号。命令格式如下：</p>
+<figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="title">plot</span><span class="params">(x,y,<span class="string">'选项'</span>)</span></span></span><br></pre></td></tr></table></figure>
+
+<h4 id="线型、颜色和数据点标识定义"><a href="#线型、颜色和数据点标识定义" class="headerlink" title="线型、颜色和数据点标识定义"></a>线型、颜色和数据点标识定义</h4><h5 id="颜色"><a href="#颜色" class="headerlink" title="颜色"></a>颜色</h5><table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">选型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">蓝色</td>
+<td align="center">b</td>
+</tr>
+<tr>
+<td align="center">绿色</td>
+<td align="center">g</td>
+</tr>
+<tr>
+<td align="center">红色</td>
+<td align="center">r</td>
+</tr>
+<tr>
+<td align="center">青色</td>
+<td align="center">c</td>
+</tr>
+<tr>
+<td align="center">紫红色</td>
+<td align="center">m</td>
+</tr>
+<tr>
+<td align="center">黄色</td>
+<td align="center">y</td>
+</tr>
+<tr>
+<td align="center">黑色</td>
+<td align="center">k</td>
+</tr>
+<tr>
+<td align="center">白色</td>
+<td align="center">w</td>
+</tr>
+</tbody></table>
+<h5 id="线型"><a href="#线型" class="headerlink" title="线型"></a>线型</h5><table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">选项</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">实线</td>
+<td align="center">-</td>
+</tr>
+<tr>
+<td align="center">点线</td>
+<td align="center">:</td>
+</tr>
+<tr>
+<td align="center">虚线</td>
+<td align="center">–</td>
+</tr>
+<tr>
+<td align="center">点画线</td>
+<td align="center">-.</td>
+</tr>
+</tbody></table>
+<h5 id="数据点标识"><a href="#数据点标识" class="headerlink" title="数据点标识"></a>数据点标识</h5><table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">选项</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">实点标记</td>
+<td align="center">.</td>
+</tr>
+<tr>
+<td align="center">圆圈标记</td>
+<td align="center">o</td>
+</tr>
+<tr>
+<td align="center">叉号标记</td>
+<td align="center">x</td>
+</tr>
+<tr>
+<td align="center">十字标记</td>
+<td align="center">+</td>
+</tr>
+<tr>
+<td align="center">星号标记</td>
+<td align="center">*</td>
+</tr>
+<tr>
+<td align="center">方块标记</td>
+<td align="center">s</td>
+</tr>
+<tr>
+<td align="center">钻石标记</td>
+<td align="center">d</td>
+</tr>
+<tr>
+<td align="center">下三角标记</td>
+<td align="center">v</td>
+</tr>
+<tr>
+<td align="center">上三角标记</td>
+<td align="center">^</td>
+</tr>
+<tr>
+<td align="center">左三角标记</td>
+<td align="center">&lt;</td>
+</tr>
+<tr>
+<td align="center">右三角标记</td>
+<td align="center">&gt;</td>
+</tr>
+<tr>
+<td align="center">五角星标记</td>
+<td align="center">p</td>
+</tr>
+<tr>
+<td align="center">六角形标记</td>
+<td align="center">h</td>
+</tr>
+</tbody></table>
+<p>不同类型的选项可以组合使用。</p>
+<figure class="highlight gml"><table><tr><td class="code"><pre><span class="line">&gt;&gt; <span class="symbol">x</span>=<span class="number">0</span>:<span class="number">0.1</span>:<span class="number">2</span>*<span class="literal">pi</span>;</span><br><span class="line">&gt;&gt; y1=<span class="built_in">sin</span>(<span class="symbol">x</span>);</span><br><span class="line">&gt;&gt; y2=<span class="built_in">cos</span>(<span class="symbol">x</span>);</span><br><span class="line">&gt;&gt; plot(<span class="symbol">x</span>,y1,<span class="string">'b-o'</span>,<span class="symbol">x</span>,y2,<span class="string">'r-.d'</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/MATLAB%E7%BB%98%E5%88%B6%E4%BA%8C%E7%BB%B4%E6%9B%B2%E7%BA%BF%EF%BC%88%E5%9F%BA%E6%9C%AC%EF%BC%89/1.png" alt></p>
+<h3 id="设置坐标轴"><a href="#设置坐标轴" class="headerlink" title="设置坐标轴"></a>设置坐标轴</h3><p>MATLAB语言可以通过函数<code>axis</code>设置坐标轴的刻度和范围来调整坐标轴。<code>axis</code>函数常用的调用格式如下：</p>
+<table>
+<thead>
+<tr>
+<th align="center">函数命令</th>
+<th align="center">功能及说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">axis auto</td>
+<td align="center">使用默认设置</td>
+</tr>
+<tr>
+<td align="center">axis ([xmin,xmax,ymin,ymax])</td>
+<td align="center">设定坐标范围，且要求xmin&lt;xmax，ymin&lt;ymax</td>
+</tr>
+<tr>
+<td align="center">axis equal</td>
+<td align="center">横纵坐标使用等长刻度</td>
+</tr>
+<tr>
+<td align="center">axis square</td>
+<td align="center">采用正方形坐标系</td>
+</tr>
+<tr>
+<td align="center">axis normal</td>
+<td align="center">默认矩形坐标系</td>
+</tr>
+<tr>
+<td align="center">axis tight</td>
+<td align="center">把数据范围设为坐标范围</td>
+</tr>
+<tr>
+<td align="center">axis image</td>
+<td align="center">横纵轴采用等长刻度，且坐标框紧贴数据范围</td>
+</tr>
+<tr>
+<td align="center">axis manual</td>
+<td align="center">保持当前坐标范围不变</td>
+</tr>
+<tr>
+<td align="center">axis fill</td>
+<td align="center">在manual方式下，使坐标充满整个绘图区域</td>
+</tr>
+<tr>
+<td align="center">axis on</td>
+<td align="center">显示坐标轴</td>
+</tr>
+<tr>
+<td align="center">axis off</td>
+<td align="center">取消坐标轴</td>
+</tr>
+<tr>
+<td align="center">axis xy</td>
+<td align="center">普通直角坐标，原点在左下方</td>
+</tr>
+<tr>
+<td align="center">axis ij</td>
+<td align="center">矩阵式坐标，原点在左上方</td>
+</tr>
+<tr>
+<td align="center">axis vis3d</td>
+<td align="center">保持高宽比不变，三维旋转时避免图形大小变化</td>
+</tr>
+</tbody></table>
+<figure class="highlight gml"><table><tr><td class="code"><pre><span class="line">&gt;&gt; <span class="symbol">x</span>=<span class="number">0</span>:<span class="number">0.1</span>:<span class="number">2</span>*<span class="literal">pi</span>;</span><br><span class="line">&gt;&gt; <span class="symbol">y</span>=<span class="built_in">sin</span>(<span class="symbol">x</span>);</span><br><span class="line">&gt;&gt; plot(<span class="symbol">x</span>,<span class="symbol">y</span>);axis([<span class="number">0</span> <span class="number">4</span>*<span class="literal">pi</span> <span class="number">-2</span> <span class="number">2</span>])</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/MATLAB%E7%BB%98%E5%88%B6%E4%BA%8C%E7%BB%B4%E6%9B%B2%E7%BA%BF%EF%BC%88%E5%9F%BA%E6%9C%AC%EF%BC%89/axis.png" alt></p>
+<h3 id="网格线和坐标边框"><a href="#网格线和坐标边框" class="headerlink" title="网格线和坐标边框"></a>网格线和坐标边框</h3><h4 id="网格线"><a href="#网格线" class="headerlink" title="网格线"></a>网格线</h4><p>为了便于读数，MATLAB语言可以使用<code>grid on</code>函数在坐标系中添加网格线，网格线根据坐标轴的刻度使用虚线分隔；使用<code>grid off</code>函数取消网格线。</p>
+<figure class="highlight gml"><table><tr><td class="code"><pre><span class="line">&gt;&gt; <span class="symbol">x</span>=<span class="number">0</span>:<span class="number">0.1</span>:<span class="number">2</span>*<span class="literal">pi</span>;</span><br><span class="line">&gt;&gt; <span class="symbol">y</span>=<span class="built_in">sin</span>(<span class="symbol">x</span>);</span><br><span class="line">&gt;&gt; plot(<span class="symbol">x</span>,<span class="symbol">y</span>);axis([<span class="number">0</span> <span class="number">4</span>*<span class="literal">pi</span> <span class="number">-2</span> <span class="number">2</span>]);grid on</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/MATLAB%E7%BB%98%E5%88%B6%E4%BA%8C%E7%BB%B4%E6%9B%B2%E7%BA%BF%EF%BC%88%E5%9F%BA%E6%9C%AC%EF%BC%89/grid.png" alt></p>
+<h4 id="坐标边框"><a href="#坐标边框" class="headerlink" title="坐标边框"></a>坐标边框</h4><p>MATLAB语言可以使用<code>box on</code>函数实现添加坐标边框，<code>box off</code>函数取消坐标边框。</p>
+<figure class="highlight gml"><table><tr><td class="code"><pre><span class="line">&gt;&gt; <span class="symbol">x</span>=<span class="number">0</span>:<span class="number">0.1</span>:<span class="number">2</span>*<span class="literal">pi</span>;</span><br><span class="line">&gt;&gt; <span class="symbol">y</span>=<span class="built_in">sin</span>(<span class="symbol">x</span>);</span><br><span class="line">&gt;&gt; plot(<span class="symbol">x</span>,<span class="symbol">y</span>);axis([<span class="number">0</span> <span class="number">4</span>*<span class="literal">pi</span> <span class="number">-2</span> <span class="number">2</span>]);box off</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/MATLAB%E7%BB%98%E5%88%B6%E4%BA%8C%E7%BB%B4%E6%9B%B2%E7%BA%BF%EF%BC%88%E5%9F%BA%E6%9C%AC%EF%BC%89/box.png" alt></p>
+<h2 id="图形修饰"><a href="#图形修饰" class="headerlink" title="图形修饰"></a>图形修饰</h2><p>MATLAB语言提供了很多图形修饰函数，实现对图形添加标题，横纵坐标轴的标签，图形某一部分文本标注，不同曲线的图例标识等功能。</p>
+<h3 id="标题和标签设置"><a href="#标题和标签设置" class="headerlink" title="标题和标签设置"></a>标题和标签设置</h3><p>MATLAB语言提供<code>title</code>函数和<code>label</code>函数实现添加图形的标题和坐标轴的标签，其调用格式如下：</p>
+<figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="title">title</span><span class="params">(<span class="string">'str'</span>)</span></span></span><br><span class="line"><span class="function"><span class="title">xlabel</span><span class="params">(<span class="string">'str'</span>)</span></span></span><br><span class="line"><span class="function"><span class="title">ylabel</span><span class="params">(<span class="string">'str'</span>)</span></span></span><br><span class="line"><span class="function"><span class="title">zlabel</span><span class="params">(<span class="string">'str'</span>)</span></span></span><br></pre></td></tr></table></figure>
+
+<p><code>title</code>为设置图形标题的函数；</p>
+<p><code>xlabel</code>、<code>ylabel</code>、<code>zlabel</code>分别为设置<code>x</code>、<code>y</code>、<code>z</code>坐标轴标签的函数；</p>
+<p><code>str</code>为注释字符串，也可为结构数组。</p>
+<h3 id="图形的文本标注"><a href="#图形的文本标注" class="headerlink" title="图形的文本标注"></a>图形的文本标注</h3><p>MATLAB语言提供<code>text</code>和<code>gtext</code>函数，能在坐标系某一位置标注文本注释，其调用格式如下：</p>
+<figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="title">text</span><span class="params">(x,y,<span class="string">'str'</span>)</span></span></span><br><span class="line"><span class="function"><span class="title">gtext</span><span class="params">(<span class="string">'str'</span>)</span></span></span><br><span class="line"><span class="function"><span class="title">gtext</span><span class="params">(&#123;<span class="string">'str1'</span>;<span class="string">'str2'</span>;<span class="string">'str3'</span>;...&#125;)</span></span></span><br></pre></td></tr></table></figure>
+
+<p><code>text(x,y,&#39;str&#39;)</code>函数能在坐标系位置<code>(x,y)</code>处添加文本注释<code>str</code>；</p>
+<p><code>gtext(&#39;str&#39;)</code>可以为鼠标选择的位置处添加文本注释<code>str</code>；</p>
+<p><code>gtext({&#39;str1&#39;;&#39;str2&#39;;&#39;str3&#39;;...})</code>一次放置一个字符串，多次放置在鼠标指定的位置上。</p>
+<h3 id="图例设置"><a href="#图例设置" class="headerlink" title="图例设置"></a>图例设置</h3><p>MATLAB语言可用<code>legend</code>函数添加图例，其调用格式为：</p>
+<figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="title">legend</span><span class="params">(<span class="string">'str1'</span>,<span class="string">'str2'</span>,...,<span class="string">'location'</span>,LOC)</span></span></span><br></pre></td></tr></table></figure>
+
+<p><code>str1</code>、<code>str2</code>为图例标题，与图形内曲线依次对应；</p>
+<p><code>LOC</code>为图例位置参数。</p>
+<p><code>legend off</code>用于取消图例。</p>
+<h4 id="图例位置参数"><a href="#图例位置参数" class="headerlink" title="图例位置参数"></a>图例位置参数</h4><table>
+<thead>
+<tr>
+<th align="center">位置参数</th>
+<th align="center">功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">‘North’</td>
+<td align="center">图内的顶部</td>
+</tr>
+<tr>
+<td align="center">‘South’</td>
+<td align="center">图内的底部</td>
+</tr>
+<tr>
+<td align="center">‘East’</td>
+<td align="center">图内的右侧</td>
+</tr>
+<tr>
+<td align="center">‘West’</td>
+<td align="center">图内的左侧</td>
+</tr>
+<tr>
+<td align="center">‘NorthEast’</td>
+<td align="center">图内右上角</td>
+</tr>
+<tr>
+<td align="center">‘NorthWest’</td>
+<td align="center">图内左上角</td>
+</tr>
+<tr>
+<td align="center">‘SouthEast’</td>
+<td align="center">图内右下角</td>
+</tr>
+<tr>
+<td align="center">‘SouthWest’</td>
+<td align="center">图内左下角</td>
+</tr>
+<tr>
+<td align="center">‘Best’</td>
+<td align="center">最佳位置</td>
+</tr>
+<tr>
+<td align="center">‘NorthOutside’</td>
+<td align="center">图外的顶部</td>
+</tr>
+<tr>
+<td align="center">‘SouthOutside’</td>
+<td align="center">图外的底部</td>
+</tr>
+<tr>
+<td align="center">‘EastOutside’</td>
+<td align="center">图外的右侧</td>
+</tr>
+<tr>
+<td align="center">‘WestOutside’</td>
+<td align="center">图外的左侧</td>
+</tr>
+<tr>
+<td align="center">‘NorthEastOutside’</td>
+<td align="center">图外右上角</td>
+</tr>
+<tr>
+<td align="center">‘NorthWestOutside’</td>
+<td align="center">图外左上角</td>
+</tr>
+<tr>
+<td align="center">‘SouthEastOutside’</td>
+<td align="center">图外右下角</td>
+</tr>
+<tr>
+<td align="center">‘SouthWestOutside’</td>
+<td align="center">图外左下角</td>
+</tr>
+<tr>
+<td align="center">BestOutside</td>
+<td align="center">图外最佳位置</td>
+</tr>
+</tbody></table>
+<h3 id="用鼠标获取二维图形数据"><a href="#用鼠标获取二维图形数据" class="headerlink" title="用鼠标获取二维图形数据"></a>用鼠标获取二维图形数据</h3><p>MATLAB语言中的<code>ginput</code>函数可实现用鼠标从图形（<strong>仅适用于二维图形</strong>）获取数据功能，其调用方式如下：</p>
+<figure class="highlight gml"><table><tr><td class="code"><pre><span class="line">[<span class="symbol">x</span>,<span class="symbol">y</span>]=ginput(n)</span><br></pre></td></tr></table></figure>
+
+<p><code>n</code>是通过鼠标在图形中获取数据点的个数；</p>
+<p><code>x</code>和<code>y</code>用来存储所获取的坐标，是列向量，每次获取的坐标点为列向量的一个元素。</p>
+<h2 id="图形保持"><a href="#图形保持" class="headerlink" title="图形保持"></a>图形保持</h2><p>一般情况下，MATLAB每执行一次<code>plot</code>，就刷新一次当前图形窗口，原有的图形将被覆盖，但可以使用图形保持命令<code>hold</code>函数。</p>
+<p><code>hold on</code>是保持原有图形；</p>
+<p><code>hold off</code>是刷新原有图形。</p>
+<figure class="highlight excel"><table><tr><td class="code"><pre><span class="line">&gt;&gt; <span class="built_in">t</span>=(<span class="symbol">0:0</span>.<span class="symbol">1:2</span>*<span class="built_in">pi</span>)';</span><br><span class="line">&gt;&gt; <span class="symbol">y1</span>=<span class="number">3</span>*<span class="built_in">exp</span>(-<span class="number">0.3</span>*<span class="built_in">t</span>)*[<span class="number">1</span>,-<span class="number">1</span>];</span><br><span class="line">&gt;&gt; <span class="symbol">y2</span>=<span class="number">3</span>*<span class="built_in">exp</span>(-<span class="number">0.3</span>*<span class="built_in">t</span>).*<span class="built_in">sin</span>(<span class="number">3</span>*<span class="built_in">t</span>);</span><br><span class="line">&gt;&gt; plot(<span class="built_in">t</span>,<span class="symbol">y1</span>,'<span class="symbol">r:</span>')</span><br><span class="line">&gt;&gt; hold on</span><br><span class="line">&gt;&gt; plot(<span class="built_in">t</span>,<span class="symbol">y2</span>,'b-')</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/MATLAB%E7%BB%98%E5%88%B6%E4%BA%8C%E7%BB%B4%E6%9B%B2%E7%BA%BF%EF%BC%88%E5%9F%BA%E6%9C%AC%EF%BC%89/%E5%9B%BE%E5%BD%A2%E4%BF%9D%E6%8C%81.png" alt></p>
+<h2 id="多个图形绘制"><a href="#多个图形绘制" class="headerlink" title="多个图形绘制"></a>多个图形绘制</h2><p>MATLAB语言提供<code>subplot</code>函数，实现一个图形窗口绘制多个图形的功能，其调用方式如下：</p>
+<figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="title">subplot</span><span class="params">(m,n,p)</span></span></span><br></pre></td></tr></table></figure>
+
+<p>将图形窗口分割成<code>m*n</code>子图，第<code>p</code>个为当前图；</p>
+<p>子图排序：左上方为第一个，从左向右从上向下依次排序。</p>
+<figure class="highlight excel"><table><tr><td class="code"><pre><span class="line">&gt;&gt; <span class="built_in">t</span>=(<span class="symbol">0:0</span>.<span class="symbol">1:2</span>*<span class="built_in">pi</span>);</span><br><span class="line">&gt;&gt; <span class="symbol">y1</span>=<span class="built_in">sin</span>(<span class="built_in">t</span>);</span><br><span class="line">&gt;&gt; <span class="symbol">y2</span>=<span class="built_in">cos</span>(<span class="built_in">t</span>);</span><br><span class="line">&gt;&gt; <span class="symbol">y3</span>=<span class="built_in">sin</span>(<span class="number">2</span>*<span class="built_in">t</span>);</span><br><span class="line">&gt;&gt; <span class="symbol">y4</span>=<span class="built_in">cos</span>(<span class="number">2</span>*<span class="built_in">t</span>);</span><br><span class="line">&gt;&gt; subplot(<span class="number">2</span>,<span class="number">2</span>,<span class="number">1</span>);plot(<span class="built_in">t</span>,<span class="symbol">y1</span>)</span><br><span class="line">&gt;&gt; title('<span class="built_in">sin</span>(<span class="built_in">t</span>)')</span><br><span class="line">&gt;&gt; subplot(<span class="number">2</span>,<span class="number">2</span>,<span class="number">2</span>);plot(<span class="built_in">t</span>,<span class="symbol">y2</span>)</span><br><span class="line">&gt;&gt; title('<span class="built_in">cos</span>(<span class="built_in">t</span>)')</span><br><span class="line">&gt;&gt; subplot(<span class="number">2</span>,<span class="number">2</span>,<span class="number">3</span>);plot(<span class="built_in">t</span>,<span class="symbol">y3</span>)</span><br><span class="line">&gt;&gt; title('<span class="built_in">sin</span>(<span class="number">2</span>*<span class="built_in">t</span>)')</span><br><span class="line">&gt;&gt; subplot(<span class="number">2</span>,<span class="number">2</span>,<span class="number">4</span>);plot(<span class="built_in">t</span>,<span class="symbol">y4</span>)</span><br><span class="line">&gt;&gt; title('<span class="built_in">cos</span>(<span class="number">2</span>*<span class="built_in">t</span>)')</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/MATLAB%E7%BB%98%E5%88%B6%E4%BA%8C%E7%BB%B4%E6%9B%B2%E7%BA%BF%EF%BC%88%E5%9F%BA%E6%9C%AC%EF%BC%89/%E5%A4%9A%E4%B8%AA%E5%9B%BE%E5%BD%A2%E7%BB%98%E5%88%B6.png" alt></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/MATLAB/" rel="tag"># MATLAB</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/10/16/Java%E7%AC%94%E8%AE%B0%E2%80%94%E2%80%94%E7%B1%BB%E4%B8%8E%E5%AF%B9%E8%B1%A1%EF%BC%88%E4%B8%80%EF%BC%89/" rel="prev" title="Java笔记——类与对象（一）">
+      <i class="fa fa-chevron-left"></i> Java笔记——类与对象（一）
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/10/25/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88%E7%82%B9%E4%BA%AELED%EF%BC%89/" rel="next" title="51单片机程序（点亮LED）">
+      51单片机程序（点亮LED） <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#绘图基本函数"><span class="nav-number">1.</span> <span class="nav-text">绘图基本函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#plot-y"><span class="nav-number">1.1.</span> <span class="nav-text">plot(y)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#y为向量时的plot-y"><span class="nav-number">1.1.1.</span> <span class="nav-text">y为向量时的plot(y)</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#举个栗子"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">举个栗子</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#y为矩阵时的plot-y"><span class="nav-number">1.1.2.</span> <span class="nav-text">y为矩阵时的plot(y)</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#举个栗子-1"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">举个栗子</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#plot-x-y"><span class="nav-number">1.2.</span> <span class="nav-text">plot(x,y)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#x和y都为向量时的plot-x-y"><span class="nav-number">1.2.1.</span> <span class="nav-text">x和y都为向量时的plot(x,y)</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#举个栗子-2"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">举个栗子</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#x为向量、y为矩阵时的plot-x-y"><span class="nav-number">1.2.2.</span> <span class="nav-text">x为向量、y为矩阵时的plot(x,y)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#x为矩阵、y为向量时的plot-x-y"><span class="nav-number">1.2.3.</span> <span class="nav-text">x为矩阵、y为向量时的plot(x,y)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#x和y都为矩阵时的plot-x-y"><span class="nav-number">1.2.4.</span> <span class="nav-text">x和y都为矩阵时的plot(x,y)</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#线性图格式设置"><span class="nav-number">2.</span> <span class="nav-text">线性图格式设置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#设置曲线的线型、颜色和数据点标识"><span class="nav-number">2.1.</span> <span class="nav-text">设置曲线的线型、颜色和数据点标识</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#线型、颜色和数据点标识定义"><span class="nav-number">2.1.1.</span> <span class="nav-text">线型、颜色和数据点标识定义</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#颜色"><span class="nav-number">2.1.1.1.</span> <span class="nav-text">颜色</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#线型"><span class="nav-number">2.1.1.2.</span> <span class="nav-text">线型</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#数据点标识"><span class="nav-number">2.1.1.3.</span> <span class="nav-text">数据点标识</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设置坐标轴"><span class="nav-number">2.2.</span> <span class="nav-text">设置坐标轴</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#网格线和坐标边框"><span class="nav-number">2.3.</span> <span class="nav-text">网格线和坐标边框</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#网格线"><span class="nav-number">2.3.1.</span> <span class="nav-text">网格线</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#坐标边框"><span class="nav-number">2.3.2.</span> <span class="nav-text">坐标边框</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#图形修饰"><span class="nav-number">3.</span> <span class="nav-text">图形修饰</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#标题和标签设置"><span class="nav-number">3.1.</span> <span class="nav-text">标题和标签设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#图形的文本标注"><span class="nav-number">3.2.</span> <span class="nav-text">图形的文本标注</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#图例设置"><span class="nav-number">3.3.</span> <span class="nav-text">图例设置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#图例位置参数"><span class="nav-number">3.3.1.</span> <span class="nav-text">图例位置参数</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#用鼠标获取二维图形数据"><span class="nav-number">3.4.</span> <span class="nav-text">用鼠标获取二维图形数据</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#图形保持"><span class="nav-number">4.</span> <span class="nav-text">图形保持</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多个图形绘制"><span class="nav-number">5.</span> <span class="nav-text">多个图形绘制</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="NIMITIZ"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">NIMITIZ</p>
+  <div class="site-description" itemprop="description">生命不息，折腾不止</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">63</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/NIMITIZ" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;NIMITIZ" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:cwn3234733323@gmail.com" title="E-Mail → mailto:cwn3234733323@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+      
+           
+         
+         <div style="">
+  <canvas id="canvas" style="width:60%;">当前浏览器不支持canvas，请更换浏览器后再试</canvas>
+</div>
+<script>
+(function(){
+
+   var digit=
+    [
+        [
+            [0,0,1,1,1,0,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,0,1,1,0],
+            [0,0,1,1,1,0,0]
+        ],//0
+        [
+            [0,0,0,1,1,0,0],
+            [0,1,1,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [1,1,1,1,1,1,1]
+        ],//1
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,1,1],
+            [1,1,1,1,1,1,1]
+        ],//2
+        [
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//3
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,0],
+            [0,0,1,1,1,1,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,1,1,0],
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,1]
+        ],//4
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,1,1,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//5
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//6
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0]
+        ],//7
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//8
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,1,1,0,0,0,0]
+        ],//9
+        [
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0]
+        ]//:
+    ];
+
+var canvas = document.getElementById('canvas');
+
+if(canvas.getContext){
+    var cxt = canvas.getContext('2d');
+    //声明canvas的宽高
+    var H = 100,W = 700;
+    canvas.height = H;
+    canvas.width = W;
+    cxt.fillStyle = '#f00';
+    cxt.fillRect(10,10,50,50);
+
+    //存储时间数据
+    var data = [];
+    //存储运动的小球
+    var balls = [];
+    //设置粒子半径
+    var R = canvas.height/20-1;
+    (function(){
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        //存储时间数字，由十位小时、个位小时、冒号、十位分钟、个位分钟、冒号、十位秒钟、个位秒钟这7个数字组成
+        data.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+    })();
+
+    /*生成点阵数字*/
+    function renderDigit(index,num){
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    cxt.beginPath();
+                    cxt.arc(14*(R+2)*index + j*2*(R+1)+(R+1),i*2*(R+1)+(R+1),R,0,2*Math.PI);
+                    cxt.closePath();
+                    cxt.fill();
+                }
+            }
+        }
+    }
+
+    /*更新时钟*/
+    function updateDigitTime(){
+        var changeNumArray = [];
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        var NewData = [];
+        NewData.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+        for(var i = data.length-1; i >=0 ; i--){
+            //时间发生变化
+            if(NewData[i] !== data[i]){
+                //将变化的数字值和在data数组中的索引存储在changeNumArray数组中
+                changeNumArray.push(i+'_'+(Number(data[i])+1)%10);
+            }
+        }
+        //增加小球
+        for(var i = 0; i< changeNumArray.length; i++){
+            addBalls.apply(this,changeNumArray[i].split('_'));
+        }
+        data = NewData.concat();
+    }
+
+    /*更新小球状态*/
+    function updateBalls(){
+        for(var i = 0; i < balls.length; i++){
+            balls[i].stepY += balls[i].disY;
+            balls[i].x += balls[i].stepX;
+            balls[i].y += balls[i].stepY;
+            if(balls[i].x > W + R || balls[i].y > H + R){
+                balls.splice(i,1);
+                i--;
+            }
+        }
+    }
+
+    /*增加要运动的小球*/
+    function addBalls(index,num){
+        var numArray = [1,2,3];
+        var colorArray =  ["#3BE","#09C","#A6C","#93C","#9C0","#690","#FB3","#F80","#F44","#C00"];
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    var ball = {
+                        x:14*(R+2)*index + j*2*(R+1)+(R+1),
+                        y:i*2*(R+1)+(R+1),
+                        stepX:Math.floor(Math.random() * 4 -2),
+                        stepY:-2*numArray[Math.floor(Math.random()*numArray.length)],
+                        color:colorArray[Math.floor(Math.random()*colorArray.length)],
+                        disY:1
+                    };
+                    balls.push(ball);
+                }
+            }
+        }
+    }
+
+    /*渲染*/
+    function render(){
+        //重置画布宽度，达到清空画布的效果
+        canvas.height = 100;
+        //渲染时钟
+        for(var i = 0; i < data.length; i++){
+            renderDigit(i,data[i]);
+        }
+        //渲染小球
+        for(var i = 0; i < balls.length; i++){
+            cxt.beginPath();
+            cxt.arc(balls[i].x,balls[i].y,R,0,2*Math.PI);
+            cxt.fillStyle = balls[i].color;
+            cxt.closePath();
+            cxt.fill();
+        }
+    }
+
+    clearInterval(oTimer);
+    var oTimer = setInterval(function(){
+        //更新时钟
+        updateDigitTime();
+        //更新小球状态
+        updateBalls();
+        //渲染
+        render();
+    },50);
+}
+
+})();
+</script>
+   </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">NIMITIZ</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">62k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">57 分钟</span>
+</div>
+
+<br /> #换行
+<!-- 网站运行时间的设置 -->
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("04/15/2020 00:00:00");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'm4huKMbJFhxPsNBUaRNaSsxb-gzGzoHsz',
+      appKey     : 'ikUKWElVr7k7aYAm1PspteAw',
+      placeholder: "ヾﾉ≧∀≦)o 来呀！吐槽一番吧！",
+      avatar     : 'monsterid',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+  
+
+  <script src="/js/activate-power-mode.min.js"></script>
+  <script>
+    POWERMODE.colorful = true;
+    POWERMODE.shake = false;
+    document.body.addEventListener('input', POWERMODE);
+  </script>
+
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>
+
+<!--浏览器搞笑标题-->
+<script type="text/javascript" src="/js/funny_title.js"></script>
+
+<!--动态线条背景-->
+<script type="text/javascript"
+color="220,220,220" opacity='0.7' zIndex="-2" count="200" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+</script>

@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-bounce.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.nimitiz.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":"ture","trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"./public/search.xml"};
+  </script>
+
+  <meta name="description" content="矩阵是MATLAB最基本和最重要的数据对象，因为MATLAB中大部分的运算是基于矩阵运算。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MATLAB矩阵及其运算">
+<meta property="og:url" content="https://www.nimitiz.cn/2020/09/22/MATLAB%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E8%BF%90%E7%AE%97/index.html">
+<meta property="og:site_name" content="小浣熊的技术小站">
+<meta property="og:description" content="矩阵是MATLAB最基本和最重要的数据对象，因为MATLAB中大部分的运算是基于矩阵运算。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.nimitiz.cn/images/MATLAB%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E8%BF%90%E7%AE%97/%E7%9B%B4%E6%8E%A5%E8%BE%93%E5%85%A5%E7%9F%A9%E9%98%B5.png">
+<meta property="og:image" content="https://www.nimitiz.cn/images/MATLAB%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E8%BF%90%E7%AE%97/%E5%88%A9%E7%94%A8%E6%96%87%E6%9C%AC%E6%96%87%E4%BB%B6%E7%94%9F%E6%88%90%E7%9F%A9%E9%98%B5.png">
+<meta property="og:image" content="https://www.nimitiz.cn/images/MATLAB%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E8%BF%90%E7%AE%97/%E6%96%87%E6%9C%AC%E6%96%87%E4%BB%B6.png">
+<meta property="article:published_time" content="2020-09-21T16:41:15.000Z">
+<meta property="article:modified_time" content="2020-10-08T09:15:45.967Z">
+<meta property="article:author" content="NIMITIZ">
+<meta property="article:tag" content="MATLAB">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.nimitiz.cn/images/MATLAB%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E8%BF%90%E7%AE%97/%E7%9B%B4%E6%8E%A5%E8%BE%93%E5%85%A5%E7%9F%A9%E9%98%B5.png">
+
+<link rel="canonical" href="https://www.nimitiz.cn/2020/09/22/MATLAB%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E8%BF%90%E7%AE%97/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>MATLAB矩阵及其运算 | 小浣熊的技术小站</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+  
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">小浣熊的技术小站</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-友链">
+
+    <a href="/links/" rel="section"><i class="fa fa-link fa-fw"></i>友链</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/NIMITIZ" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.nimitiz.cn/2020/09/22/MATLAB%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E8%BF%90%E7%AE%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="NIMITIZ">
+      <meta itemprop="description" content="生命不息，折腾不止">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小浣熊的技术小站">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          MATLAB矩阵及其运算
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-09-22 00:41:15" itemprop="dateCreated datePublished" datetime="2020-09-22T00:41:15+08:00">2020-09-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-10-08 17:15:45" itemprop="dateModified" datetime="2020-10-08T17:15:45+08:00">2020-10-08</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/09/22/MATLAB%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E8%BF%90%E7%AE%97/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/09/22/MATLAB%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E8%BF%90%E7%AE%97/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.1k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>矩阵是MATLAB最基本和最重要的数据对象，因为MATLAB中大部分的运算是基于矩阵运算。</p>
+<a id="more"></a>
+
+
+
+<h2 id="矩阵的创建"><a href="#矩阵的创建" class="headerlink" title="矩阵的创建"></a>矩阵的创建</h2><h3 id="直接输入矩阵"><a href="#直接输入矩阵" class="headerlink" title="直接输入矩阵"></a>直接输入矩阵</h3><p>MATLAB语言最简单的创建矩阵的方法是在命令窗口直接输入矩阵；规则如下：</p>
+<ul>
+<li><p>将所有矩阵元素置于同一<code>[]</code>内</p>
+</li>
+<li><p>同一行的不同元素之间用<code>,</code>或者<code>空格符</code>来分隔</p>
+</li>
+<li><p>不同行用<code>;</code>或者<code>回车符</code>分隔</p>
+</li>
+</ul>
+<h4 id="举个栗子"><a href="#举个栗子" class="headerlink" title="举个栗子"></a>举个栗子</h4><p>生成矩阵A：</p>
+<p><img src="/images/MATLAB%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E8%BF%90%E7%AE%97/%E7%9B%B4%E6%8E%A5%E8%BE%93%E5%85%A5%E7%9F%A9%E9%98%B5.png" alt></p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">&gt;&gt; A=[<span class="number">1</span> <span class="number">2</span> <span class="number">3</span>;<span class="number">4</span> <span class="number">5</span> <span class="number">6</span>;<span class="number">6</span> <span class="number">8</span> <span class="number">9</span>]</span><br><span class="line"></span><br><span class="line">A =</span><br><span class="line"></span><br><span class="line">     <span class="number">1</span>     <span class="number">2</span>     <span class="number">3</span></span><br><span class="line">     <span class="number">4</span>     <span class="number">5</span>     <span class="number">6</span></span><br><span class="line">     <span class="number">6</span>     <span class="number">8</span>     <span class="number">9</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="冒号生成矩阵"><a href="#冒号生成矩阵" class="headerlink" title="冒号生成矩阵"></a>冒号生成矩阵</h3><p>在MATLAB语言中，可利用<code>;</code>生成一个步长相等的一维数组或行向量；规则如下：</p>
+<figure class="highlight groovy"><table><tr><td class="code"><pre><span class="line">x=<span class="string">a:</span><span class="string">step:</span>b</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><code>a</code>是一维数组或行向量的第一个元素，<code>b</code>是其最后一个元素，<code>step</code>是步长增量</p>
+</li>
+<li><p>冒号表达式可生成一个由<code>a</code>开始到<code>b</code>结束，以步长<code>step</code>自增或自减（<code>step</code>&lt;0，<code>b</code>&lt;<code>a</code>）的一维数组或行向量</p>
+</li>
+<li><p>如果步长<strong><code>step</code>=1</strong>，则冒号表达式可以省略步长</p>
+</li>
+</ul>
+<h4 id="举个栗子-1"><a href="#举个栗子-1" class="headerlink" title="举个栗子"></a>举个栗子</h4><figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">&gt;&gt; X1=<span class="number">1</span>:<span class="number">1</span>:<span class="number">10</span></span><br><span class="line"></span><br><span class="line">X1 =</span><br><span class="line"></span><br><span class="line">     <span class="number">1</span>     <span class="number">2</span>     <span class="number">3</span>     <span class="number">4</span>     <span class="number">5</span>     <span class="number">6</span>     <span class="number">7</span>     <span class="number">8</span>     <span class="number">9</span>    <span class="number">10</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">&gt;&gt; X2=<span class="number">1</span>:<span class="number">10</span></span><br><span class="line"></span><br><span class="line">X2 =</span><br><span class="line"></span><br><span class="line">     <span class="number">1</span>     <span class="number">2</span>     <span class="number">3</span>     <span class="number">4</span>     <span class="number">5</span>     <span class="number">6</span>     <span class="number">7</span>     <span class="number">8</span>     <span class="number">9</span>    <span class="number">10</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">&gt;&gt; X3=<span class="number">10</span>:<span class="number">-2</span>:<span class="number">0</span></span><br><span class="line"></span><br><span class="line">X3 =</span><br><span class="line"></span><br><span class="line">    <span class="number">10</span>     <span class="number">8</span>     <span class="number">6</span>     <span class="number">4</span>     <span class="number">2</span>     <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="利用函数生成矩阵"><a href="#利用函数生成矩阵" class="headerlink" title="利用函数生成矩阵"></a>利用函数生成矩阵</h3><h4 id="linspace函数"><a href="#linspace函数" class="headerlink" title="linspace函数"></a>linspace函数</h4><p>MATLAB语言可用<code>linspace</code>函数生成初值、终值和元素个数已知的一维数组或行向量，元素之间是等差数列；规则如下：</p>
+<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"><span class="attr">x</span>=linspace(a,b,n)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><code>a</code>和<code>b</code>分别是生成一维数组或行向量的初值和终值，<code>n</code>是元素个数；<strong>当<code>n</code>省略时，自动生成100个元素</strong></p>
+</li>
+<li><p>当<code>a</code>&gt;<code>b</code>，元素之间是等差递减；当<code>a</code>&lt;<code>b</code>，元素之间是等差递增</p>
+</li>
+</ul>
+<h5 id="举个栗子-2"><a href="#举个栗子-2" class="headerlink" title="举个栗子"></a>举个栗子</h5><figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">&gt;&gt; X1=linspace(<span class="number">1</span>,<span class="number">10</span>,<span class="number">10</span>)</span><br><span class="line"></span><br><span class="line">X1 =</span><br><span class="line"></span><br><span class="line">     <span class="number">1</span>     <span class="number">2</span>     <span class="number">3</span>     <span class="number">4</span>     <span class="number">5</span>     <span class="number">6</span>     <span class="number">7</span>     <span class="number">8</span>     <span class="number">9</span>    <span class="number">10</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">&gt;&gt; X2=linspace(<span class="number">10</span>,<span class="number">6</span>,<span class="number">5</span>)</span><br><span class="line"></span><br><span class="line">X2 =</span><br><span class="line"></span><br><span class="line">    <span class="number">10</span>     <span class="number">9</span>     <span class="number">8</span>     <span class="number">7</span>     <span class="number">6</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">&gt;&gt; X3=linspace(<span class="number">1</span>,<span class="number">10</span>)</span><br><span class="line"></span><br><span class="line">X3 =</span><br><span class="line"></span><br><span class="line">  列 <span class="number">1</span> 至 <span class="number">13</span></span><br><span class="line"></span><br><span class="line">    <span class="number">1.0000</span>    <span class="number">1.0909</span>    <span class="number">1.1818</span>    <span class="number">1.2727</span>    <span class="number">1.3636</span>    <span class="number">1.4545</span>    <span class="number">1.5455</span>    <span class="number">1.6364</span>    <span class="number">1.7273</span>    <span class="number">1.8182</span>    <span class="number">1.9091</span>    <span class="number">2.0000</span>    <span class="number">2.0909</span></span><br><span class="line"></span><br><span class="line">  列 <span class="number">14</span> 至 <span class="number">26</span></span><br><span class="line"></span><br><span class="line">    <span class="number">2.1818</span>    <span class="number">2.2727</span>    <span class="number">2.3636</span>    <span class="number">2.4545</span>    <span class="number">2.5455</span>    <span class="number">2.6364</span>    <span class="number">2.7273</span>    <span class="number">2.8182</span>    <span class="number">2.9091</span>    <span class="number">3.0000</span>    <span class="number">3.0909</span>    <span class="number">3.1818</span>    <span class="number">3.2727</span></span><br><span class="line"></span><br><span class="line">  列 <span class="number">27</span> 至 <span class="number">39</span></span><br><span class="line"></span><br><span class="line">    <span class="number">3.3636</span>    <span class="number">3.4545</span>    <span class="number">3.5455</span>    <span class="number">3.6364</span>    <span class="number">3.7273</span>    <span class="number">3.8182</span>    <span class="number">3.9091</span>    <span class="number">4.0000</span>    <span class="number">4.0909</span>    <span class="number">4.1818</span>    <span class="number">4.2727</span>    <span class="number">4.3636</span>    <span class="number">4.4545</span></span><br><span class="line"></span><br><span class="line">  列 <span class="number">40</span> 至 <span class="number">52</span></span><br><span class="line"></span><br><span class="line">    <span class="number">4.5455</span>    <span class="number">4.6364</span>    <span class="number">4.7273</span>    <span class="number">4.8182</span>    <span class="number">4.9091</span>    <span class="number">5.0000</span>    <span class="number">5.0909</span>    <span class="number">5.1818</span>    <span class="number">5.2727</span>    <span class="number">5.3636</span>    <span class="number">5.4545</span>    <span class="number">5.5455</span>    <span class="number">5.6364</span></span><br><span class="line"></span><br><span class="line">  列 <span class="number">53</span> 至 <span class="number">65</span></span><br><span class="line"></span><br><span class="line">    <span class="number">5.7273</span>    <span class="number">5.8182</span>    <span class="number">5.9091</span>    <span class="number">6.0000</span>    <span class="number">6.0909</span>    <span class="number">6.1818</span>    <span class="number">6.2727</span>    <span class="number">6.3636</span>    <span class="number">6.4545</span>    <span class="number">6.5455</span>    <span class="number">6.6364</span>    <span class="number">6.7273</span>    <span class="number">6.8182</span></span><br><span class="line"></span><br><span class="line">  列 <span class="number">66</span> 至 <span class="number">78</span></span><br><span class="line"></span><br><span class="line">    <span class="number">6.9091</span>    <span class="number">7.0000</span>    <span class="number">7.0909</span>    <span class="number">7.1818</span>    <span class="number">7.2727</span>    <span class="number">7.3636</span>    <span class="number">7.4545</span>    <span class="number">7.5455</span>    <span class="number">7.6364</span>    <span class="number">7.7273</span>    <span class="number">7.8182</span>    <span class="number">7.9091</span>    <span class="number">8.0000</span></span><br><span class="line"></span><br><span class="line">  列 <span class="number">79</span> 至 <span class="number">91</span></span><br><span class="line"></span><br><span class="line">    <span class="number">8.0909</span>    <span class="number">8.1818</span>    <span class="number">8.2727</span>    <span class="number">8.3636</span>    <span class="number">8.4545</span>    <span class="number">8.5455</span>    <span class="number">8.6364</span>    <span class="number">8.7273</span>    <span class="number">8.8182</span>    <span class="number">8.9091</span>    <span class="number">9.0000</span>    <span class="number">9.0909</span>    <span class="number">9.1818</span></span><br><span class="line"></span><br><span class="line">  列 <span class="number">92</span> 至 <span class="number">100</span></span><br><span class="line"></span><br><span class="line">    <span class="number">9.2727</span>    <span class="number">9.3636</span>    <span class="number">9.4545</span>    <span class="number">9.5455</span>    <span class="number">9.6364</span>    <span class="number">9.7273</span>    <span class="number">9.8182</span>    <span class="number">9.9091</span>   <span class="number">10.0000</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="logspace函数"><a href="#logspace函数" class="headerlink" title="logspace函数"></a>logspace函数</h4><p>MATLAB语言可用<code>logspace</code>函数生成一维数组或行向量，元素之间是对数等比数列；规则如下：</p>
+<ul>
+<li>第一个元素是10^<code>a</code>，最后一个元素是10^<code>b</code>，元素个数是<code>n</code></li>
+<li>如果<code>b</code>的值是<code>pi</code>，则该函数生成<code>a</code>到<code>pi</code>之间<code>n</code>个对数等比数列</li>
+</ul>
+<h5 id="举个栗子-3"><a href="#举个栗子-3" class="headerlink" title="举个栗子"></a>举个栗子</h5><figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">&gt;&gt; X1=logspace(<span class="number">1</span>,<span class="number">2</span>,<span class="number">10</span>)</span><br><span class="line"></span><br><span class="line">X1 =</span><br><span class="line"></span><br><span class="line">   <span class="number">10.0000</span>   <span class="number">12.9155</span>   <span class="number">16.6810</span>   <span class="number">21.5443</span>   <span class="number">27.8256</span>   <span class="number">35.9381</span>   <span class="number">46.4159</span>   <span class="number">59.9484</span>   <span class="number">77.4264</span>  <span class="number">100.0000</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">&gt;&gt; X2=logspace(<span class="number">1</span>,pi,<span class="number">10</span>)</span><br><span class="line"></span><br><span class="line">X2 =</span><br><span class="line"></span><br><span class="line">   <span class="number">10.0000</span>    <span class="number">8.7928</span>    <span class="number">7.7314</span>    <span class="number">6.7980</span>    <span class="number">5.9774</span>    <span class="number">5.2558</span>    <span class="number">4.6213</span>    <span class="number">4.0634</span>    <span class="number">3.5729</span>    <span class="number">3.1416</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="利用文本文件生成矩阵"><a href="#利用文本文件生成矩阵" class="headerlink" title="利用文本文件生成矩阵"></a>利用文本文件生成矩阵</h3><p>MATLAB语言中的矩阵还可以由文本文件（.txt）生成。在<code>软件安装目录\bin</code>路径下新建文本文件并在其中输入矩阵，然后在命令窗口内使用<code>load</code>函数调用该文本文件。</p>
+<p><strong>文件内容不含变量名称，文件名为矩阵变量名。</strong></p>
+<h4 id="举个栗子-4"><a href="#举个栗子-4" class="headerlink" title="举个栗子"></a>举个栗子</h4><p>生成矩阵A：</p>
+<p><img src="/images/MATLAB%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E8%BF%90%E7%AE%97/%E5%88%A9%E7%94%A8%E6%96%87%E6%9C%AC%E6%96%87%E4%BB%B6%E7%94%9F%E6%88%90%E7%9F%A9%E9%98%B5.png" alt></p>
+<p><img src="/images/MATLAB%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E8%BF%90%E7%AE%97/%E6%96%87%E6%9C%AC%E6%96%87%E4%BB%B6.png" alt></p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">&gt;&gt; load A.txt</span><br><span class="line">&gt;&gt; A</span><br><span class="line"></span><br><span class="line">A =</span><br><span class="line"></span><br><span class="line">     <span class="number">1</span>     <span class="number">2</span>     <span class="number">3</span></span><br><span class="line">     <span class="number">4</span>     <span class="number">5</span>     <span class="number">6</span></span><br><span class="line">     <span class="number">7</span>     <span class="number">8</span>     <span class="number">9</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="特殊矩阵的生成"><a href="#特殊矩阵的生成" class="headerlink" title="特殊矩阵的生成"></a>特殊矩阵的生成</h2><h3 id="单位矩阵"><a href="#单位矩阵" class="headerlink" title="单位矩阵"></a>单位矩阵</h3><p>MATLAB语言中可使用<code>eye</code>函数来生成单位矩阵，其调用方式如下：</p>
+<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"><span class="attr">X1</span>=eye(n)<span class="comment">;</span></span><br><span class="line"><span class="attr">X2</span>=eye(m,n)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>X1=eye(n)</code>表示生成<code>n</code>*<code>n</code>的单位矩阵</li>
+<li><code>X2=eye(m,n)</code>表示生成<code>m</code>*<code>n</code>的单位矩阵</li>
+</ul>
+<h4 id="举个栗子-5"><a href="#举个栗子-5" class="headerlink" title="举个栗子"></a>举个栗子</h4><figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">&gt;&gt; X1=eye(<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line">X1 =</span><br><span class="line"></span><br><span class="line">     <span class="number">1</span>     <span class="number">0</span>     <span class="number">0</span></span><br><span class="line">     <span class="number">0</span>     <span class="number">1</span>     <span class="number">0</span></span><br><span class="line">     <span class="number">0</span>     <span class="number">0</span>     <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">&gt;&gt; X2=eye(<span class="number">4</span>,<span class="number">5</span>)</span><br><span class="line"></span><br><span class="line">X2 =</span><br><span class="line"></span><br><span class="line">     <span class="number">1</span>     <span class="number">0</span>     <span class="number">0</span>     <span class="number">0</span>     <span class="number">0</span></span><br><span class="line">     <span class="number">0</span>     <span class="number">1</span>     <span class="number">0</span>     <span class="number">0</span>     <span class="number">0</span></span><br><span class="line">     <span class="number">0</span>     <span class="number">0</span>     <span class="number">1</span>     <span class="number">0</span>     <span class="number">0</span></span><br><span class="line">     <span class="number">0</span>     <span class="number">0</span>     <span class="number">0</span>     <span class="number">1</span>     <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="0矩阵"><a href="#0矩阵" class="headerlink" title="0矩阵"></a>0矩阵</h3><p>MATLAB语言中可使用<code>zeros</code>函数来生成0矩阵，其调用方式如下：</p>
+<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"><span class="attr">X1</span>=zeros(n)<span class="comment">;</span></span><br><span class="line"><span class="attr">X2</span>=zeros(m,n)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>X1=zeros(n)</code>表示生成<code>n</code>*<code>n</code>的0矩阵</li>
+<li><code>X2=zeros(m,n)</code>表示生成<code>m</code>*<code>n</code>的0矩阵</li>
+</ul>
+<h4 id="举个栗子-6"><a href="#举个栗子-6" class="headerlink" title="举个栗子"></a>举个栗子</h4><figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">&gt;&gt; X1=zeros(<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line">X1 =</span><br><span class="line"></span><br><span class="line">     <span class="number">0</span>     <span class="number">0</span>     <span class="number">0</span></span><br><span class="line">     <span class="number">0</span>     <span class="number">0</span>     <span class="number">0</span></span><br><span class="line">     <span class="number">0</span>     <span class="number">0</span>     <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">&gt;&gt; X2=zeros(<span class="number">4</span>,<span class="number">5</span>)</span><br><span class="line"></span><br><span class="line">X2 =</span><br><span class="line"></span><br><span class="line">     <span class="number">0</span>     <span class="number">0</span>     <span class="number">0</span>     <span class="number">0</span>     <span class="number">0</span></span><br><span class="line">     <span class="number">0</span>     <span class="number">0</span>     <span class="number">0</span>     <span class="number">0</span>     <span class="number">0</span></span><br><span class="line">     <span class="number">0</span>     <span class="number">0</span>     <span class="number">0</span>     <span class="number">0</span>     <span class="number">0</span></span><br><span class="line">     <span class="number">0</span>     <span class="number">0</span>     <span class="number">0</span>     <span class="number">0</span>     <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="1矩阵"><a href="#1矩阵" class="headerlink" title="1矩阵"></a>1矩阵</h3><p>MATLAB语言中可使用<code>ones</code>函数来生成1矩阵，其调用方式如下：</p>
+<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"><span class="attr">X1</span>=<span class="literal">on</span>es(n)<span class="comment">;</span></span><br><span class="line"><span class="attr">X2</span>=<span class="literal">on</span>es(m,n)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>X1=ones(n)</code>表示生成<code>n</code>*<code>n</code>的1矩阵</li>
+<li><code>X2=ones(m,n)</code>表示生成<code>m</code>*<code>n</code>的1矩阵</li>
+</ul>
+<h4 id="举个栗子-7"><a href="#举个栗子-7" class="headerlink" title="举个栗子"></a>举个栗子</h4><figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">&gt;&gt; X1=ones(<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line">X1 =</span><br><span class="line"></span><br><span class="line">     <span class="number">1</span>     <span class="number">1</span>     <span class="number">1</span></span><br><span class="line">     <span class="number">1</span>     <span class="number">1</span>     <span class="number">1</span></span><br><span class="line">     <span class="number">1</span>     <span class="number">1</span>     <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">&gt;&gt; X2=ones(<span class="number">4</span>,<span class="number">5</span>)</span><br><span class="line"></span><br><span class="line">X2 =</span><br><span class="line"></span><br><span class="line">     <span class="number">1</span>     <span class="number">1</span>     <span class="number">1</span>     <span class="number">1</span>     <span class="number">1</span></span><br><span class="line">     <span class="number">1</span>     <span class="number">1</span>     <span class="number">1</span>     <span class="number">1</span>     <span class="number">1</span></span><br><span class="line">     <span class="number">1</span>     <span class="number">1</span>     <span class="number">1</span>     <span class="number">1</span>     <span class="number">1</span></span><br><span class="line">     <span class="number">1</span>     <span class="number">1</span>     <span class="number">1</span>     <span class="number">1</span>     <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="魔方矩阵"><a href="#魔方矩阵" class="headerlink" title="魔方矩阵"></a>魔方矩阵</h3><p>魔方矩阵是指行和列、正和反斜对角线元素之和都相等的矩阵，MATLAB语言中可使用<code>magic</code>函数来生成魔方矩阵，其调用方式如下：</p>
+<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"><span class="attr">X</span>=magic(n)</span><br></pre></td></tr></table></figure>
+
+<p><code>X=magic(n)</code>表示生成<code>n</code><em><code>n</code>的魔方矩阵*</em>（n大于0且n不等于2）**</p>
+<h4 id="举个栗子-8"><a href="#举个栗子-8" class="headerlink" title="举个栗子"></a>举个栗子</h4><figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">&gt;&gt; X=magic(<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line">X =</span><br><span class="line"></span><br><span class="line">     <span class="number">8</span>     <span class="number">1</span>     <span class="number">6</span></span><br><span class="line">     <span class="number">3</span>     <span class="number">5</span>     <span class="number">7</span></span><br><span class="line">     <span class="number">4</span>     <span class="number">9</span>     <span class="number">2</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="附注"><a href="#附注" class="headerlink" title="附注"></a>附注</h5><ul>
+<li><p>计算每列的和</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">&gt;&gt; A=sum(X)</span><br><span class="line"></span><br><span class="line">A =</span><br><span class="line"></span><br><span class="line">    <span class="number">15</span>    <span class="number">15</span>    <span class="number">15</span></span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ul>
+<ul>
+<li><p>计算每行的和</p>
+<figure class="highlight lsl"><table><tr><td class="code"><pre><span class="line">&gt;&gt; B=sum(X')</span><br><span class="line"></span><br><span class="line">B =</span><br><span class="line"></span><br><span class="line">    <span class="number">15</span>    <span class="number">15</span>    <span class="number">15</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+</li>
+</ul>
+<h3 id="0-1均匀分布随机矩阵"><a href="#0-1均匀分布随机矩阵" class="headerlink" title="0~1均匀分布随机矩阵"></a>0~1均匀分布随机矩阵</h3><p>MATLAB语言中可使用<code>rand</code>函数生成0~1均匀分布的随机矩阵，其调用方式如下：</p>
+<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"><span class="attr">X1</span>=rand(n)<span class="comment">;</span></span><br><span class="line"><span class="attr">X2</span>=rand(m,n)<span class="comment">;</span></span><br><span class="line"><span class="attr">X3</span>=a+(b-a)*rand(m,n)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>X1=rand(n)</code>表示生成<code>n</code>*<code>n</code>个元素值为0~1均匀分布的随机矩阵</li>
+<li><code>X2=rand(m,n)</code>表示生成<code>m</code>*<code>n</code>个元素值为0~1均匀分布的随机矩阵</li>
+<li><code>X3=a+(b-a)*rand(m,n)</code>表示生成<code>m</code>*<code>n</code>个元素值为<code>a</code>~<code>b</code>均匀分布的随机矩阵</li>
+</ul>
+<h4 id="举个栗子-9"><a href="#举个栗子-9" class="headerlink" title="举个栗子"></a>举个栗子</h4><figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">&gt;&gt; X1=rand(<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line">X1 =</span><br><span class="line"></span><br><span class="line">    <span class="number">0.8147</span>    <span class="number">0.9134</span>    <span class="number">0.2785</span></span><br><span class="line">    <span class="number">0.9058</span>    <span class="number">0.6324</span>    <span class="number">0.5469</span></span><br><span class="line">    <span class="number">0.1270</span>    <span class="number">0.0975</span>    <span class="number">0.9575</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">&gt;&gt; X2=rand(<span class="number">2</span>,<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line">X2 =</span><br><span class="line"></span><br><span class="line">    <span class="number">0.9649</span>    <span class="number">0.9706</span>    <span class="number">0.4854</span></span><br><span class="line">    <span class="number">0.1576</span>    <span class="number">0.9572</span>    <span class="number">0.8003</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">&gt;&gt; X3=<span class="number">10</span>+(<span class="number">15</span><span class="number">-10</span>)*rand(<span class="number">2</span>,<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line">X3 =</span><br><span class="line"></span><br><span class="line">   <span class="number">10.7094</span>   <span class="number">14.5787</span>   <span class="number">14.7975</span></span><br><span class="line">   <span class="number">12.1088</span>   <span class="number">13.9610</span>   <span class="number">13.2787</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="正态分布随机矩阵"><a href="#正态分布随机矩阵" class="headerlink" title="正态分布随机矩阵"></a>正态分布随机矩阵</h3><p>MATLAB语言中可使用<code>randn</code>函数生成均值为0，单位方差的正态分布随机矩阵，其调用方式如下：</p>
+<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"><span class="attr">X1</span>=randn(n)<span class="comment">;</span></span><br><span class="line"><span class="attr">X2</span>=randn(m,n)<span class="comment">;</span></span><br><span class="line"><span class="attr">X3</span>=a+sqrt(b)*randn(m,n)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>X1=randn(n)</code>表示生成<code>n</code>*<code>n</code>个元素且均值为0，方差为1的正态分布随机矩阵</li>
+<li><code>X2=randn(m,n)</code>表示生成<code>m</code>*<code>n</code>个元素且均值为0，方差为1的正态分布随机矩阵</li>
+<li><code>X3=a+sqrt(b)*randn(m,n)</code>表示生成<code>m</code>*<code>n</code>个元素且均值为<code>a</code>，方差为<code>b</code>的正态分布随机矩阵</li>
+</ul>
+<h4 id="举个栗子-10"><a href="#举个栗子-10" class="headerlink" title="举个栗子"></a>举个栗子</h4><figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">&gt;&gt; X1=randn(<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line">X1 =</span><br><span class="line"></span><br><span class="line">   <span class="number">-1.2075</span>    <span class="number">0.4889</span>   <span class="number">-0.3034</span></span><br><span class="line">    <span class="number">0.7172</span>    <span class="number">1.0347</span>    <span class="number">0.2939</span></span><br><span class="line">    <span class="number">1.6302</span>    <span class="number">0.7269</span>   <span class="number">-0.7873</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">&gt;&gt; X2=randn(<span class="number">2</span>,<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line">X2 =</span><br><span class="line"></span><br><span class="line">    <span class="number">0.8884</span>   <span class="number">-1.0689</span>   <span class="number">-2.9443</span></span><br><span class="line">   <span class="number">-1.1471</span>   <span class="number">-0.8095</span>    <span class="number">1.4384</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">&gt;&gt; X3=<span class="number">1</span>+sqrt(<span class="number">0.1</span>)*randn(<span class="number">2</span>,<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line">X3 =</span><br><span class="line"></span><br><span class="line">    <span class="number">1.1028</span>    <span class="number">1.4333</span>    <span class="number">0.9677</span></span><br><span class="line">    <span class="number">0.7613</span>    <span class="number">0.4588</span>    <span class="number">0.9236</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="对角矩阵"><a href="#对角矩阵" class="headerlink" title="对角矩阵"></a>对角矩阵</h3><p>MATLAB语言中可以使用<code>diag</code>函数来生成对角矩阵，其调用方式如下：</p>
+<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"><span class="attr">X</span>=diag(v,k)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>X=diag(v,k)</code>表示生成以向量<code>v</code>元素作为矩阵<code>X</code>的第<code>k</code>条对角线元素的对角矩阵</li>
+<li>当<code>k</code>=0时，<code>v</code>为<code>X</code>的主对角线；当<code>k</code>&gt;0时，<code>v</code>为<code>X</code>的主对角线上方第<code>k</code>条对角线的元素；当<code>k</code>&lt;0时，<code>v</code>为<code>X</code>的主对角线下方第<code>k</code>条对角线的元素</li>
+</ul>
+<h4 id="举个栗子-11"><a href="#举个栗子-11" class="headerlink" title="举个栗子"></a>举个栗子</h4><figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">&gt;&gt; v=[<span class="number">3</span>,<span class="number">2</span>,<span class="number">1</span>];</span><br><span class="line">&gt;&gt; X1=diag(v)</span><br><span class="line"></span><br><span class="line">X1 =</span><br><span class="line"></span><br><span class="line">     <span class="number">3</span>     <span class="number">0</span>     <span class="number">0</span></span><br><span class="line">     <span class="number">0</span>     <span class="number">2</span>     <span class="number">0</span></span><br><span class="line">     <span class="number">0</span>     <span class="number">0</span>     <span class="number">1</span></span><br><span class="line"></span><br><span class="line">&gt;&gt; X2=diag(v,<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">X2 =</span><br><span class="line"></span><br><span class="line">     <span class="number">0</span>     <span class="number">3</span>     <span class="number">0</span>     <span class="number">0</span></span><br><span class="line">     <span class="number">0</span>     <span class="number">0</span>     <span class="number">2</span>     <span class="number">0</span></span><br><span class="line">     <span class="number">0</span>     <span class="number">0</span>     <span class="number">0</span>     <span class="number">1</span></span><br><span class="line">     <span class="number">0</span>     <span class="number">0</span>     <span class="number">0</span>     <span class="number">0</span></span><br><span class="line"></span><br><span class="line">&gt;&gt; X3=diag(v,<span class="number">-1</span>)</span><br><span class="line"></span><br><span class="line">X3 =</span><br><span class="line"></span><br><span class="line">     <span class="number">0</span>     <span class="number">0</span>     <span class="number">0</span>     <span class="number">0</span></span><br><span class="line">     <span class="number">3</span>     <span class="number">0</span>     <span class="number">0</span>     <span class="number">0</span></span><br><span class="line">     <span class="number">0</span>     <span class="number">2</span>     <span class="number">0</span>     <span class="number">0</span></span><br><span class="line">     <span class="number">0</span>     <span class="number">0</span>     <span class="number">1</span>     <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<p>若<code>X</code>是一个矩阵，则<code>diag(X)</code>是提取矩阵<code>X</code>的对角线矩阵。</p>
+<h4 id="举个栗子-12"><a href="#举个栗子-12" class="headerlink" title="举个栗子"></a>举个栗子</h4><figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">&gt;&gt; X=[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>;<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>]</span><br><span class="line"></span><br><span class="line">X =</span><br><span class="line"></span><br><span class="line">     <span class="number">1</span>     <span class="number">2</span>     <span class="number">3</span></span><br><span class="line">     <span class="number">4</span>     <span class="number">5</span>     <span class="number">6</span></span><br><span class="line"></span><br><span class="line">&gt;&gt; Y=diag(X)</span><br><span class="line"></span><br><span class="line">Y =</span><br><span class="line"></span><br><span class="line">     <span class="number">1</span></span><br><span class="line">     <span class="number">5</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="三角矩阵"><a href="#三角矩阵" class="headerlink" title="三角矩阵"></a>三角矩阵</h3><p>MATLAB语言中可以使用<code>tril</code>和<code>triu</code>函数来生成三角矩阵，其调用方式如下：</p>
+<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"><span class="attr">X1</span>=tril(X,k)<span class="comment">;</span></span><br><span class="line"><span class="attr">X2</span>=triu(X,k)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>X1=tril(X,k)</code>表示生成矩阵<code>X</code>中第<code>k</code>条对角线的下三角部分的矩阵</li>
+<li><code>X2=triu(X,k)</code>表示生成矩阵<code>X</code>中第<code>k</code>条对角线的上三角部分的矩阵</li>
+<li><code>k</code>=0为<code>X</code>的主对角线；<code>k</code>&gt;0为<code>X</code>的主对角线以上；<code>k</code>&lt;0为<code>X</code>的主对角线以下</li>
+</ul>
+<h4 id="举个栗子-13"><a href="#举个栗子-13" class="headerlink" title="举个栗子"></a>举个栗子</h4><figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">&gt;&gt; X=ones(<span class="number">4</span>);</span><br><span class="line">&gt;&gt; X1=tril(X,<span class="number">-2</span>)</span><br><span class="line"></span><br><span class="line">X1 =</span><br><span class="line"></span><br><span class="line">     <span class="number">0</span>     <span class="number">0</span>     <span class="number">0</span>     <span class="number">0</span></span><br><span class="line">     <span class="number">0</span>     <span class="number">0</span>     <span class="number">0</span>     <span class="number">0</span></span><br><span class="line">     <span class="number">1</span>     <span class="number">0</span>     <span class="number">0</span>     <span class="number">0</span></span><br><span class="line">     <span class="number">1</span>     <span class="number">1</span>     <span class="number">0</span>     <span class="number">0</span></span><br><span class="line"></span><br><span class="line">&gt;&gt; X2=triu(X,<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">X2 =</span><br><span class="line"></span><br><span class="line">     <span class="number">1</span>     <span class="number">1</span>     <span class="number">1</span>     <span class="number">1</span></span><br><span class="line">     <span class="number">0</span>     <span class="number">1</span>     <span class="number">1</span>     <span class="number">1</span></span><br><span class="line">     <span class="number">0</span>     <span class="number">0</span>     <span class="number">1</span>     <span class="number">1</span></span><br><span class="line">     <span class="number">0</span>     <span class="number">0</span>     <span class="number">0</span>     <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="矩阵的修改"><a href="#矩阵的修改" class="headerlink" title="矩阵的修改"></a>矩阵的修改</h2><h3 id="矩阵部分替换"><a href="#矩阵部分替换" class="headerlink" title="矩阵部分替换"></a>矩阵部分替换</h3><p>MATLAB语言可以部分替换矩阵的某个值、某行或某列，方式如下：</p>
+<figure class="highlight reasonml"><table><tr><td class="code"><pre><span class="line"><span class="constructor">A(<span class="params">m</span>,<span class="params">n</span>)</span>=a1;</span><br><span class="line"><span class="constructor">A(<span class="params">m</span>,:)</span>=<span class="literal">[<span class="identifier">a1</span>,<span class="identifier">a2</span>,<span class="operator">...</span>,<span class="identifier">an</span>]</span>;</span><br><span class="line"><span class="constructor">A(:,<span class="params">n</span>)</span>=<span class="literal">[<span class="identifier">a1</span>,<span class="identifier">a2</span>,<span class="operator">...</span>,<span class="identifier">am</span>]</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>A(m,n)=a1</code>表示替换矩阵<code>A</code>中的第<code>m</code>行，第<code>n</code>列元素为<code>a1</code></li>
+<li><code>A(m,:)=[a1,a2,...,an]</code>表示替换矩阵<code>A</code>中第<code>m</code>行的所有元素为<code>a1,a2,...,an</code></li>
+<li><code>A(:,n)=[a1,a2,...,am]</code>表示替换矩阵<code>A</code>中第<code>n</code>列的所有元素为<code>a1,a2,...,am</code></li>
+</ul>
+<h4 id="举个栗子-14"><a href="#举个栗子-14" class="headerlink" title="举个栗子"></a>举个栗子</h4><figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">&gt;&gt; A=[<span class="number">1</span> <span class="number">2</span> <span class="number">3</span>;<span class="number">4</span> <span class="number">5</span> <span class="number">6</span>;<span class="number">7</span> <span class="number">8</span> <span class="number">9</span>]</span><br><span class="line"></span><br><span class="line">A =</span><br><span class="line"></span><br><span class="line">     <span class="number">1</span>     <span class="number">2</span>     <span class="number">3</span></span><br><span class="line">     <span class="number">4</span>     <span class="number">5</span>     <span class="number">6</span></span><br><span class="line">     <span class="number">7</span>     <span class="number">8</span>     <span class="number">9</span></span><br><span class="line"></span><br><span class="line">&gt;&gt; A(<span class="number">2</span>,<span class="number">2</span>)=<span class="number">10</span></span><br><span class="line"></span><br><span class="line">A =</span><br><span class="line"></span><br><span class="line">     <span class="number">1</span>     <span class="number">2</span>     <span class="number">3</span></span><br><span class="line">     <span class="number">4</span>    <span class="number">10</span>     <span class="number">6</span></span><br><span class="line">     <span class="number">7</span>     <span class="number">8</span>     <span class="number">9</span></span><br><span class="line"></span><br><span class="line">&gt;&gt; A(<span class="number">2</span>,:)=[<span class="number">14</span> <span class="number">15</span> <span class="number">16</span>]</span><br><span class="line"></span><br><span class="line">A =</span><br><span class="line"></span><br><span class="line">     <span class="number">1</span>     <span class="number">2</span>     <span class="number">3</span></span><br><span class="line">    <span class="number">14</span>    <span class="number">15</span>    <span class="number">16</span></span><br><span class="line">     <span class="number">7</span>     <span class="number">8</span>     <span class="number">9</span></span><br><span class="line"></span><br><span class="line">&gt;&gt; A(:,<span class="number">2</span>)=[<span class="number">12</span> <span class="number">15</span> <span class="number">18</span>]</span><br><span class="line"></span><br><span class="line">A =</span><br><span class="line"></span><br><span class="line">     <span class="number">1</span>    <span class="number">12</span>     <span class="number">3</span></span><br><span class="line">    <span class="number">14</span>    <span class="number">15</span>    <span class="number">16</span></span><br><span class="line">     <span class="number">7</span>    <span class="number">18</span>     <span class="number">9</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="矩阵部分删除"><a href="#矩阵部分删除" class="headerlink" title="矩阵部分删除"></a>矩阵部分删除</h3><p>MATLAB语言可以部分删除矩阵的行或列，方式如下：</p>
+<figure class="highlight xquery"><table><tr><td class="code"><pre><span class="line">A<span class="comment">(:,n)=[];</span></span><br><span class="line"><span class="comment">A(m,:)</span>=[]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>A(:,n)=[]</code>表示删除矩阵<code>A</code>的第<code>n</code>列</li>
+<li><code>A(m,:)=[]</code>表示删除矩阵<code>A</code>的第<code>m</code>行</li>
+</ul>
+<h4 id="举个栗子-15"><a href="#举个栗子-15" class="headerlink" title="举个栗子"></a>举个栗子</h4><figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">&gt;&gt; A=[<span class="number">1</span> <span class="number">2</span> <span class="number">3</span>;<span class="number">4</span> <span class="number">5</span> <span class="number">6</span>;<span class="number">7</span> <span class="number">8</span> <span class="number">9</span>]</span><br><span class="line"></span><br><span class="line">A =</span><br><span class="line"></span><br><span class="line">     <span class="number">1</span>     <span class="number">2</span>     <span class="number">3</span></span><br><span class="line">     <span class="number">4</span>     <span class="number">5</span>     <span class="number">6</span></span><br><span class="line">     <span class="number">7</span>     <span class="number">8</span>     <span class="number">9</span></span><br><span class="line"></span><br><span class="line">&gt;&gt; A(<span class="number">2</span>,:)=[]</span><br><span class="line"></span><br><span class="line">A =</span><br><span class="line"></span><br><span class="line">     <span class="number">1</span>     <span class="number">2</span>     <span class="number">3</span></span><br><span class="line">     <span class="number">7</span>     <span class="number">8</span>     <span class="number">9</span></span><br><span class="line"></span><br><span class="line">&gt;&gt; A(:,<span class="number">2</span>)=[]</span><br><span class="line"></span><br><span class="line">A =</span><br><span class="line"></span><br><span class="line">     <span class="number">1</span>     <span class="number">3</span></span><br><span class="line">     <span class="number">7</span>     <span class="number">9</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="矩阵部分扩展"><a href="#矩阵部分扩展" class="headerlink" title="矩阵部分扩展"></a>矩阵部分扩展</h3><h4 id="常用方式"><a href="#常用方式" class="headerlink" title="常用方式"></a>常用方式</h4><p>MATLAB语言可以部分扩展矩阵，方式如下：</p>
+<figure class="highlight abnf"><table><tr><td class="code"><pre><span class="line"><span class="attribute">A</span>=[A<span class="comment">;B C]</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>A</code>为原矩阵，<code>B</code>和<code>C</code>为要扩展的元素，<code>M</code>为扩展后的矩阵</li>
+<li><strong><code>B</code>和<code>C</code>的行数都要相等</strong></li>
+<li><strong><code>B</code>和<code>C</code>的列数之和要与<code>A</code>的列数相等</strong></li>
+</ul>
+<h5 id="举个栗子-16"><a href="#举个栗子-16" class="headerlink" title="举个栗子"></a>举个栗子</h5><figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">&gt;&gt; A=[<span class="number">1</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span>;<span class="number">0</span> <span class="number">1</span> <span class="number">0</span> <span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">A =</span><br><span class="line"></span><br><span class="line">     <span class="number">1</span>     <span class="number">0</span>     <span class="number">0</span>     <span class="number">0</span></span><br><span class="line">     <span class="number">0</span>     <span class="number">1</span>     <span class="number">0</span>     <span class="number">0</span></span><br><span class="line"></span><br><span class="line">&gt;&gt; B=zeros(<span class="number">2</span>);</span><br><span class="line">&gt;&gt; C=eye(<span class="number">2</span>);</span><br><span class="line">&gt;&gt; M=[A;B C]</span><br><span class="line"></span><br><span class="line">M =</span><br><span class="line"></span><br><span class="line">     <span class="number">1</span>     <span class="number">0</span>     <span class="number">0</span>     <span class="number">0</span></span><br><span class="line">     <span class="number">0</span>     <span class="number">1</span>     <span class="number">0</span>     <span class="number">0</span></span><br><span class="line">     <span class="number">0</span>     <span class="number">0</span>     <span class="number">1</span>     <span class="number">0</span></span><br><span class="line">     <span class="number">0</span>     <span class="number">0</span>     <span class="number">0</span>     <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="平铺矩阵函数"><a href="#平铺矩阵函数" class="headerlink" title="平铺矩阵函数"></a>平铺矩阵函数</h4><p>MATLAB语言可以利用平铺矩阵函数<code>repmat</code>扩展矩阵，调用方式如下：</p>
+<figure class="highlight gcode"><table><tr><td class="code"><pre><span class="line">M=repmat<span class="comment">(A,m,n)</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>M=repmat(A,m,n)</code>表示将矩阵<code>A</code>复制扩展为<code>m*n</code>块</li>
+</ul>
+<h5 id="举个栗子-17"><a href="#举个栗子-17" class="headerlink" title="举个栗子"></a>举个栗子</h5><figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">&gt;&gt; A=[<span class="number">1</span> <span class="number">2</span> <span class="number">3</span>;<span class="number">4</span> <span class="number">5</span> <span class="number">6</span>;<span class="number">7</span> <span class="number">8</span> <span class="number">9</span>]</span><br><span class="line"></span><br><span class="line">A =</span><br><span class="line"></span><br><span class="line">     <span class="number">1</span>     <span class="number">2</span>     <span class="number">3</span></span><br><span class="line">     <span class="number">4</span>     <span class="number">5</span>     <span class="number">6</span></span><br><span class="line">     <span class="number">7</span>     <span class="number">8</span>     <span class="number">9</span></span><br><span class="line"></span><br><span class="line">&gt;&gt; M=repmat(A,<span class="number">2</span>,<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line">M =</span><br><span class="line"></span><br><span class="line">     <span class="number">1</span>     <span class="number">2</span>     <span class="number">3</span>     <span class="number">1</span>     <span class="number">2</span>     <span class="number">3</span>     <span class="number">1</span>     <span class="number">2</span>     <span class="number">3</span></span><br><span class="line">     <span class="number">4</span>     <span class="number">5</span>     <span class="number">6</span>     <span class="number">4</span>     <span class="number">5</span>     <span class="number">6</span>     <span class="number">4</span>     <span class="number">5</span>     <span class="number">6</span></span><br><span class="line">     <span class="number">7</span>     <span class="number">8</span>     <span class="number">9</span>     <span class="number">7</span>     <span class="number">8</span>     <span class="number">9</span>     <span class="number">7</span>     <span class="number">8</span>     <span class="number">9</span></span><br><span class="line">     <span class="number">1</span>     <span class="number">2</span>     <span class="number">3</span>     <span class="number">1</span>     <span class="number">2</span>     <span class="number">3</span>     <span class="number">1</span>     <span class="number">2</span>     <span class="number">3</span></span><br><span class="line">     <span class="number">4</span>     <span class="number">5</span>     <span class="number">6</span>     <span class="number">4</span>     <span class="number">5</span>     <span class="number">6</span>     <span class="number">4</span>     <span class="number">5</span>     <span class="number">6</span></span><br><span class="line">     <span class="number">7</span>     <span class="number">8</span>     <span class="number">9</span>     <span class="number">7</span>     <span class="number">8</span>     <span class="number">9</span>     <span class="number">7</span>     <span class="number">8</span>     <span class="number">9</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="指定维数拼接函数"><a href="#指定维数拼接函数" class="headerlink" title="指定维数拼接函数"></a>指定维数拼接函数</h4><p>MATLAB语言可以使用指定维数拼接函数<code>cat</code>拼接矩阵，调用方式如下：</p>
+<figure class="highlight gcode"><table><tr><td class="code"><pre><span class="line"><span class="name">M1</span>=cat<span class="comment">(1,A,B)</span>;</span><br><span class="line"><span class="name">M2</span>=cat<span class="comment">(2,A,B)</span>;</span><br><span class="line"><span class="name">M3</span>=cat<span class="comment">(3,A,B)</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>M1=cat(1,A,B)</code>表示垂直拼接</li>
+<li><code>M2=cat(2,A,B)</code>表示水平拼接</li>
+<li><code>M3=cat(3,A,B)</code>表示三维拼接</li>
+</ul>
+<h5 id="举个栗子-18"><a href="#举个栗子-18" class="headerlink" title="举个栗子"></a>举个栗子</h5><figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">&gt;&gt; A=eye(<span class="number">2</span>);</span><br><span class="line">&gt;&gt; B=zeros(<span class="number">2</span>);</span><br><span class="line">&gt;&gt; M1=cat(<span class="number">1</span>,A,B)</span><br><span class="line"></span><br><span class="line">M1 =</span><br><span class="line"></span><br><span class="line">     <span class="number">1</span>     <span class="number">0</span></span><br><span class="line">     <span class="number">0</span>     <span class="number">1</span></span><br><span class="line">     <span class="number">0</span>     <span class="number">0</span></span><br><span class="line">     <span class="number">0</span>     <span class="number">0</span></span><br><span class="line"></span><br><span class="line">&gt;&gt; M2=cat(<span class="number">2</span>,A,B)</span><br><span class="line"></span><br><span class="line">M2 =</span><br><span class="line"></span><br><span class="line">     <span class="number">1</span>     <span class="number">0</span>     <span class="number">0</span>     <span class="number">0</span></span><br><span class="line">     <span class="number">0</span>     <span class="number">1</span>     <span class="number">0</span>     <span class="number">0</span></span><br><span class="line"></span><br><span class="line">&gt;&gt; M3=cat(<span class="number">3</span>,A,B)</span><br><span class="line"></span><br><span class="line">M3(:,:,<span class="number">1</span>) =</span><br><span class="line"></span><br><span class="line">     <span class="number">1</span>     <span class="number">0</span></span><br><span class="line">     <span class="number">0</span>     <span class="number">1</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">M3(:,:,<span class="number">2</span>) =</span><br><span class="line"></span><br><span class="line">     <span class="number">0</span>     <span class="number">0</span></span><br><span class="line">     <span class="number">0</span>     <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="矩阵结构变换"><a href="#矩阵结构变换" class="headerlink" title="矩阵结构变换"></a>矩阵结构变换</h3><h4 id="上下行对调"><a href="#上下行对调" class="headerlink" title="上下行对调"></a>上下行对调</h4><p>MATLAB语言可以使用<code>flipud</code>函数来上下变换矩阵的结构，调用方式如下：</p>
+<figure class="highlight gcode"><table><tr><td class="code"><pre><span class="line">M=flipud<span class="comment">(A)</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="举个栗子-19"><a href="#举个栗子-19" class="headerlink" title="举个栗子"></a>举个栗子</h5><figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">&gt;&gt; A=[<span class="number">1</span> <span class="number">2</span> <span class="number">3</span>;<span class="number">4</span> <span class="number">5</span> <span class="number">6</span>]</span><br><span class="line"></span><br><span class="line">A =</span><br><span class="line"></span><br><span class="line">     <span class="number">1</span>     <span class="number">2</span>     <span class="number">3</span></span><br><span class="line">     <span class="number">4</span>     <span class="number">5</span>     <span class="number">6</span></span><br><span class="line"></span><br><span class="line">&gt;&gt; M=flipud(A)</span><br><span class="line"></span><br><span class="line">M =</span><br><span class="line"></span><br><span class="line">     <span class="number">4</span>     <span class="number">5</span>     <span class="number">6</span></span><br><span class="line">     <span class="number">1</span>     <span class="number">2</span>     <span class="number">3</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="左右列对调"><a href="#左右列对调" class="headerlink" title="左右列对调"></a>左右列对调</h4><p>MATLAB语言可以使用<code>fliplr</code>函数来左右变换矩阵的结构，调用方式如下：</p>
+<figure class="highlight gcode"><table><tr><td class="code"><pre><span class="line">M=fliplr<span class="comment">(A)</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="举个栗子-20"><a href="#举个栗子-20" class="headerlink" title="举个栗子"></a>举个栗子</h5><figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">&gt;&gt; A=[<span class="number">1</span> <span class="number">3</span> <span class="number">6</span>;<span class="number">2</span> <span class="number">4</span> <span class="number">8</span>]</span><br><span class="line"></span><br><span class="line">A =</span><br><span class="line"></span><br><span class="line">     <span class="number">1</span>     <span class="number">3</span>     <span class="number">6</span></span><br><span class="line">     <span class="number">2</span>     <span class="number">4</span>     <span class="number">8</span></span><br><span class="line"></span><br><span class="line">&gt;&gt; M=fliplr(A)</span><br><span class="line"></span><br><span class="line">M =</span><br><span class="line"></span><br><span class="line">     <span class="number">6</span>     <span class="number">3</span>     <span class="number">1</span></span><br><span class="line">     <span class="number">8</span>     <span class="number">4</span>     <span class="number">2</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="逆（顺）时针旋转"><a href="#逆（顺）时针旋转" class="headerlink" title="逆（顺）时针旋转"></a>逆（顺）时针旋转</h4><p>MATLAB语言可以使用函数<code>rot90</code>旋转矩阵的结构，调用方式如下：</p>
+<figure class="highlight gcode"><table><tr><td class="code"><pre><span class="line"><span class="name">M1</span>=rot<span class="number">90</span><span class="comment">(A)</span>;</span><br><span class="line"><span class="name">M2</span>=rot<span class="number">90</span><span class="comment">(A,k)</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>M1=rot90(A)</code>表示将矩阵<code>A</code>逆时针旋转<code>pi/2</code></li>
+<li><code>M2=rot90(A,k)</code>表示将矩阵<code>A</code>旋转<code>k</code>倍的<code>pi/2</code>；当<code>k</code>&gt;0时，逆时针旋转；当<code>k</code>&lt;0时，顺时针旋转</li>
+</ul>
+<h5 id="举个栗子-21"><a href="#举个栗子-21" class="headerlink" title="举个栗子"></a>举个栗子</h5><figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">&gt;&gt; A=[<span class="number">1</span> <span class="number">2</span> <span class="number">3</span>;<span class="number">4</span> <span class="number">5</span> <span class="number">6</span>]</span><br><span class="line"></span><br><span class="line">A =</span><br><span class="line"></span><br><span class="line">     <span class="number">1</span>     <span class="number">2</span>     <span class="number">3</span></span><br><span class="line">     <span class="number">4</span>     <span class="number">5</span>     <span class="number">6</span></span><br><span class="line"></span><br><span class="line">&gt;&gt; M1=rot90(A)</span><br><span class="line"></span><br><span class="line">M1 =</span><br><span class="line"></span><br><span class="line">     <span class="number">3</span>     <span class="number">6</span></span><br><span class="line">     <span class="number">2</span>     <span class="number">5</span></span><br><span class="line">     <span class="number">1</span>     <span class="number">4</span></span><br><span class="line"></span><br><span class="line">&gt;&gt; M2=rot90(A,<span class="number">-1</span>)</span><br><span class="line"></span><br><span class="line">M2 =</span><br><span class="line"></span><br><span class="line">     <span class="number">4</span>     <span class="number">1</span></span><br><span class="line">     <span class="number">5</span>     <span class="number">2</span></span><br><span class="line">     <span class="number">6</span>     <span class="number">3</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="转置"><a href="#转置" class="headerlink" title="转置"></a>转置</h4><p>MATLAB语言中转置用<code>&#39;</code>运算符，方式如下：</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line"><span class="attribute">M</span>=A'</span><br></pre></td></tr></table></figure>
+
+<h5 id="举个栗子-22"><a href="#举个栗子-22" class="headerlink" title="举个栗子"></a>举个栗子</h5><figure class="highlight lsl"><table><tr><td class="code"><pre><span class="line">&gt;&gt; A=[<span class="number">1</span> <span class="number">2</span>;<span class="number">3</span> <span class="number">4</span>]</span><br><span class="line"></span><br><span class="line">A =</span><br><span class="line"></span><br><span class="line">     <span class="number">1</span>     <span class="number">2</span></span><br><span class="line">     <span class="number">3</span>     <span class="number">4</span></span><br><span class="line"></span><br><span class="line">&gt;&gt; M=A'</span><br><span class="line"></span><br><span class="line">M =</span><br><span class="line"></span><br><span class="line">     <span class="number">1</span>     <span class="number">3</span></span><br><span class="line">     <span class="number">2</span>     <span class="number">4</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="变维"><a href="#变维" class="headerlink" title="变维"></a>变维</h4><p>MATLAB语言可以使用<code>reshape</code>函数实现矩阵变维，调用方式如下：</p>
+<figure class="highlight gcode"><table><tr><td class="code"><pre><span class="line">M=reshape<span class="comment">(A,m,n)</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>M=reshape(A,m,n)</code>表示以矩阵<code>A</code>的元素构成<code>m*n</code>维<code>M</code>矩阵</li>
+</ul>
+<h5 id="举个栗子-23"><a href="#举个栗子-23" class="headerlink" title="举个栗子"></a>举个栗子</h5><figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">&gt;&gt; A=<span class="number">1</span>:<span class="number">8</span></span><br><span class="line"></span><br><span class="line">A =</span><br><span class="line"></span><br><span class="line">     <span class="number">1</span>     <span class="number">2</span>     <span class="number">3</span>     <span class="number">4</span>     <span class="number">5</span>     <span class="number">6</span>     <span class="number">7</span>     <span class="number">8</span></span><br><span class="line"></span><br><span class="line">&gt;&gt; M=reshape(A,<span class="number">2</span>,<span class="number">4</span>)</span><br><span class="line"></span><br><span class="line">M =</span><br><span class="line"></span><br><span class="line">     <span class="number">1</span>     <span class="number">3</span>     <span class="number">5</span>     <span class="number">7</span></span><br><span class="line">     <span class="number">2</span>     <span class="number">4</span>     <span class="number">6</span>     <span class="number">8</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="矩阵的基本运算（非全部）"><a href="#矩阵的基本运算（非全部）" class="headerlink" title="矩阵的基本运算（非全部）"></a>矩阵的基本运算（非全部）</h2><h3 id="矩阵的除法运算"><a href="#矩阵的除法运算" class="headerlink" title="矩阵的除法运算"></a>矩阵的除法运算</h3><p>在MATLAB语言中，有左除（运算符：<code>\</code>）和右除（运算符：<code>/</code>）两种除法运算。若矩阵<code>A</code>为非奇异方阵，<code>A\B</code>等效于<code>A</code>的逆矩阵左乘矩阵<code>B</code>，即<code>inv(A)*B</code>；<code>B/A</code>等效于<code>A</code>的逆矩阵右乘矩阵<code>B</code>，即<code>B*inv(A)</code></p>
+<h4 id="举个栗子-24"><a href="#举个栗子-24" class="headerlink" title="举个栗子"></a>举个栗子</h4><figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">&gt;&gt; A=[<span class="number">1</span> <span class="number">2</span>;<span class="number">3</span> <span class="number">4</span>];</span><br><span class="line">&gt;&gt; B=[<span class="number">1</span> <span class="number">3</span>;<span class="number">2</span> <span class="number">1</span>];</span><br><span class="line">&gt;&gt; M1=A\B</span><br><span class="line"></span><br><span class="line">M1 =</span><br><span class="line"></span><br><span class="line">         <span class="number">0</span>   <span class="number">-5.0000</span></span><br><span class="line">    <span class="number">0.5000</span>    <span class="number">4.0000</span></span><br><span class="line"></span><br><span class="line">&gt;&gt; M2=B/A</span><br><span class="line"></span><br><span class="line">M2 =</span><br><span class="line"></span><br><span class="line">    <span class="number">2.5000</span>   <span class="number">-0.5000</span></span><br><span class="line">   <span class="number">-2.5000</span>    <span class="number">1.5000</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="矩阵的乘方运算"><a href="#矩阵的乘方运算" class="headerlink" title="矩阵的乘方运算"></a>矩阵的乘方运算</h3><p>在MATLAB语言中，当<code>A</code>是方阵，<code>n</code>为大于0的整数时，矩阵<code>A</code>的<code>n</code>次乘方运算可以表示为<code>A^n</code>；当<code>n</code>为小于0的整数时，<code>A^n</code>表示<code>A</code>的逆矩阵的<code>-n</code>次方</p>
+<h4 id="举个栗子-25"><a href="#举个栗子-25" class="headerlink" title="举个栗子"></a>举个栗子</h4><figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">&gt;&gt; A=[<span class="number">1</span> <span class="number">2</span>;<span class="number">3</span> <span class="number">4</span>];</span><br><span class="line">&gt;&gt; M1=A^<span class="number">2</span></span><br><span class="line"></span><br><span class="line">M1 =</span><br><span class="line"></span><br><span class="line">     <span class="number">7</span>    <span class="number">10</span></span><br><span class="line">    <span class="number">15</span>    <span class="number">22</span></span><br><span class="line"></span><br><span class="line">&gt;&gt; M2=A^<span class="number">-2</span></span><br><span class="line"></span><br><span class="line">M2 =</span><br><span class="line"></span><br><span class="line">    <span class="number">5.5000</span>   <span class="number">-2.5000</span></span><br><span class="line">   <span class="number">-3.7500</span>    <span class="number">1.7500</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="矩阵的点运算"><a href="#矩阵的点运算" class="headerlink" title="矩阵的点运算"></a>矩阵的点运算</h3><p>在MATLAB语言中，点运算是一种特殊的运算，其运算符有<code>.*</code>、<code>./</code>、<code>.\</code>、<code>.^</code>四种。点运算规则是对应元素进行相关运算，具体如下：</p>
+<ul>
+<li>若两个矩阵<code>A</code>和<code>B</code>进行点乘运算，要求矩阵维度相同，对应元素相乘</li>
+<li>若<code>A</code>和<code>B</code>两个矩阵同维，则<code>A./B</code>表示<code>A</code>矩阵除以<code>B</code>矩阵的对应元素；<code>B.\A</code>表示<code>A</code>矩阵除以<code>B</code>矩阵的对应元素</li>
+<li>若<code>A</code>和<code>B</code>两个矩阵同维，则<code>A.^B</code>表示两个矩阵对应元素进行乘方运算</li>
+<li><code>A.^b</code>表示矩阵<code>A</code>的每个元素与标量<code>b</code>做乘方运算；<code>a.^B</code>表示标量<code>a</code>与矩阵<code>B</code>的每个元素进行乘方运算</li>
+</ul>
+<h4 id="举个栗子-26"><a href="#举个栗子-26" class="headerlink" title="举个栗子"></a>举个栗子</h4><figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">&gt;&gt; A=[<span class="number">1</span> <span class="number">2</span>;<span class="number">3</span> <span class="number">4</span>];</span><br><span class="line">&gt;&gt; B=[<span class="number">1</span> <span class="number">-1</span>;<span class="number">2</span> <span class="number">1</span>];</span><br><span class="line">&gt;&gt; C=A.*B</span><br><span class="line"></span><br><span class="line">C =</span><br><span class="line"></span><br><span class="line">     <span class="number">1</span>    <span class="number">-2</span></span><br><span class="line">     <span class="number">6</span>     <span class="number">4</span></span><br><span class="line"></span><br><span class="line">&gt;&gt; C=A./B</span><br><span class="line"></span><br><span class="line">C =</span><br><span class="line"></span><br><span class="line">    <span class="number">1.0000</span>   <span class="number">-2.0000</span></span><br><span class="line">    <span class="number">1.5000</span>    <span class="number">4.0000</span></span><br><span class="line"></span><br><span class="line">&gt;&gt; C=B.\A</span><br><span class="line"></span><br><span class="line">C =</span><br><span class="line"></span><br><span class="line">    <span class="number">1.0000</span>   <span class="number">-2.0000</span></span><br><span class="line">    <span class="number">1.5000</span>    <span class="number">4.0000</span></span><br><span class="line"></span><br><span class="line">&gt;&gt; C=A.^B</span><br><span class="line"></span><br><span class="line">C =</span><br><span class="line"></span><br><span class="line">    <span class="number">1.0000</span>    <span class="number">0.5000</span></span><br><span class="line">    <span class="number">9.0000</span>    <span class="number">4.0000</span></span><br><span class="line"></span><br><span class="line">&gt;&gt; a=<span class="number">2</span>;b=<span class="number">2</span>;</span><br><span class="line">&gt;&gt; C=A.^b</span><br><span class="line"></span><br><span class="line">C =</span><br><span class="line"></span><br><span class="line">     <span class="number">1</span>     <span class="number">4</span></span><br><span class="line">     <span class="number">9</span>    <span class="number">16</span></span><br><span class="line"></span><br><span class="line">&gt;&gt; C=a.^B</span><br><span class="line"></span><br><span class="line">C =</span><br><span class="line"></span><br><span class="line">    <span class="number">2.0000</span>    <span class="number">0.5000</span></span><br><span class="line">    <span class="number">4.0000</span>    <span class="number">2.0000</span></span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/MATLAB/" rel="tag"># MATLAB</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/09/17/Termux%E5%B0%8F%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89/" rel="prev" title="Termux小记（二）">
+      <i class="fa fa-chevron-left"></i> Termux小记（二）
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/09/23/You-Get%E7%9A%84%E4%BD%BF%E7%94%A8/" rel="next" title="You-Get的使用">
+      You-Get的使用 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#矩阵的创建"><span class="nav-number">1.</span> <span class="nav-text">矩阵的创建</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#直接输入矩阵"><span class="nav-number">1.1.</span> <span class="nav-text">直接输入矩阵</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#举个栗子"><span class="nav-number">1.1.1.</span> <span class="nav-text">举个栗子</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#冒号生成矩阵"><span class="nav-number">1.2.</span> <span class="nav-text">冒号生成矩阵</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#举个栗子-1"><span class="nav-number">1.2.1.</span> <span class="nav-text">举个栗子</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#利用函数生成矩阵"><span class="nav-number">1.3.</span> <span class="nav-text">利用函数生成矩阵</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#linspace函数"><span class="nav-number">1.3.1.</span> <span class="nav-text">linspace函数</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#举个栗子-2"><span class="nav-number">1.3.1.1.</span> <span class="nav-text">举个栗子</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#logspace函数"><span class="nav-number">1.3.2.</span> <span class="nav-text">logspace函数</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#举个栗子-3"><span class="nav-number">1.3.2.1.</span> <span class="nav-text">举个栗子</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#利用文本文件生成矩阵"><span class="nav-number">1.4.</span> <span class="nav-text">利用文本文件生成矩阵</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#举个栗子-4"><span class="nav-number">1.4.1.</span> <span class="nav-text">举个栗子</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#特殊矩阵的生成"><span class="nav-number">2.</span> <span class="nav-text">特殊矩阵的生成</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#单位矩阵"><span class="nav-number">2.1.</span> <span class="nav-text">单位矩阵</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#举个栗子-5"><span class="nav-number">2.1.1.</span> <span class="nav-text">举个栗子</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#0矩阵"><span class="nav-number">2.2.</span> <span class="nav-text">0矩阵</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#举个栗子-6"><span class="nav-number">2.2.1.</span> <span class="nav-text">举个栗子</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1矩阵"><span class="nav-number">2.3.</span> <span class="nav-text">1矩阵</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#举个栗子-7"><span class="nav-number">2.3.1.</span> <span class="nav-text">举个栗子</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#魔方矩阵"><span class="nav-number">2.4.</span> <span class="nav-text">魔方矩阵</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#举个栗子-8"><span class="nav-number">2.4.1.</span> <span class="nav-text">举个栗子</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#附注"><span class="nav-number">2.4.1.1.</span> <span class="nav-text">附注</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#0-1均匀分布随机矩阵"><span class="nav-number">2.5.</span> <span class="nav-text">0~1均匀分布随机矩阵</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#举个栗子-9"><span class="nav-number">2.5.1.</span> <span class="nav-text">举个栗子</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#正态分布随机矩阵"><span class="nav-number">2.6.</span> <span class="nav-text">正态分布随机矩阵</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#举个栗子-10"><span class="nav-number">2.6.1.</span> <span class="nav-text">举个栗子</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对角矩阵"><span class="nav-number">2.7.</span> <span class="nav-text">对角矩阵</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#举个栗子-11"><span class="nav-number">2.7.1.</span> <span class="nav-text">举个栗子</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#举个栗子-12"><span class="nav-number">2.7.2.</span> <span class="nav-text">举个栗子</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三角矩阵"><span class="nav-number">2.8.</span> <span class="nav-text">三角矩阵</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#举个栗子-13"><span class="nav-number">2.8.1.</span> <span class="nav-text">举个栗子</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#矩阵的修改"><span class="nav-number">3.</span> <span class="nav-text">矩阵的修改</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#矩阵部分替换"><span class="nav-number">3.1.</span> <span class="nav-text">矩阵部分替换</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#举个栗子-14"><span class="nav-number">3.1.1.</span> <span class="nav-text">举个栗子</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#矩阵部分删除"><span class="nav-number">3.2.</span> <span class="nav-text">矩阵部分删除</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#举个栗子-15"><span class="nav-number">3.2.1.</span> <span class="nav-text">举个栗子</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#矩阵部分扩展"><span class="nav-number">3.3.</span> <span class="nav-text">矩阵部分扩展</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#常用方式"><span class="nav-number">3.3.1.</span> <span class="nav-text">常用方式</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#举个栗子-16"><span class="nav-number">3.3.1.1.</span> <span class="nav-text">举个栗子</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#平铺矩阵函数"><span class="nav-number">3.3.2.</span> <span class="nav-text">平铺矩阵函数</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#举个栗子-17"><span class="nav-number">3.3.2.1.</span> <span class="nav-text">举个栗子</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#指定维数拼接函数"><span class="nav-number">3.3.3.</span> <span class="nav-text">指定维数拼接函数</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#举个栗子-18"><span class="nav-number">3.3.3.1.</span> <span class="nav-text">举个栗子</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#矩阵结构变换"><span class="nav-number">3.4.</span> <span class="nav-text">矩阵结构变换</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#上下行对调"><span class="nav-number">3.4.1.</span> <span class="nav-text">上下行对调</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#举个栗子-19"><span class="nav-number">3.4.1.1.</span> <span class="nav-text">举个栗子</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#左右列对调"><span class="nav-number">3.4.2.</span> <span class="nav-text">左右列对调</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#举个栗子-20"><span class="nav-number">3.4.2.1.</span> <span class="nav-text">举个栗子</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#逆（顺）时针旋转"><span class="nav-number">3.4.3.</span> <span class="nav-text">逆（顺）时针旋转</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#举个栗子-21"><span class="nav-number">3.4.3.1.</span> <span class="nav-text">举个栗子</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#转置"><span class="nav-number">3.4.4.</span> <span class="nav-text">转置</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#举个栗子-22"><span class="nav-number">3.4.4.1.</span> <span class="nav-text">举个栗子</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#变维"><span class="nav-number">3.4.5.</span> <span class="nav-text">变维</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#举个栗子-23"><span class="nav-number">3.4.5.1.</span> <span class="nav-text">举个栗子</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#矩阵的基本运算（非全部）"><span class="nav-number">4.</span> <span class="nav-text">矩阵的基本运算（非全部）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#矩阵的除法运算"><span class="nav-number">4.1.</span> <span class="nav-text">矩阵的除法运算</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#举个栗子-24"><span class="nav-number">4.1.1.</span> <span class="nav-text">举个栗子</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#矩阵的乘方运算"><span class="nav-number">4.2.</span> <span class="nav-text">矩阵的乘方运算</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#举个栗子-25"><span class="nav-number">4.2.1.</span> <span class="nav-text">举个栗子</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#矩阵的点运算"><span class="nav-number">4.3.</span> <span class="nav-text">矩阵的点运算</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#举个栗子-26"><span class="nav-number">4.3.1.</span> <span class="nav-text">举个栗子</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="NIMITIZ"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">NIMITIZ</p>
+  <div class="site-description" itemprop="description">生命不息，折腾不止</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">63</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/NIMITIZ" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;NIMITIZ" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:cwn3234733323@gmail.com" title="E-Mail → mailto:cwn3234733323@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+      
+           
+         
+         <div style="">
+  <canvas id="canvas" style="width:60%;">当前浏览器不支持canvas，请更换浏览器后再试</canvas>
+</div>
+<script>
+(function(){
+
+   var digit=
+    [
+        [
+            [0,0,1,1,1,0,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,0,1,1,0],
+            [0,0,1,1,1,0,0]
+        ],//0
+        [
+            [0,0,0,1,1,0,0],
+            [0,1,1,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [1,1,1,1,1,1,1]
+        ],//1
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,1,1],
+            [1,1,1,1,1,1,1]
+        ],//2
+        [
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//3
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,0],
+            [0,0,1,1,1,1,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,1,1,0],
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,1]
+        ],//4
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,1,1,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//5
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//6
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0]
+        ],//7
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//8
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,1,1,0,0,0,0]
+        ],//9
+        [
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0]
+        ]//:
+    ];
+
+var canvas = document.getElementById('canvas');
+
+if(canvas.getContext){
+    var cxt = canvas.getContext('2d');
+    //声明canvas的宽高
+    var H = 100,W = 700;
+    canvas.height = H;
+    canvas.width = W;
+    cxt.fillStyle = '#f00';
+    cxt.fillRect(10,10,50,50);
+
+    //存储时间数据
+    var data = [];
+    //存储运动的小球
+    var balls = [];
+    //设置粒子半径
+    var R = canvas.height/20-1;
+    (function(){
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        //存储时间数字，由十位小时、个位小时、冒号、十位分钟、个位分钟、冒号、十位秒钟、个位秒钟这7个数字组成
+        data.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+    })();
+
+    /*生成点阵数字*/
+    function renderDigit(index,num){
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    cxt.beginPath();
+                    cxt.arc(14*(R+2)*index + j*2*(R+1)+(R+1),i*2*(R+1)+(R+1),R,0,2*Math.PI);
+                    cxt.closePath();
+                    cxt.fill();
+                }
+            }
+        }
+    }
+
+    /*更新时钟*/
+    function updateDigitTime(){
+        var changeNumArray = [];
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        var NewData = [];
+        NewData.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+        for(var i = data.length-1; i >=0 ; i--){
+            //时间发生变化
+            if(NewData[i] !== data[i]){
+                //将变化的数字值和在data数组中的索引存储在changeNumArray数组中
+                changeNumArray.push(i+'_'+(Number(data[i])+1)%10);
+            }
+        }
+        //增加小球
+        for(var i = 0; i< changeNumArray.length; i++){
+            addBalls.apply(this,changeNumArray[i].split('_'));
+        }
+        data = NewData.concat();
+    }
+
+    /*更新小球状态*/
+    function updateBalls(){
+        for(var i = 0; i < balls.length; i++){
+            balls[i].stepY += balls[i].disY;
+            balls[i].x += balls[i].stepX;
+            balls[i].y += balls[i].stepY;
+            if(balls[i].x > W + R || balls[i].y > H + R){
+                balls.splice(i,1);
+                i--;
+            }
+        }
+    }
+
+    /*增加要运动的小球*/
+    function addBalls(index,num){
+        var numArray = [1,2,3];
+        var colorArray =  ["#3BE","#09C","#A6C","#93C","#9C0","#690","#FB3","#F80","#F44","#C00"];
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    var ball = {
+                        x:14*(R+2)*index + j*2*(R+1)+(R+1),
+                        y:i*2*(R+1)+(R+1),
+                        stepX:Math.floor(Math.random() * 4 -2),
+                        stepY:-2*numArray[Math.floor(Math.random()*numArray.length)],
+                        color:colorArray[Math.floor(Math.random()*colorArray.length)],
+                        disY:1
+                    };
+                    balls.push(ball);
+                }
+            }
+        }
+    }
+
+    /*渲染*/
+    function render(){
+        //重置画布宽度，达到清空画布的效果
+        canvas.height = 100;
+        //渲染时钟
+        for(var i = 0; i < data.length; i++){
+            renderDigit(i,data[i]);
+        }
+        //渲染小球
+        for(var i = 0; i < balls.length; i++){
+            cxt.beginPath();
+            cxt.arc(balls[i].x,balls[i].y,R,0,2*Math.PI);
+            cxt.fillStyle = balls[i].color;
+            cxt.closePath();
+            cxt.fill();
+        }
+    }
+
+    clearInterval(oTimer);
+    var oTimer = setInterval(function(){
+        //更新时钟
+        updateDigitTime();
+        //更新小球状态
+        updateBalls();
+        //渲染
+        render();
+    },50);
+}
+
+})();
+</script>
+   </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">NIMITIZ</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">62k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">57 分钟</span>
+</div>
+
+<br /> #换行
+<!-- 网站运行时间的设置 -->
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("04/15/2020 00:00:00");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'm4huKMbJFhxPsNBUaRNaSsxb-gzGzoHsz',
+      appKey     : 'ikUKWElVr7k7aYAm1PspteAw',
+      placeholder: "ヾﾉ≧∀≦)o 来呀！吐槽一番吧！",
+      avatar     : 'monsterid',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+  
+
+  <script src="/js/activate-power-mode.min.js"></script>
+  <script>
+    POWERMODE.colorful = true;
+    POWERMODE.shake = false;
+    document.body.addEventListener('input', POWERMODE);
+  </script>
+
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>
+
+<!--浏览器搞笑标题-->
+<script type="text/javascript" src="/js/funny_title.js"></script>
+
+<!--动态线条背景-->
+<script type="text/javascript"
+color="220,220,220" opacity='0.7' zIndex="-2" count="200" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+</script>
