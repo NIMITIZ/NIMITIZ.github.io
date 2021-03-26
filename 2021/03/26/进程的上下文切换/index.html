@@ -23,21 +23,19 @@
     var CONFIG = {"hostname":"www.nimitiz.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":"ture","trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"./public/search.xml"};
   </script>
 
-  <meta name="description" content="本文记录了部分在使用C语言编写Windows应用程序的过程中会涉及的基本知识。">
+  <meta name="description" content="各进程之间是共享CPU资源的，CPU需要在不同的时候执行不同的进程，一个进程切换到另一个进程运行的过程被称为进程的上下文切换。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Windows编程小记（一）">
-<meta property="og:url" content="https://www.nimitiz.cn/2020/09/13/Windows%E7%BC%96%E7%A8%8B%E5%B0%8F%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/index.html">
+<meta property="og:title" content="进程的上下文切换">
+<meta property="og:url" content="https://www.nimitiz.cn/2021/03/26/%E8%BF%9B%E7%A8%8B%E7%9A%84%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%87%E6%8D%A2/index.html">
 <meta property="og:site_name" content="小浣熊的技术小站">
-<meta property="og:description" content="本文记录了部分在使用C语言编写Windows应用程序的过程中会涉及的基本知识。">
+<meta property="og:description" content="各进程之间是共享CPU资源的，CPU需要在不同的时候执行不同的进程，一个进程切换到另一个进程运行的过程被称为进程的上下文切换。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2020-09-13T06:20:13.000Z">
-<meta property="article:modified_time" content="2020-09-13T06:23:17.036Z">
+<meta property="article:published_time" content="2021-03-26T11:21:34.000Z">
+<meta property="article:modified_time" content="2021-03-26T11:21:59.492Z">
 <meta property="article:author" content="NIMITIZ">
-<meta property="article:tag" content="C语言">
-<meta property="article:tag" content="Windows">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://www.nimitiz.cn/2020/09/13/Windows%E7%BC%96%E7%A8%8B%E5%B0%8F%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/">
+<link rel="canonical" href="https://www.nimitiz.cn/2021/03/26/%E8%BF%9B%E7%A8%8B%E7%9A%84%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%87%E6%8D%A2/">
 
 
 <script id="page-configurations">
@@ -50,7 +48,7 @@
   };
 </script>
 
-  <title>Windows编程小记（一） | 小浣熊的技术小站</title>
+  <title>进程的上下文切换 | 小浣熊的技术小站</title>
   
 
 
@@ -207,7 +205,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://www.nimitiz.cn/2020/09/13/Windows%E7%BC%96%E7%A8%8B%E5%B0%8F%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/">
+    <link itemprop="mainEntityOfPage" href="https://www.nimitiz.cn/2021/03/26/%E8%BF%9B%E7%A8%8B%E7%9A%84%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%87%E6%8D%A2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -220,7 +218,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Windows编程小记（一）
+          进程的上下文切换
         </h1>
 
         <div class="post-meta">
@@ -231,7 +229,16 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2020-09-13 14:20:13 / 修改时间：14:23:17" itemprop="dateCreated datePublished" datetime="2020-09-13T14:20:13+08:00">2020-09-13</time>
+              <time title="创建时间：2021-03-26 19:21:34 / 修改时间：19:21:59" itemprop="dateCreated datePublished" datetime="2021-03-26T19:21:34+08:00">2021-03-26</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">操作系统</span></a>
+                </span>
             </span>
 
           
@@ -250,8 +257,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2020/09/13/Windows%E7%BC%96%E7%A8%8B%E5%B0%8F%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/09/13/Windows%E7%BC%96%E7%A8%8B%E5%B0%8F%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/" itemprop="commentCount"></span>
+    <a title="valine" href="/2021/03/26/%E8%BF%9B%E7%A8%8B%E7%9A%84%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%87%E6%8D%A2/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/03/26/%E8%BF%9B%E7%A8%8B%E7%9A%84%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%87%E6%8D%A2/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -261,7 +268,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>637</span>
+              <span>824</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -280,26 +287,26 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>本文记录了部分在使用C语言编写Windows应用程序的过程中会涉及的基本知识。</p>
+        <p>各进程之间是共享CPU资源的，CPU需要在不同的时候执行不同的进程，一个进程切换到另一个进程运行的过程被称为进程的上下文切换。</p>
 <a id="more"></a>
 
 
 
-<h2 id="Windows-API"><a href="#Windows-API" class="headerlink" title="Windows API"></a>Windows API</h2><p><code>API</code>全称<code>Application Programming Interface</code>，即<code>应用程序编程接口</code>，Windows把计算机底层复杂的操作（在计算机上层即使执行诸如文件打开、读取、关闭这样看似简单的操作，到了底层是非常复杂的 (☉д⊙) ）用函数表示并编译成动态链接库（DLL），在软件开发过程中，通过调用这些函数即可轻松执行相关操作，从而显著提高开发效率。</p>
-<h2 id="句柄"><a href="#句柄" class="headerlink" title="句柄"></a>句柄</h2><p>在Windows编程中，窗口、控件（窗口中的输入区域、菜单、按钮等）、图像、音频、视频等都被称为<code>资源（Resource）</code>。不同的资源都对应唯一的一个ID，称为<code>句柄（Handle）</code>。程序通过句柄获取对应的资源的信息，也可以使用、修改该资源。</p>
-<h2 id="Windows的消息机制"><a href="#Windows的消息机制" class="headerlink" title="Windows的消息机制"></a>Windows的消息机制</h2><p>用户敲击键盘、点击鼠标、拖动窗口、选择菜单、输入文字等所有操作都被称为<code>事件（Event）</code>，当有事件发生时，Windows会生成一个<code>消息</code>（Message，结构体的一种）并存储到一个由系统维护的<code>队列</code>（数据结构的一种）中，应用程序从队列中获取消息，调用事件处理函数，随后响应用户的操作。</p>
-<p>Windows向队列中存储消息与应用程序从队列中获取消息并不是同步的，只要有事件发生，Windows就会把消息存储到队列中，至于消息什么时候被获取，这就是应用程序的事了 ( ˘･з･) 。</p>
-<h3 id="消息结构体"><a href="#消息结构体" class="headerlink" title="消息结构体"></a>消息结构体</h3><p>消息是一个结构体，定义为：</p>
-<figure class="highlight thrift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">tagMSG</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">	HWND hwnd;			<span class="comment">//消息所属的窗口</span></span><br><span class="line">	UINT message;			<span class="comment">//消息类型</span></span><br><span class="line">	WPARAM wParam;			<span class="comment">//指定消息的附加信息</span></span><br><span class="line">	LPARAM lParam;			<span class="comment">//指定消息的附加信息</span></span><br><span class="line">	DWORD time;			<span class="comment">//消息存储到队列中的时间</span></span><br><span class="line">	POINT pt;			<span class="comment">//鼠标指针的当前位置</span></span><br><span class="line">&#125;MSG;</span><br></pre></td></tr></table></figure>
-
-
-
-
-
+<h2 id="CPU的上下文切换"><a href="#CPU的上下文切换" class="headerlink" title="CPU的上下文切换"></a>CPU的上下文切换</h2><p>在每个任务（进程、线程、中断）被CPU执行前，CPU需要知道任务从哪里加载，又从哪个阶段执行；所以操作系统会设置CPU的寄存器（例如写入执行数据的地址）和程序计数器（写入即将执行的指令的的地址），寄存器值和程序计数器的值为CPU必须依赖的环境，即CPU的上下文。</p>
+<p>CPU上下文切换即为操作系统将当前任务的寄存器值和程序计数器的值保存起来，然后将CPU执行新任务所需的寄存器值和程序计数器的值写入，由CPU来执行新任务；当CPU需要继续执行此前的任务时，操作系统就将此前已保存的寄存器值和程序计数器的值写入，CPU则会继续执行此前的任务。</p>
+<p>根据执行的任务的不同，CPU的上下文切换可分为进程的上下文切换、线程的上下文切换、中断的上下文切换。</p>
+<p>当需要切换进程上下文时，操作系统会将当前的CPU上下文保存到当前进程的PCB（进程控制块），然后把另一个进程的PCB中的CPU上下文写入，CPU则会继续执行另一个进程。</p>
+<h2 id="发生进程上下文切换的场景"><a href="#发生进程上下文切换的场景" class="headerlink" title="发生进程上下文切换的场景"></a>发生进程上下文切换的场景</h2><p>为保证所有任务都能得到相对公平的调度（一个CPU逻辑核心同一时刻内只能执行一个任务），操作系统将CPU时间划分为多个片段，当一个任务完成一个时间片段的执行后，CPU将被切换到执行另一个任务，每个任务快速轮流执行（因为时间片段足够短且CPU逻辑核心执行效率足够高，使人感觉多个任务是在同时执行）。</p>
+<ul>
+<li>当某个进程的时间片段耗尽，该进程被操作系统挂起，CPU被切换到执行其他进程；</li>
+<li>当前进程所需资源过多（例如内存不足）时，操作系统会将当前进程挂起，CPU被切换到执行资源消耗较少的进程，直至资源充足且完成一个时间片段的执行，再切换回来继续执行；</li>
+<li>当进程申请主动挂起且被操作系统允许时，操作系统也会重新调度资源，切换上下文；</li>
+<li>低优先级的进程被高优先级的进程打断；</li>
+<li>发生硬件中断。</li>
+</ul>
 <hr>
-<p>整理自</p>
-<p><a href="http://c.biancheng.net/cpp/html/2845.html" target="_blank" rel="noopener">Windows API的概念</a></p>
-<p><a href="http://c.biancheng.net/cpp/html/2947.html" target="_blank" rel="noopener">与windows编程有关的重要概念</a></p>
+<p><strong>参考资料：</strong></p>
+<p><a href="https://alanwin.top/2021/03/21/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/" target="_blank" rel="noopener">进程与线程</a></p>
 
     </div>
 
@@ -308,10 +315,6 @@
     
 
       <footer class="post-footer">
-          <div class="post-tags">
-              <a href="/tags/C%E8%AF%AD%E8%A8%80/" rel="tag"># C语言</a>
-              <a href="/tags/Windows/" rel="tag"># Windows</a>
-          </div>
 
         
 
@@ -319,13 +322,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/09/12/C%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0%E8%BF%9B%E5%88%B6%E8%BD%AC%E6%8D%A2/" rel="prev" title="C语言实现进制转换">
-      <i class="fa fa-chevron-left"></i> C语言实现进制转换
+    <a href="/2021/03/26/Intel%208086%E3%81%AE%E5%AD%98%E5%82%A8%E5%99%A8%E7%BB%84%E7%BB%87/" rel="prev" title="Intel 8086の存储器组织">
+      <i class="fa fa-chevron-left"></i> Intel 8086の存储器组织
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2020/09/17/Termux%E5%B0%8F%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89/" rel="next" title="Termux小记（二）">
-      Termux小记（二） <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -385,7 +385,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Windows-API"><span class="nav-number">1.</span> <span class="nav-text">Windows API</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#句柄"><span class="nav-number">2.</span> <span class="nav-text">句柄</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Windows的消息机制"><span class="nav-number">3.</span> <span class="nav-text">Windows的消息机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#消息结构体"><span class="nav-number">3.1.</span> <span class="nav-text">消息结构体</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#CPU的上下文切换"><span class="nav-number">1.</span> <span class="nav-text">CPU的上下文切换</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#发生进程上下文切换的场景"><span class="nav-number">2.</span> <span class="nav-text">发生进程上下文切换的场景</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
