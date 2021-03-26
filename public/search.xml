@@ -4,6 +4,25 @@
   
     
     <entry>
+      <title>Intel 8086の寻址方式</title>
+      <link href="/2021/03/27/Intel%208086%E3%81%AE%E5%AF%BB%E5%9D%80%E6%96%B9%E5%BC%8F/"/>
+      <url>/2021/03/27/Intel%208086%E3%81%AE%E5%AF%BB%E5%9D%80%E6%96%B9%E5%BC%8F/</url>
+      
+        <content type="html"><![CDATA[<p>根据指令内容来确定操作数的过程，被称为寻址。根据寻址计算所得到的操作数地址被称为操作数的有效地址（EA），即段内偏移地址，段内偏移地址还需要与相应的段地址组合形成20位的物理地址（PA）。</p><p>Intel 8086的寻址方式由立即寻址、寄存器寻址、直接寻址、寄存器间接寻址、变址寻址、基址加变址寻址。</p><a id="more"></a><h2 id="立即寻址"><a href="#立即寻址" class="headerlink" title="立即寻址"></a>立即寻址</h2><p><strong>立即寻址主要用来给寄存器或存储单元赋初值</strong>，操作数直接放在指令中，与操作码一起放在代码段内；立即数既可以是8位，也可以是16位，若为16位，则低字节位于低地址处，高字节位于高地址处；<strong>立即数只能是源操作数，且只能为整数</strong>。</p><p><img src="/2021/03/27/Intel%208086%E3%81%AE%E5%AF%BB%E5%9D%80%E6%96%B9%E5%BC%8F/%E7%AB%8B%E5%8D%B3%E5%AF%BB%E5%9D%800.png" alt></p><p><img src="/2021/03/27/Intel%208086%E3%81%AE%E5%AF%BB%E5%9D%80%E6%96%B9%E5%BC%8F/%E7%AB%8B%E5%8D%B3%E5%AF%BB%E5%9D%801.png" alt></p><h2 id="寄存器寻址"><a href="#寄存器寻址" class="headerlink" title="寄存器寻址"></a>寄存器寻址</h2><p><strong>寄存器寻址可以用来在寄存器和内存单元之间传送数据</strong>，操作数放在CPU的内部寄存器中，寄存器名（<strong>AX、BX、CX、DX、DI、SI、SP、BP</strong>）由指令给出。</p><p><img src="/2021/03/27/Intel%208086%E3%81%AE%E5%AF%BB%E5%9D%80%E6%96%B9%E5%BC%8F/%E5%AF%84%E5%AD%98%E5%99%A8%E5%AF%BB%E5%9D%80.png" alt></p><h2 id="直接寻址"><a href="#直接寻址" class="headerlink" title="直接寻址"></a>直接寻址</h2><p>直接寻址是指操作数的有效地址（只包含16位偏移地址）由指令直接给出，与操作码一起存放在代码段。<strong>操作数的有效地址在指令中必须用<code>[]</code>括起来</strong>。直接寻址以<strong>数据段</strong>的地址为基础，Intel 8086允许段超越，即允许操作数位于以<strong>代码段、堆栈段或附加数据段</strong>为基准的内存区域中，此时需要<strong>在指令中指明段超越（即操作数位于哪个内存区域内）</strong>。</p><p><img src="/2021/03/27/Intel%208086%E3%81%AE%E5%AF%BB%E5%9D%80%E6%96%B9%E5%BC%8F/%E7%9B%B4%E6%8E%A5%E5%AF%BB%E5%9D%80.png" alt></p><p><img src="/2021/03/27/Intel%208086%E3%81%AE%E5%AF%BB%E5%9D%80%E6%96%B9%E5%BC%8F/%E7%9B%B4%E6%8E%A5%E5%AF%BB%E5%9D%800.png" alt></p><p><img src="/2021/03/27/Intel%208086%E3%81%AE%E5%AF%BB%E5%9D%80%E6%96%B9%E5%BC%8F/%E7%9B%B4%E6%8E%A5%E5%AF%BB%E5%9D%801.png" alt></p><h2 id="寄存器间接寻址"><a href="#寄存器间接寻址" class="headerlink" title="寄存器间接寻址"></a>寄存器间接寻址</h2><p>如果<strong>寄存器中的内容为操作数的内存地址</strong>，则对应为寄存器间接寻址，<strong>寄存器在指令中必须用<code>[]</code>括起来</strong>。在Intel 8086中，操作数的16位偏移地址可以存放于寄存器<strong>SI、DI、BP、BX</strong>，此时分为两种情况：</p><ul><li>以<strong>SI、DI、BX</strong>间接寻址时，默认操作数位于数据段<strong>DS</strong>中；</li><li>以<strong>BP</strong>间接寻址时，默认操作数位于堆栈段<strong>SS</strong>中。</li></ul><p><img src="/2021/03/27/Intel%208086%E3%81%AE%E5%AF%BB%E5%9D%80%E6%96%B9%E5%BC%8F/%E5%AF%84%E5%AD%98%E5%99%A8%E9%97%B4%E6%8E%A5%E5%AF%BB%E5%9D%80.png" alt></p><h2 id="变址寻址"><a href="#变址寻址" class="headerlink" title="变址寻址"></a>变址寻址</h2><p>变址寻址即在寄存器间接寻址的基础上再加一个16位的偏移量。</p><p><img src="/2021/03/27/Intel%208086%E3%81%AE%E5%AF%BB%E5%9D%80%E6%96%B9%E5%BC%8F/%E5%8F%98%E5%9D%80%E5%AF%BB%E5%9D%80.png" alt></p><h2 id="基址加变址寻址"><a href="#基址加变址寻址" class="headerlink" title="基址加变址寻址"></a>基址加变址寻址</h2><p>基址加变址寻址时，把一个基址寄存器（<strong>BX或BP</strong>）的内容加上一个变址寄存器（<strong>SI或DI</strong>）的内容（若指令中还指定了8位或16位<strong>偏移量</strong>，则还需再加上）后作为操作数的16位偏移地址。</p><p>当使用基址寄存器<strong>BX</strong>时，操作数默认位于数据段<strong>DS</strong>中；当使用基址寄存器<strong>BP</strong>时，操作数默认位于堆栈段<strong>SS</strong>中；基址加变址寻址允许段超越，但需要在指令中指明。</p><p><img src="/2021/03/27/Intel%208086%E3%81%AE%E5%AF%BB%E5%9D%80%E6%96%B9%E5%BC%8F/%E5%9F%BA%E5%9D%80%E5%8A%A0%E5%8F%98%E5%9D%80%E5%AF%BB%E5%9D%80.png" alt></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 计算机硬件 </category>
+          
+      </categories>
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>进程的上下文切换</title>
       <link href="/2021/03/26/%E8%BF%9B%E7%A8%8B%E7%9A%84%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%87%E6%8D%A2/"/>
       <url>/2021/03/26/%E8%BF%9B%E7%A8%8B%E7%9A%84%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%87%E6%8D%A2/</url>
