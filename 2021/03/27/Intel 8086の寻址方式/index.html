@@ -40,7 +40,7 @@
 <meta property="og:image" content="https://www.nimitiz.cn/2021/03/27/Intel%208086%E3%81%AE%E5%AF%BB%E5%9D%80%E6%96%B9%E5%BC%8F/%E5%8F%98%E5%9D%80%E5%AF%BB%E5%9D%80.png">
 <meta property="og:image" content="https://www.nimitiz.cn/2021/03/27/Intel%208086%E3%81%AE%E5%AF%BB%E5%9D%80%E6%96%B9%E5%BC%8F/%E5%9F%BA%E5%9D%80%E5%8A%A0%E5%8F%98%E5%9D%80%E5%AF%BB%E5%9D%80.png">
 <meta property="article:published_time" content="2021-03-26T16:21:12.000Z">
-<meta property="article:modified_time" content="2021-03-26T16:22:23.720Z">
+<meta property="article:modified_time" content="2021-04-08T03:58:26.522Z">
 <meta property="article:author" content="NIMITIZ">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://www.nimitiz.cn/2021/03/27/Intel%208086%E3%81%AE%E5%AF%BB%E5%9D%80%E6%96%B9%E5%BC%8F/%E7%AB%8B%E5%8D%B3%E5%AF%BB%E5%9D%800.png">
@@ -237,10 +237,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-03-27 00:21:12 / 修改时间：00:22:23" itemprop="dateCreated datePublished" datetime="2021-03-27T00:21:12+08:00">2021-03-27</time>
+              <time title="创建时间：2021-03-27 00:21:12" itemprop="dateCreated datePublished" datetime="2021-03-27T00:21:12+08:00">2021-03-27</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-04-08 11:58:26" itemprop="dateModified" datetime="2021-04-08T11:58:26+08:00">2021-04-08</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -278,7 +284,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>862</span>
+              <span>856</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -308,7 +314,7 @@
 <h2 id="立即寻址"><a href="#立即寻址" class="headerlink" title="立即寻址"></a>立即寻址</h2><p><strong>立即寻址主要用来给寄存器或存储单元赋初值</strong>，操作数直接放在指令中，与操作码一起放在代码段内；立即数既可以是8位，也可以是16位，若为16位，则低字节位于低地址处，高字节位于高地址处；<strong>立即数只能是源操作数，且只能为整数</strong>。</p>
 <p><img src="/2021/03/27/Intel%208086%E3%81%AE%E5%AF%BB%E5%9D%80%E6%96%B9%E5%BC%8F/%E7%AB%8B%E5%8D%B3%E5%AF%BB%E5%9D%800.png" alt></p>
 <p><img src="/2021/03/27/Intel%208086%E3%81%AE%E5%AF%BB%E5%9D%80%E6%96%B9%E5%BC%8F/%E7%AB%8B%E5%8D%B3%E5%AF%BB%E5%9D%801.png" alt></p>
-<h2 id="寄存器寻址"><a href="#寄存器寻址" class="headerlink" title="寄存器寻址"></a>寄存器寻址</h2><p><strong>寄存器寻址可以用来在寄存器和内存单元之间传送数据</strong>，操作数放在CPU的内部寄存器中，寄存器名（<strong>AX、BX、CX、DX、DI、SI、SP、BP</strong>）由指令给出。</p>
+<h2 id="寄存器寻址"><a href="#寄存器寻址" class="headerlink" title="寄存器寻址"></a>寄存器寻址</h2><p><strong>寄存器寻址的操作数位于寄存器中，</strong>寄存器名（<strong>AX、BX、CX、DX、DI、SI、SP、BP</strong>）由指令给出，<strong>也可用于寄存器和内存单元之间传送数据</strong>。</p>
 <p><img src="/2021/03/27/Intel%208086%E3%81%AE%E5%AF%BB%E5%9D%80%E6%96%B9%E5%BC%8F/%E5%AF%84%E5%AD%98%E5%99%A8%E5%AF%BB%E5%9D%80.png" alt></p>
 <h2 id="直接寻址"><a href="#直接寻址" class="headerlink" title="直接寻址"></a>直接寻址</h2><p>直接寻址是指操作数的有效地址（只包含16位偏移地址）由指令直接给出，与操作码一起存放在代码段。<strong>操作数的有效地址在指令中必须用<code>[]</code>括起来</strong>。直接寻址以<strong>数据段</strong>的地址为基础，Intel 8086允许段超越，即允许操作数位于以<strong>代码段、堆栈段或附加数据段</strong>为基准的内存区域中，此时需要<strong>在指令中指明段超越（即操作数位于哪个内存区域内）</strong>。</p>
 <p><img src="/2021/03/27/Intel%208086%E3%81%AE%E5%AF%BB%E5%9D%80%E6%96%B9%E5%BC%8F/%E7%9B%B4%E6%8E%A5%E5%AF%BB%E5%9D%80.png" alt></p>
