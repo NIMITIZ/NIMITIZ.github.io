@@ -31,7 +31,7 @@
 <meta property="og:description" content="今天在逛GitHub的时候发现了kiftd这个项目，兴趣上头，就部署到之前被我刷入了Armbian的斐讯N1上，顺便写下本文来水一水(⁰▿⁰)。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-03-30T15:25:41.000Z">
-<meta property="article:modified_time" content="2021-04-10T15:07:06.355Z">
+<meta property="article:modified_time" content="2021-04-20T15:26:59.675Z">
 <meta property="article:author" content="NIMITIZ">
 <meta property="article:tag" content="私有云存储">
 <meta name="twitter:card" content="summary">
@@ -236,7 +236,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-04-10 23:07:06" itemprop="dateModified" datetime="2021-04-10T23:07:06+08:00">2021-04-10</time>
+                <time title="修改时间：2021-04-20 23:26:59" itemprop="dateModified" datetime="2021-04-20T23:26:59+08:00">2021-04-20</time>
               </span>
 
           
@@ -294,11 +294,11 @@
 
 <h2 id="kiftd简介"><a href="#kiftd简介" class="headerlink" title="kiftd简介"></a>kiftd简介</h2><p>kiftd是一套开源的网络文件存储系统，可运行于Windows、Linux和Mac OS X；无传输限制，所有文件均能随意上传和下载；支持音、视频文件的在线播放，图片的在线预览，以及Word、PPT、TXT、PDF文档的在线预览；完全开源，无内置代码的隐患。</p>
 <p><del>反正只是满足一下自己的折腾欲望(´∀`)。</del></p>
-<h2 id="搭建kiftd"><a href="#搭建kiftd" class="headerlink" title="搭建kiftd"></a>搭建kiftd</h2><h3 id="安装Java运行环境"><a href="#安装Java运行环境" class="headerlink" title="安装Java运行环境"></a>安装Java运行环境</h3><p>kiftd基于Java开发，需要运行在Java环境下，根据说明文档的描述，Java 7/JDK 1.7及以下的版本会导致kiftd无法启动，必须是Java 8/JDK 1.8或以上的版本才能使kiftd运行（不过经过我的实际折腾，kiftd不能运行于最新的Java SE 16Σ( ° △ °|||)，但能运行于Java SE 8即JDK 1.8，原因不明 (☉_☉)）。</p>
-<h4 id="下载JDK-1-8"><a href="#下载JDK-1-8" class="headerlink" title="下载JDK 1.8"></a>下载JDK 1.8</h4><p>直接使用一条命令就可以完成下载及安装。</p>
+<h2 id="搭建kiftd"><a href="#搭建kiftd" class="headerlink" title="搭建kiftd"></a>搭建kiftd</h2><h3 id="安装Java运行环境"><a href="#安装Java运行环境" class="headerlink" title="安装Java运行环境"></a>安装Java运行环境</h3><p>kiftd基于Java开发，需要运行在Java环境下，根据说明文档的描述，Java 7/JDK 1.7及以下的版本会导致kiftd无法启动，必须是Java 8/JDK 1.8或以上的版本才能使kiftd运行（不过经过我的实际折腾，<a href="https://github.com/KOHGYLW/kiftd/releases/tag/v1.0.35-release" target="_blank" rel="noopener">kiftd v1.0.35-RELEASE 发行版</a>不能运行于最新的Java SE 16Σ( ° △ °|||)，但能运行于Java SE 8即JDK 1.8，原因不明 (☉_☉)）。</p>
+<h4 id="安装JDK-1-8"><a href="#安装JDK-1-8" class="headerlink" title="安装JDK 1.8"></a>安装JDK 1.8</h4><p>直接使用一条命令就可以完成下载及安装。</p>
 <figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">apt install openjdk<span class="number">-8</span>-jre</span><br></pre></td></tr></table></figure>
 
-<p>完成后可使用<code>java -version</code>检查，输出如下：</p>
+<p>完成后可使用<code>java -version</code>检查，若安装成功，则输出如下：</p>
 <figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">openjdk version <span class="string">"1.8.0_282"</span></span><br><span class="line">OpenJDK Runtime Environment (build 1.8.0_282-8u282-b08-0ubuntu1~18.04-b08)</span><br><span class="line">OpenJDK 64-Bit<span class="built_in"> Server </span>VM (build 25.282-b08, mixed mode)</span><br></pre></td></tr></table></figure>
 
 
@@ -423,7 +423,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#kiftd简介"><span class="nav-number">1.</span> <span class="nav-text">kiftd简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#搭建kiftd"><span class="nav-number">2.</span> <span class="nav-text">搭建kiftd</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装Java运行环境"><span class="nav-number">2.1.</span> <span class="nav-text">安装Java运行环境</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#下载JDK-1-8"><span class="nav-number">2.1.1.</span> <span class="nav-text">下载JDK 1.8</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#下载-amp-解压kiftd程序主目录"><span class="nav-number">2.2.</span> <span class="nav-text">下载 &amp; 解压kiftd程序主目录</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运行kiftd"><span class="nav-number">3.</span> <span class="nav-text">运行kiftd</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#修改配置文件"><span class="nav-number">3.1.</span> <span class="nav-text">修改配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动kiftd"><span class="nav-number">3.2.</span> <span class="nav-text">启动kiftd</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#后台运行"><span class="nav-number">3.2.1.</span> <span class="nav-text">后台运行</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#详细使用说明"><span class="nav-number">3.2.2.</span> <span class="nav-text">详细使用说明</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#kiftd简介"><span class="nav-number">1.</span> <span class="nav-text">kiftd简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#搭建kiftd"><span class="nav-number">2.</span> <span class="nav-text">搭建kiftd</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装Java运行环境"><span class="nav-number">2.1.</span> <span class="nav-text">安装Java运行环境</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#安装JDK-1-8"><span class="nav-number">2.1.1.</span> <span class="nav-text">安装JDK 1.8</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#下载-amp-解压kiftd程序主目录"><span class="nav-number">2.2.</span> <span class="nav-text">下载 &amp; 解压kiftd程序主目录</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运行kiftd"><span class="nav-number">3.</span> <span class="nav-text">运行kiftd</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#修改配置文件"><span class="nav-number">3.1.</span> <span class="nav-text">修改配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动kiftd"><span class="nav-number">3.2.</span> <span class="nav-text">启动kiftd</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#后台运行"><span class="nav-number">3.2.1.</span> <span class="nav-text">后台运行</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#详细使用说明"><span class="nav-number">3.2.2.</span> <span class="nav-text">详细使用说明</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -439,7 +439,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-count">69</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -769,7 +769,7 @@ if(canvas.getContext){
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">1:05</span>
+    <span title="站点阅读时长">1:06</span>
 </div>
 
 <br /> #换行

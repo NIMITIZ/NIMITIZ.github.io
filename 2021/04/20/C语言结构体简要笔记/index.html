@@ -23,17 +23,20 @@
     var CONFIG = {"hostname":"www.nimitiz.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":"ture","trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"./public/search.xml"};
   </script>
 
-  <meta name="description" content="生命不息，折腾不止">
-<meta property="og:type" content="website">
-<meta property="og:title" content="小浣熊的技术小站">
-<meta property="og:url" content="https://www.nimitiz.cn/archives/2021/03/index.html">
+  <meta name="description" content="C语言中的结构体是一种由若干个不同类型的数据组合而成、可由用户自定义的数据类型。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C语言结构体简要笔记">
+<meta property="og:url" content="https://www.nimitiz.cn/2021/04/20/C%E8%AF%AD%E8%A8%80%E7%BB%93%E6%9E%84%E4%BD%93%E7%AE%80%E8%A6%81%E7%AC%94%E8%AE%B0/index.html">
 <meta property="og:site_name" content="小浣熊的技术小站">
-<meta property="og:description" content="生命不息，折腾不止">
+<meta property="og:description" content="C语言中的结构体是一种由若干个不同类型的数据组合而成、可由用户自定义的数据类型。">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-04-20T15:19:11.000Z">
+<meta property="article:modified_time" content="2021-04-20T15:20:12.313Z">
 <meta property="article:author" content="NIMITIZ">
+<meta property="article:tag" content="C语言">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://www.nimitiz.cn/archives/2021/03/">
+<link rel="canonical" href="https://www.nimitiz.cn/2021/04/20/C%E8%AF%AD%E8%A8%80%E7%BB%93%E6%9E%84%E4%BD%93%E7%AE%80%E8%A6%81%E7%AC%94%E8%AE%B0/">
 
 
 <script id="page-configurations">
@@ -41,12 +44,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>归档 | 小浣熊的技术小站</title>
+  <title>C语言结构体简要笔记 | 小浣熊的技术小站</title>
   
 
 
@@ -196,177 +199,163 @@
         <div class="content-wrap">
           
 
-          <div class="content archive">
+          <div class="content post posts-expand">
             
 
+    
   
   
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.nimitiz.cn/2021/04/20/C%E8%AF%AD%E8%A8%80%E7%BB%93%E6%9E%84%E4%BD%93%E7%AE%80%E8%A6%81%E7%AC%94%E8%AE%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="NIMITIZ">
+      <meta itemprop="description" content="生命不息，折腾不止">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小浣熊的技术小站">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          C语言结构体简要笔记
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-04-20 23:19:11 / 修改时间：23:20:12" itemprop="dateCreated datePublished" datetime="2021-04-20T23:19:11+08:00">2021-04-20</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
   
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        
-        <span class="collection-header">不错! 目前共计 69 篇日志。 继续努力。</span>
-      </div>
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/04/20/C%E8%AF%AD%E8%A8%80%E7%BB%93%E6%9E%84%E4%BD%93%E7%AE%80%E8%A6%81%E7%AC%94%E8%AE%B0/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/04/20/C%E8%AF%AD%E8%A8%80%E7%BB%93%E6%9E%84%E4%BD%93%E7%AE%80%E8%A6%81%E7%AC%94%E8%AE%B0/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>306</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2021</span>
-    </div>
+        <p>C语言中的结构体是一种由若干个不同类型的数据组合而成、可由用户自定义的数据类型。</p>
+<a id="more"></a>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-03-30T23:25:41+08:00"
-              content="2021-03-30">
-          03-30
-        </time>
-      </div>
 
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/03/30/%E6%96%90%E8%AE%AFN1%E6%8A%98%E8%85%BE%E8%AE%B0%E5%BD%95%EF%BC%88%E4%BA%8C%EF%BC%89%E2%80%94%E2%80%94kiftd%E7%9A%84%E9%83%A8%E7%BD%B2/" itemprop="url">
-            <span itemprop="name">斐讯N1折腾记录（二）——kiftd的部署</span>
-          </a>
-      </div>
 
-    </header>
-  </article>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+<h2 id="结构体的定义和初始化"><a href="#结构体的定义和初始化" class="headerlink" title="结构体的定义和初始化"></a>结构体的定义和初始化</h2><p><del>因为我懒，</del>直接上源码吧，反正只有我自己看(つд⊂)。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">//方式一</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Person</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">char</span> *name;</span><br><span class="line">    <span class="keyword">int</span> age;</span><br><span class="line">    <span class="keyword">char</span> sex;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Person</span> <span class="title">me</span>=&#123;</span><span class="string">"NIMITIZ"</span>,<span class="number">19</span>,<span class="string">'M'</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"name: %s\n"</span>,me.name);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"age: %d\n"</span>,me.age);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"sex: %c\n"</span>,me.sex);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-03-27T00:21:12+08:00"
-              content="2021-03-27">
-          03-27
-        </time>
-      </div>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">//方式二</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Person</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">char</span> *name;</span><br><span class="line">    <span class="keyword">int</span> age;</span><br><span class="line">    <span class="keyword">char</span> sex;</span><br><span class="line">&#125;me=&#123;<span class="string">"NIMITIZ"</span>,<span class="number">19</span>,<span class="string">'M'</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"name: %s\n"</span>,me.name);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"age: %d\n"</span>,me.age);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"sex: %c\n"</span>,me.sex);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/03/27/Intel%208086%E3%81%AE%E5%AF%BB%E5%9D%80%E6%96%B9%E5%BC%8F/" itemprop="url">
-            <span itemprop="name">Intel 8086の寻址方式</span>
-          </a>
-      </div>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">//方式三</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">Person</span></span></span><br><span class="line"><span class="class">    &#123;</span></span><br><span class="line">        <span class="keyword">char</span> *name;</span><br><span class="line">        <span class="keyword">int</span> age;</span><br><span class="line">        <span class="keyword">char</span> sex;</span><br><span class="line">    &#125;me;</span><br><span class="line">    me.name=<span class="string">"NIMITIZ"</span>;</span><br><span class="line">    me.age=<span class="number">19</span>;</span><br><span class="line">    me.sex=<span class="string">'M'</span>;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"name: %s\n"</span>,me.name);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"age: %d\n"</span>,me.age);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"sex: %c\n"</span>,me.sex);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-    </header>
-  </article>
+<ul>
+<li>结构体可包含多个C语言提供的数据类型（例如<code>int</code>、<code>float</code>、<code>char</code>等），也可包含其他结构体；</li>
+<li><strong>结构体不能整体引用，只能引用结构体成员</strong>；</li>
+<li><strong>在定义结构体时，可对其进行整体赋值；但在使用过程中，只能对结构体成员逐一赋值</strong>；</li>
+<li><strong>结构体</strong>只是创建该数据类型的模板，<strong>不占用内存空间</strong>；<strong>结构体成员</strong>才是该数据类型的实体，<strong>需要占用内存空间</strong>。</li>
+</ul>
+<h2 id="结构体作函数参数"><a href="#结构体作函数参数" class="headerlink" title="结构体作函数参数"></a>结构体作函数参数</h2><p>可把结构体作为函数参数来使用。</p>
+<figure class="highlight arduino"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Person</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">char</span> *name;</span><br><span class="line">    <span class="keyword">int</span> age;</span><br><span class="line">    <span class="keyword">char</span> sex;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">OUTPUT</span><span class="params">(struct Person I)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"name: %s\n"</span>,I.name);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"age: %d\n"</span>,I.age);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"sex: %c\n"</span>,I.sex);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">Person</span> <span class="title">me</span>;</span></span><br><span class="line">    me.name=<span class="string">"NIMITIZ"</span>;</span><br><span class="line">    me.age=<span class="number">19</span>;</span><br><span class="line">    me.sex=<span class="string">'M'</span>;</span><br><span class="line">    <span class="literal">OUTPUT</span>(me);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-03-26T19:21:34+08:00"
-              content="2021-03-26">
-          03-26
-        </time>
-      </div>
 
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/03/26/%E8%BF%9B%E7%A8%8B%E7%9A%84%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%87%E6%8D%A2/" itemprop="url">
-            <span itemprop="name">进程的上下文切换</span>
-          </a>
-      </div>
 
-    </header>
-  </article>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+<h2 id="结构体数组"><a href="#结构体数组" class="headerlink" title="结构体数组"></a>结构体数组</h2><p>结构体数据即数组中的每个元素均为结构体。</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line"><span class="comment">#include&lt;stdio.h&gt;</span></span><br><span class="line"></span><br><span class="line">struct</span><br><span class="line">&#123;</span><br><span class="line">    char *name;</span><br><span class="line">    char group;</span><br><span class="line">    int score;</span><br><span class="line">&#125;</span><br><span class="line">class[]=&#123;&#123;<span class="string">"Arthur"</span>,<span class="string">'A'</span>,89&#125;,&#123;<span class="string">"John"</span>,<span class="string">'B'</span>,87&#125;,&#123;<span class="string">"Dutch"</span>,<span class="string">'B'</span>,96&#125;,&#123;<span class="string">"Micah"</span>,<span class="string">'A'</span>,76&#125;&#125;;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    int i,<span class="attribute">sum</span>=0;</span><br><span class="line">    <span class="keyword">for</span>(<span class="attribute">i</span>=0;i&lt;4;i++)</span><br><span class="line">    &#123;</span><br><span class="line">        sum+=class[i].score;</span><br><span class="line">    &#125;</span><br><span class="line">    printf(<span class="string">"ALL: %d"</span>,sum);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-03-26T16:38:25+08:00"
-              content="2021-03-26">
-          03-26
-        </time>
-      </div>
 
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/03/26/Intel%208086%E3%81%AE%E5%AD%98%E5%82%A8%E5%99%A8%E7%BB%84%E7%BB%87/" itemprop="url">
-            <span itemprop="name">Intel 8086の存储器组织</span>
-          </a>
-      </div>
 
-    </header>
-  </article>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-03-15T23:48:54+08:00"
-              content="2021-03-15">
-          03-15
-        </time>
-      </div>
+<h2 id="指向结构体的指针"><a href="#指向结构体的指针" class="headerlink" title="指向结构体的指针"></a>指向结构体的指针</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">char</span> *name;</span><br><span class="line">    <span class="keyword">int</span> age;</span><br><span class="line">    <span class="keyword">char</span> sex;</span><br><span class="line">&#125;</span><br><span class="line">Person=&#123;<span class="string">"NIMITIZ"</span>,<span class="number">19</span>,<span class="string">'M'</span>&#125;,*ptr=&amp;Person;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"name: %s  age: %d  sex: %c"</span>,(*ptr).name,(*ptr).age,(*ptr).sex);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"name: %s  age: %d  sex: %c"</span>,ptr-&gt;name,ptr-&gt;age,ptr-&gt;sex);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/03/15/Intel%208086%E7%9A%84%E5%AF%84%E5%AD%98%E5%99%A8%E7%BB%93%E6%9E%84/" itemprop="url">
-            <span itemprop="name">Intel 8086的寄存器结构</span>
-          </a>
-      </div>
 
-    </header>
-  </article>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-03-06T22:21:31+08:00"
-              content="2021-03-06">
-          03-06
-        </time>
-      </div>
 
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/03/06/51%E5%8D%95%E7%89%87%E6%9C%BA%E4%B8%AD%E6%96%AD%E4%BC%98%E5%85%88%E7%BA%A7/" itemprop="url">
-            <span itemprop="name">51单片机中断优先级</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-03-03T09:40:59+08:00"
-              content="2021-03-03">
-          03-03
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/03/03/51%E5%8D%95%E7%89%87%E6%9C%BA%E2%80%94%E2%80%94UART%E9%80%9A%E4%BF%A1%E7%AE%80%E5%8D%95%E8%AE%B0%E5%BD%95/" itemprop="url">
-            <span itemprop="name">51单片机——UART通信简单记录</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
+<h2 id="结构体数组-amp-指向结构体的指针"><a href="#结构体数组-amp-指向结构体的指针" class="headerlink" title="结构体数组 &amp; 指向结构体的指针"></a>结构体数组 &amp; 指向结构体的指针</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">G</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">char</span> *name;</span><br><span class="line">    <span class="keyword">char</span> group;</span><br><span class="line">    <span class="keyword">int</span> score;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span>[]=&#123;</span>&#123;<span class="string">"Arthur"</span>,<span class="string">'A'</span>,<span class="number">89</span>&#125;,&#123;<span class="string">"John"</span>,<span class="string">'B'</span>,<span class="number">87</span>&#125;,&#123;<span class="string">"Dutch"</span>,<span class="string">'B'</span>,<span class="number">96</span>&#125;,&#123;<span class="string">"Micah"</span>,<span class="string">'A'</span>,<span class="number">76</span>&#125;&#125;,*ptr;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> x=<span class="keyword">sizeof</span>(class)/<span class="keyword">sizeof</span>(struct G);</span><br><span class="line">    <span class="keyword">for</span>(ptr=class;ptr&lt;class+x;ptr++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"name: %s  group: %c  score: %d\n"</span>,ptr-&gt;name,ptr-&gt;group,ptr-&gt;score);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
     </div>
-  </div>
-  
-  
-  
 
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/C%E8%AF%AD%E8%A8%80/" rel="tag"># C语言</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/04/12/Intel%208086%E3%81%AE%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F/" rel="prev" title="Intel 8086の指令系统">
+      <i class="fa fa-chevron-left"></i> Intel 8086の指令系统
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
   
 
 
 
           </div>
           
+    <div class="comments" id="valine-comments"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -413,6 +402,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#结构体的定义和初始化"><span class="nav-number">1.</span> <span class="nav-text">结构体的定义和初始化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结构体作函数参数"><span class="nav-number">2.</span> <span class="nav-text">结构体作函数参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结构体数组"><span class="nav-number">3.</span> <span class="nav-text">结构体数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#指向结构体的指针"><span class="nav-number">4.</span> <span class="nav-text">指向结构体的指针</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结构体数组-amp-指向结构体的指针"><span class="nav-number">5.</span> <span class="nav-text">结构体数组 &amp; 指向结构体的指针</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
