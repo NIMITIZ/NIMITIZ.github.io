@@ -31,7 +31,7 @@
 <meta property="og:description" content="整理一下进程和线程的一些简单笔记，如有错误，请在评论区多多指教，非常感谢＜（＾－＾）＞。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-01-21T15:47:21.000Z">
-<meta property="article:modified_time" content="2021-01-21T16:04:55.739Z">
+<meta property="article:modified_time" content="2021-05-04T14:04:32.940Z">
 <meta property="article:author" content="NIMITIZ">
 <meta name="twitter:card" content="summary">
 
@@ -235,7 +235,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-01-22 00:04:55" itemprop="dateModified" datetime="2021-01-22T00:04:55+08:00">2021-01-22</time>
+                <time title="修改时间：2021-05-04 22:04:32" itemprop="dateModified" datetime="2021-05-04T22:04:32+08:00">2021-05-04</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -274,14 +274,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>1.2k</span>
+              <span>1.9k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
+              <span>2 分钟</span>
             </span>
 
         </div>
@@ -298,31 +298,79 @@
 
 
 
+
+
 <h2 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h2><p>进程一个具有一定独立功能的程序在一个数据集上的一次动态执行的过程，是应用程序运行的载体，也是操作系统分配资源和调度的基本单位，每个进程均有独立的内存空间。进程一般由程序段、数据段和进程控制块三部分组成。操作系统通过链接方式和索引方式对各个进程进行管理。在Windows下，每运行一个<code>.exe</code>文件即为新建一个进程。</p>
 <h3 id="进程的特征"><a href="#进程的特征" class="headerlink" title="进程的特征"></a>进程的特征</h3><ul>
-<li>动态性：进程是程序的一次执行过程，动态产生、动态消亡，是临时的，具有生命周期。</li>
-<li>并发性：任何进程均可与其他进程一起并发执行。</li>
-<li>独立性：进程是操作系统进行资源分配和调度的一个独立单位。</li>
-<li>结构性：进程一般由程序段、数据段和进程控制块三部分组成。</li>
+<li><strong>动态性</strong>：进程是程序的一次执行过程，动态产生、动态消亡，是临时的，具有生命周期。</li>
+<li><strong>并发性</strong>：任何进程均可与其他进程一起并发执行。</li>
+<li><strong>独立性</strong>：进程是操作系统进行资源分配和调度的一个独立单位。</li>
+<li><strong>制约性</strong>：因访问共享资源或进程间同步而产生制约。</li>
 </ul>
-<h3 id="进程的组成"><a href="#进程的组成" class="headerlink" title="进程的组成"></a>进程的组成</h3><ul>
-<li>程序段：程序段用于描述进程要完成的功能以及控制进程的执行。</li>
-<li>数据段：数据段包含进程在执行时所需要的数据。</li>
-<li>进程控制块：操作系统通过程序控制块来管理进程，该部分包含进程的描述信息（用于记录进程标识符唯一ID和用户标识符ID）、控制与管理信息（包含进程的优先级和当前状态）、资源分配信息、处理机相关信息（包含进程切换时需要记录的各种寄存器值（例如，当前进程执行到哪里）），是进程存在的唯一标志。</li>
+<h3 id="进程的组成"><a href="#进程的组成" class="headerlink" title="进程的组成"></a>进程的组成</h3><p>进程由程序段、数据段和进程控制块三部分组成：</p>
+<ul>
+<li><strong>程序段</strong>：程序段用于描述进程要完成的功能以及控制进程的执行。</li>
+<li><strong>数据段</strong>：数据段包含进程在执行时所需要的数据。</li>
+<li><strong>进程控制块</strong>：操作系统为每个进程都维护一个进程控制块来管理进程，该部分包含进程的描述信息、控制与管理信息、资源分配信息、处理机相关信息，是进程存在的唯一标志，进程的任何状态变化都可通过进程控制块来体现。</li>
+</ul>
+<h4 id="进程控制块包含的的信息"><a href="#进程控制块包含的的信息" class="headerlink" title="进程控制块包含的的信息"></a>进程控制块包含的的信息</h4><ul>
+<li><p><strong>进程标识信息</strong>：包括本进程的标识、本进程的父进程标识、用户标识等。</p>
+</li>
+<li><p><strong>处理机状态信息保护区</strong>：用于保存进程的运行现场信息：</p>
+<ul>
+<li><strong>用户可见寄存器</strong>：用户程序可使用的（数据、地址等）寄存器；</li>
+<li><strong>控制和状态寄存器</strong>：程序计数器、程序状态字；</li>
+<li><strong>栈指针</strong>：用于中断处理和返回、过程调用、系统调用；</li>
+</ul>
+</li>
+<li><p><strong>进程控制信息</strong>：</p>
+<ul>
+<li><strong>调度和状态信息</strong>：在被操作系统调度时使用；</li>
+<li><strong>进程间通信信息</strong>：进程之间进行通信所需的各种标识、信号等，这些信息存在于接收方的进程控制块中；</li>
+<li><strong>存储管理信息</strong>：包含有指向本进程存储空间的数据结构；</li>
+<li><strong>进程所用资源</strong>：说明由进程使用的系统资源（例如进程打开的文件）；</li>
+<li><strong>有关数据结构连接信息</strong>：进程可以连接到一个进程队列中，或连接到相关的其他进程的进程控制块。</li>
+</ul>
+</li>
 </ul>
 <h3 id="进程的组织"><a href="#进程的组织" class="headerlink" title="进程的组织"></a>进程的组织</h3><ul>
-<li>链接方式：根据进程状态将各进程的进程控制块分为多个队列，操作系统持有指向各队列的指针。</li>
-<li>索引方式：根据进程状态为各进程的进程控制块建立多个索引表，操作系统持有指向各索引表的指针。</li>
+<li><strong>链接方式</strong>：根据进程状态将各进程的进程控制块分为多个队列，操作系统持有指向各队列的指针。</li>
+<li><strong>索引方式</strong>：根据进程状态为各进程的进程控制块建立多个索引表，操作系统持有指向各索引表的指针。</li>
 </ul>
-<h3 id="进程的状态"><a href="#进程的状态" class="headerlink" title="进程的状态"></a>进程的状态</h3><ul>
-<li>创建状态：进程正在创建，还不能执行。此时操作系统需要为该进程建立程序控制块、分配资源、建立地址空间、加载程序等。</li>
-<li>就绪状态：进程此时已具备执行条件，等待CPU空闲以执行。</li>
-<li>运行状态：进程正在执行，正在占用CPU。</li>
-<li>阻塞状态：进程正在等待某一事件执行完毕。</li>
-<li>终止状态：进程执行完毕，释放操作系统分配的资源。</li>
+<h3 id="进程的状态"><a href="#进程的状态" class="headerlink" title="进程的状态"></a>进程的状态</h3><p>在多数的操作系统中，进程在生命结束前有三种基本状态：</p>
+<ul>
+<li><strong>就绪状态</strong>：进程此时已具备执行条件，但其他进程正在占用CPU，一旦得到处理机就可以运行。</li>
+<li><strong>运行状态</strong>：进程正在执行，正在占用CPU。</li>
+<li><strong>阻塞状态</strong>：进程正在等待某一事件（例如等待输入输出或等待某数据）而暂停执行。</li>
 </ul>
-<p>在只搭载一个单核CPU的计算机上，在任何时刻有且仅有一个进程处于运行状态。</p>
-<h2 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h2><p>线程是进程执行中的一个单一的顺序控制流程，是进程执行的最小单位，也是CPU调度和执行的基本单位。和进程一样，线程也有就绪、阻塞、运行三种基本状态。一个进程包含有一个或多个线程，除线程本身所必需的最基本资源（例如，程序计数器）外，同一进程中的线程共享操作系统分配给该进程的资源和内存空间。</p>
+<p>在只搭载一个单核CPU（不考虑超线程技术）的计算机上，在任何时刻有且仅有一个进程处于运行状态。</p>
+<h3 id="进程的生命周期管理"><a href="#进程的生命周期管理" class="headerlink" title="进程的生命周期管理"></a>进程的生命周期管理</h3><h4 id="进程创建"><a href="#进程创建" class="headerlink" title="进程创建"></a>进程创建</h4><p>创建进程有三种主要情况：</p>
+<ul>
+<li>系统初始化；</li>
+<li>用户请求创建一个新进程；</li>
+<li>一个正在运行的进程执行创建进程的系统调用。</li>
+</ul>
+<h4 id="进程运行"><a href="#进程运行" class="headerlink" title="进程运行"></a>进程运行</h4><p>操作系统内核选择一个处于就绪状态的进程，让其占用处理机并运行。</p>
+<h4 id="进程阻塞"><a href="#进程阻塞" class="headerlink" title="进程阻塞"></a>进程阻塞</h4><p>进程阻塞有三种主要情况：</p>
+<ul>
+<li>请求并等待系统服务，无法马上完成；</li>
+<li>启动某种操作，无法马上完成；</li>
+<li>需要的数据没有到达。</li>
+</ul>
+<h4 id="进程唤醒"><a href="#进程唤醒" class="headerlink" title="进程唤醒"></a>进程唤醒</h4><p>进程只能被其他进程或操作系统唤醒，有三种主要情况：</p>
+<ul>
+<li>被阻塞的进程需要的资源可被满足；</li>
+<li>被阻塞的进程等待的事件到达；</li>
+<li>将该进程的进程控制块插入到就绪队列。</li>
+</ul>
+<h4 id="进程结束"><a href="#进程结束" class="headerlink" title="进程结束"></a>进程结束</h4><p>进程结束有四种主要情况：</p>
+<ul>
+<li><strong>正常退出</strong>（自愿）：进程执行完毕，正常终止。</li>
+<li><strong>出错退出</strong>（自愿）：进程发现了错误而退出。</li>
+<li><strong>严重错误</strong>（强制）：进程发生了严重的错误而不得不退出，通常是由程序的错误引起，例如执行了非法指令、引用不存在的内存等。</li>
+<li><strong>被其他进程杀死</strong>（强制）。</li>
+</ul>
+<h2 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h2><p>线程是进程执行中的一个单一的顺序控制流程，是进程执行的最小单位，也是资源分配和CPU调度的基本单位。和进程一样，线程也有就绪、阻塞、运行三种基本状态。一个进程包含有一个或多个线程，除线程本身所必需的最基本资源（例如寄存器、栈）外，同一进程中的线程共享操作系统分配给该进程的资源和内存空间。</p>
 <h2 id="进程与线程的区别"><a href="#进程与线程的区别" class="headerlink" title="进程与线程的区别"></a>进程与线程的区别</h2><ul>
 <li>进程是操作系统分配资源和调度的基本单位，线程是CPU调度和执行的基本单位。</li>
 <li>一个线程只能属于一个进程，而一个进程至少包含有一个线程。</li>
@@ -338,6 +386,7 @@
 <p><a href="https://github.com/zkywsg/Daily-DeepLearning/blob/master/07-BaseClass/Os/04%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B.md" target="_blank" rel="noopener">04进程与线程.md</a></p>
 <p><a href="https://blog.csdn.net/ThinkWon/article/details/102021274" target="_blank" rel="noopener">进程和线程的区别(超详细)</a></p>
 <p><a href="http://luckylau.tech/2017/06/20/%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%8C%BA%E5%88%AB/" target="_blank" rel="noopener">进程和线程的区别</a></p>
+<p><a href="https://mp.weixin.qq.com/s/vofzmsLtJcMyAhWgSVTVIg" target="_blank" rel="noopener">深度好文|面试官：进程和线程，我只问这19个问题</a></p>
 
     </div>
 
@@ -419,7 +468,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#进程"><span class="nav-number">1.</span> <span class="nav-text">进程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#进程的特征"><span class="nav-number">1.1.</span> <span class="nav-text">进程的特征</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#进程的组成"><span class="nav-number">1.2.</span> <span class="nav-text">进程的组成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#进程的组织"><span class="nav-number">1.3.</span> <span class="nav-text">进程的组织</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#进程的状态"><span class="nav-number">1.4.</span> <span class="nav-text">进程的状态</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#线程"><span class="nav-number">2.</span> <span class="nav-text">线程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#进程与线程的区别"><span class="nav-number">3.</span> <span class="nav-text">进程与线程的区别</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#进程"><span class="nav-number">1.</span> <span class="nav-text">进程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#进程的特征"><span class="nav-number">1.1.</span> <span class="nav-text">进程的特征</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#进程的组成"><span class="nav-number">1.2.</span> <span class="nav-text">进程的组成</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#进程控制块包含的的信息"><span class="nav-number">1.2.1.</span> <span class="nav-text">进程控制块包含的的信息</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#进程的组织"><span class="nav-number">1.3.</span> <span class="nav-text">进程的组织</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#进程的状态"><span class="nav-number">1.4.</span> <span class="nav-text">进程的状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#进程的生命周期管理"><span class="nav-number">1.5.</span> <span class="nav-text">进程的生命周期管理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#进程创建"><span class="nav-number">1.5.1.</span> <span class="nav-text">进程创建</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#进程运行"><span class="nav-number">1.5.2.</span> <span class="nav-text">进程运行</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#进程阻塞"><span class="nav-number">1.5.3.</span> <span class="nav-text">进程阻塞</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#进程唤醒"><span class="nav-number">1.5.4.</span> <span class="nav-text">进程唤醒</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#进程结束"><span class="nav-number">1.5.5.</span> <span class="nav-text">进程结束</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#线程"><span class="nav-number">2.</span> <span class="nav-text">线程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#进程与线程的区别"><span class="nav-number">3.</span> <span class="nav-text">进程与线程的区别</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -759,7 +808,7 @@ if(canvas.getContext){
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">72k</span>
+    <span title="站点总字数">73k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
