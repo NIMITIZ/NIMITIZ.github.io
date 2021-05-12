@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-bounce.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.nimitiz.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":"ture","trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"./public/search.xml"};
+  </script>
+
+  <meta name="description" content="DS1302是DALLAS公司推出的一款具有涓流充电功能的实时时钟芯片，带有存储容量为31字节的RAM，可对秒、分、时、日、月、年进行计时，能对日期进行自动调整（包括闰年的校正），可通过配置AM&#x2F;PM来选择使用24小时制还是12小时制，通过串行通信的方式与MCU进行数据交换。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="51单片机 —— DS1302简要记录">
+<meta property="og:url" content="https://www.nimitiz.cn/2021/05/13/51%E5%8D%95%E7%89%87%E6%9C%BA%20%E2%80%94%E2%80%94%20DS1302%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/index.html">
+<meta property="og:site_name" content="小浣熊的技术小站">
+<meta property="og:description" content="DS1302是DALLAS公司推出的一款具有涓流充电功能的实时时钟芯片，带有存储容量为31字节的RAM，可对秒、分、时、日、月、年进行计时，能对日期进行自动调整（包括闰年的校正），可通过配置AM&#x2F;PM来选择使用24小时制还是12小时制，通过串行通信的方式与MCU进行数据交换。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/05/13/51%E5%8D%95%E7%89%87%E6%9C%BA%20%E2%80%94%E2%80%94%20DS1302%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/%E5%BC%95%E8%84%9A%E5%AE%9A%E4%B9%89.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/05/13/51%E5%8D%95%E7%89%87%E6%9C%BA%20%E2%80%94%E2%80%94%20DS1302%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/DS1302%E5%91%BD%E4%BB%A4%E5%AD%97.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/05/13/51%E5%8D%95%E7%89%87%E6%9C%BA%20%E2%80%94%E2%80%94%20DS1302%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/%E8%AF%BB%E6%97%B6%E5%BA%8F.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/05/13/51%E5%8D%95%E7%89%87%E6%9C%BA%20%E2%80%94%E2%80%94%20DS1302%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/%E5%86%99%E6%97%B6%E5%BA%8F.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/05/13/51%E5%8D%95%E7%89%87%E6%9C%BA%20%E2%80%94%E2%80%94%20DS1302%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/%E6%95%B0%E6%8D%AE%E5%9C%B0%E5%9D%80.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/05/13/51%E5%8D%95%E7%89%87%E6%9C%BA%20%E2%80%94%E2%80%94%20DS1302%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/DS1302%E6%97%B6%E9%92%9F%E6%A8%A1%E5%9D%97.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/05/13/51%E5%8D%95%E7%89%87%E6%9C%BA%20%E2%80%94%E2%80%94%20DS1302%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/LCD1602%E6%A8%A1%E5%9D%97.png">
+<meta property="article:published_time" content="2021-05-12T16:02:21.000Z">
+<meta property="article:modified_time" content="2021-05-12T16:02:37.379Z">
+<meta property="article:author" content="NIMITIZ">
+<meta property="article:tag" content="51单片机">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.nimitiz.cn/2021/05/13/51%E5%8D%95%E7%89%87%E6%9C%BA%20%E2%80%94%E2%80%94%20DS1302%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/%E5%BC%95%E8%84%9A%E5%AE%9A%E4%B9%89.png">
+
+<link rel="canonical" href="https://www.nimitiz.cn/2021/05/13/51%E5%8D%95%E7%89%87%E6%9C%BA%20%E2%80%94%E2%80%94%20DS1302%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>51单片机 —— DS1302简要记录 | 小浣熊的技术小站</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+  
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">小浣熊的技术小站</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-友链">
+
+    <a href="/links/" rel="section"><i class="fa fa-link fa-fw"></i>友链</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/NIMITIZ" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.nimitiz.cn/2021/05/13/51%E5%8D%95%E7%89%87%E6%9C%BA%20%E2%80%94%E2%80%94%20DS1302%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="NIMITIZ">
+      <meta itemprop="description" content="生命不息，折腾不止">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小浣熊的技术小站">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          51单片机 —— DS1302简要记录
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-05-13 00:02:21 / 修改时间：00:02:37" itemprop="dateCreated datePublished" datetime="2021-05-13T00:02:21+08:00">2021-05-13</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/05/13/51%E5%8D%95%E7%89%87%E6%9C%BA%20%E2%80%94%E2%80%94%20DS1302%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/05/13/51%E5%8D%95%E7%89%87%E6%9C%BA%20%E2%80%94%E2%80%94%20DS1302%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.1k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>DS1302是DALLAS公司推出的一款具有涓流充电功能的实时时钟芯片，带有存储容量为31字节的RAM，可对秒、分、时、日、月、年进行计时，能对日期进行自动调整（包括闰年的校正），可通过配置<code>AM/PM</code>来选择使用24小时制还是12小时制，通过串行通信的方式与MCU进行数据交换。</p>
+<a id="more"></a>
+
+
+
+
+
+<h2 id="DS1302引脚定义"><a href="#DS1302引脚定义" class="headerlink" title="DS1302引脚定义"></a>DS1302引脚定义</h2><p><img src="/2021/05/13/51%E5%8D%95%E7%89%87%E6%9C%BA%20%E2%80%94%E2%80%94%20DS1302%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/%E5%BC%95%E8%84%9A%E5%AE%9A%E4%B9%89.png" alt></p>
+<ul>
+<li><code>VCC2</code>：主电源引脚</li>
+<li><code>X1</code>&amp;<code>X2</code>：连接一个32.768K的晶振，为DS1302提供一个时钟基准</li>
+<li><code>GND</code>：接地</li>
+<li><code>RST&#39;</code>：复位/片选引脚，也相当于使能引脚，读写DS1302时，该引脚必须为高电平</li>
+<li><code>I/O</code>：双向通信引脚，DS1302通过该引脚进行数据的读写</li>
+<li><code>SCLK</code>：时钟信号输入引脚</li>
+<li><code>VCC1</code>：备用电源引脚</li>
+</ul>
+<h2 id="DS1302命令字"><a href="#DS1302命令字" class="headerlink" title="DS1302命令字"></a>DS1302命令字</h2><p><img src="/2021/05/13/51%E5%8D%95%E7%89%87%E6%9C%BA%20%E2%80%94%E2%80%94%20DS1302%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/DS1302%E5%91%BD%E4%BB%A4%E5%AD%97.png" alt></p>
+<ul>
+<li><code>bit7</code>：最高有效位，必须为<code>1</code>，才能将数据写入DS1302</li>
+<li><code>bit6</code>：若为<code>0</code>，表示存取日历时钟数据；若为<code>1</code>，表示存取RAM数据</li>
+<li><code>bit5</code>~<code>bit1</code>：对将要进行操作的寄存器的地址</li>
+<li><code>bit0</code>：读写选择位；若为<code>0</code>，表示进行写操作；若为<code>1</code>，表示进行读操作</li>
+</ul>
+<h2 id="DS1302读写时序"><a href="#DS1302读写时序" class="headerlink" title="DS1302读写时序"></a>DS1302读写时序</h2><h3 id="读时序"><a href="#读时序" class="headerlink" title="读时序"></a>读时序</h3><p><img src="/2021/05/13/51%E5%8D%95%E7%89%87%E6%9C%BA%20%E2%80%94%E2%80%94%20DS1302%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/%E8%AF%BB%E6%97%B6%E5%BA%8F.png" alt></p>
+<h3 id="写时序"><a href="#写时序" class="headerlink" title="写时序"></a>写时序</h3><p><img src="/2021/05/13/51%E5%8D%95%E7%89%87%E6%9C%BA%20%E2%80%94%E2%80%94%20DS1302%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/%E5%86%99%E6%97%B6%E5%BA%8F.png" alt></p>
+<h2 id="DS1302数据地址和传输格式"><a href="#DS1302数据地址和传输格式" class="headerlink" title="DS1302数据地址和传输格式"></a>DS1302数据地址和传输格式</h2><p><img src="/2021/05/13/51%E5%8D%95%E7%89%87%E6%9C%BA%20%E2%80%94%E2%80%94%20DS1302%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/%E6%95%B0%E6%8D%AE%E5%9C%B0%E5%9D%80.png" alt></p>
+<p>如图所示，时钟日历被写入7个寄存器，数值以BCD码的形式被存储于这7个寄存器中。</p>
+<ul>
+<li><code>寄存器1</code>：<code>秒</code>寄存器；最高位<code>CH</code>为时钟停止标志位，该位为<code>0</code>表示时钟持续运行，该位为<code>1</code>表示时钟停止运行；剩下的7位中，高3位为<code>秒</code>的十位，低4位为<code>秒</code>的个位</li>
+<li><code>寄存器2</code>：<code>分</code>寄存器；最高位无意义；剩下的7位中，高3位为<code>分</code>的十位，低4位为<code>分</code>的个位</li>
+<li><code>寄存器3</code>：<code>时</code>寄存器；<code>bit7</code>为<code>1</code>表示12小时制，为<code>0</code>则表示24小时制；<code>bit6</code>固定为<code>0</code>；<code>bit5</code>在12小时制下若为<code>0</code>则表示<code>AM</code>，若为<code>1</code>则表示<code>PM</code>，在24小时制下和<code>bit4</code>一起表示<code>时</code>的十位；低4位则表示<code>时</code>的个位</li>
+<li><code>寄存器4</code>：<code>日</code>寄存器；高2位固定为<code>0</code>；<code>bit5</code>和<code>bit4</code>表示<code>日</code>的十位；低4位表示<code>日</code>的个位</li>
+<li><code>寄存器5</code>：<code>月</code>寄存器；高3位固定为<code>0</code>；<code>bit4</code>表示<code>月</code>的十位；低4位表示<code>月</code>的个位</li>
+<li><code>寄存器6</code>：<code>星期</code>寄存器；高5位固定为<code>0</code>；低3位表示<code>星期</code></li>
+<li><code>寄存器7</code>：<code>年</code>寄存器；高4位表示<code>年</code>的十位；低4位表示<code>年</code>的个位；范围为从2000年到2099年</li>
+<li><code>寄存器8</code>：写保护寄存器；最高位<code>WP</code>为保护位，若该位为<code>1</code>，则禁止向DS1302的RAM或其他寄存器写入数据</li>
+<li><code>寄存器9</code>：涓流充电功能所用到的寄存器</li>
+</ul>
+<h2 id="举个栗子"><a href="#举个栗子" class="headerlink" title="举个栗子"></a>举个栗子</h2><p>从2021年5月11日0时0分0秒开始计时并在LCD1602上显示。</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">#include&lt;reg52.h&gt;</span><br><span class="line">#include&lt;<span class="built_in">int</span>rins.h&gt;</span><br><span class="line"></span><br><span class="line">sbit RST=P2^<span class="number">4</span>;</span><br><span class="line">sbit CLK=P2^<span class="number">1</span>;</span><br><span class="line">sbit IO=P2^<span class="number">0</span>;</span><br><span class="line">sbit RS=P1^<span class="number">0</span>;</span><br><span class="line">sbit RW=P1^<span class="number">1</span>;</span><br><span class="line">sbit E=P2^<span class="number">5</span>;</span><br><span class="line">sbit DU=P2^<span class="number">6</span>;</span><br><span class="line"></span><br><span class="line">unsigned char num[]=&#123;<span class="string">"0123456789"</span>&#125;;		<span class="comment">//LCD1602显示的数字字符</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">void</span> X()		<span class="comment">//关闭数码管</span></span><br><span class="line">&#123;</span><br><span class="line">	DU=<span class="number">1</span>;</span><br><span class="line">	P0=<span class="number">0x00</span>;</span><br><span class="line">	DU=<span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">void</span> Delay()</span><br><span class="line">&#123;</span><br><span class="line">	_nop_();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">void</span> Write_Bit_DS1302(unsigned char DAT)		<span class="comment">//向DS1302写入一字节的数据</span></span><br><span class="line">&#123;</span><br><span class="line">	unsigned char i;</span><br><span class="line">	CLK=<span class="number">0</span>;</span><br><span class="line">	Delay();</span><br><span class="line">	<span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;<span class="number">8</span>;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		IO=DAT&amp;<span class="number">0x01</span>;		<span class="comment">//低位在前，高位在后</span></span><br><span class="line">		Delay();</span><br><span class="line">		CLK=<span class="number">1</span>;		<span class="comment">//时钟信号上升沿，写入数据</span></span><br><span class="line">		Delay();</span><br><span class="line">		CLK=<span class="number">0</span>;		<span class="comment">//重新拉低CLK，形成脉冲</span></span><br><span class="line">		DAT&gt;&gt;=<span class="number">1</span>;		<span class="comment">//将DAT的各数据位右移1位，准备写入下一数据位</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">void</span> Write_DS1302(unsigned char CMD,unsigned char DAT)		<span class="comment">//向DS1302写入命令和数据</span></span><br><span class="line">&#123;</span><br><span class="line">	RST=<span class="number">0</span>;		<span class="comment">//禁止数据传输</span></span><br><span class="line">	CLK=<span class="number">0</span>;		<span class="comment">//在写入数据前确保CLK置低电平</span></span><br><span class="line">	RST=<span class="number">1</span>;		<span class="comment">//开始数据传输</span></span><br><span class="line">	Delay();</span><br><span class="line">	Write_Bit_DS1302(CMD);		<span class="comment">//写入命令</span></span><br><span class="line">	Write_Bit_DS1302(DAT);		<span class="comment">//写入数据</span></span><br><span class="line">	CLK=<span class="number">1</span>;</span><br><span class="line">	RST=<span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">unsigned char Read_Bit_DS1302()		<span class="comment">//从DS1302读出一字节的数据</span></span><br><span class="line">&#123;</span><br><span class="line">	unsigned char i,DAT;</span><br><span class="line">	Delay();</span><br><span class="line">	<span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;<span class="number">8</span>;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		DAT&gt;&gt;=<span class="number">1</span>;</span><br><span class="line">		<span class="keyword">if</span>(IO==<span class="number">1</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			DAT|=<span class="number">0x80</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		CLK=<span class="number">1</span>;</span><br><span class="line">		Delay();</span><br><span class="line">		CLK=<span class="number">0</span>;		<span class="comment">//时钟信号下降沿，读出数据</span></span><br><span class="line">		Delay();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> DAT;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">unsigned char Read_DS1302(unsigned char CMD)		<span class="comment">//向DS1302写入命令后再从DS1302读出数据</span></span><br><span class="line">&#123;</span><br><span class="line">	unsigned char DAT;</span><br><span class="line">	RST=<span class="number">0</span>;</span><br><span class="line">	CLK=<span class="number">0</span>;</span><br><span class="line">	RST=<span class="number">1</span>;</span><br><span class="line">	Write_Bit_DS1302(CMD);		<span class="comment">//写入命令</span></span><br><span class="line">	DAT=Read_Bit_DS1302();		<span class="comment">//读出数据</span></span><br><span class="line">	CLK=<span class="number">1</span>;</span><br><span class="line">	RST=<span class="number">0</span>;</span><br><span class="line">	<span class="keyword">return</span> DAT;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">void</span> Init_DS1302()		<span class="comment">//DS1302初始化</span></span><br><span class="line">&#123;</span><br><span class="line">	unsigned char X;</span><br><span class="line">	X=Read_DS1302(<span class="number">0x81</span>);</span><br><span class="line">	<span class="keyword">if</span>(X&amp;<span class="number">0x80</span>)		<span class="comment">//判断DS1302是否处于运行状态</span></span><br><span class="line">	&#123;</span><br><span class="line">		Write_DS1302(<span class="number">0x8e</span>,<span class="number">0x00</span>);		<span class="comment">//允许将数据写入DS1302的寄存器</span></span><br><span class="line">		Write_DS1302(<span class="number">0x80</span>,((<span class="number">00</span>/<span class="number">10</span>)&lt;&lt;<span class="number">4</span>|(<span class="number">00</span>%<span class="number">10</span>)));		<span class="comment">//写入“秒”的初始值，需要将LCD1602显示的数字的ASCII值转换成BCD码</span></span><br><span class="line">		Write_DS1302(<span class="number">0x82</span>,((<span class="number">00</span>/<span class="number">10</span>)&lt;&lt;<span class="number">4</span>|(<span class="number">00</span>%<span class="number">10</span>)));		<span class="comment">//写入“分”的初始值</span></span><br><span class="line">		Write_DS1302(<span class="number">0x84</span>,((<span class="number">00</span>/<span class="number">10</span>)&lt;&lt;<span class="number">4</span>|(<span class="number">00</span>%<span class="number">10</span>)));		<span class="comment">//写入“时”的初始值</span></span><br><span class="line">		Write_DS1302(<span class="number">0x86</span>,((<span class="number">11</span>/<span class="number">10</span>)&lt;&lt;<span class="number">4</span>|(<span class="number">11</span>%<span class="number">10</span>)));		<span class="comment">//写入“日”的初始值</span></span><br><span class="line">		Write_DS1302(<span class="number">0x88</span>,((<span class="number">5</span>/<span class="number">10</span>)&lt;&lt;<span class="number">4</span>|(<span class="number">5</span>%<span class="number">10</span>)));		<span class="comment">//写入“月”的初始值</span></span><br><span class="line">		Write_DS1302(<span class="number">0x8c</span>,((<span class="number">21</span>/<span class="number">10</span>)&lt;&lt;<span class="number">4</span>|(<span class="number">21</span>%<span class="number">10</span>)));		<span class="comment">//写入“年”的初始值</span></span><br><span class="line">		Write_DS1302(<span class="number">0x8e</span>,<span class="number">0x80</span>);		<span class="comment">//禁止将数据写入DS1302的寄存器</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">void</span> Delay5ms()</span><br><span class="line">&#123;</span><br><span class="line">	unsigned char i,j;</span><br><span class="line">	_nop_();</span><br><span class="line">	i=<span class="number">9</span>;</span><br><span class="line">	j=<span class="number">244</span>;</span><br><span class="line">	<span class="keyword">do</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">while</span>(--j);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">while</span>(--i);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">int</span> ReadBusy()		<span class="comment">//LCD1602“读忙”操作</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="built_in">int</span> temp;</span><br><span class="line">	RS=<span class="number">0</span>;</span><br><span class="line">	RW=<span class="number">1</span>;</span><br><span class="line">	_nop_();</span><br><span class="line">	P0=<span class="number">0xff</span>;</span><br><span class="line">	_nop_();</span><br><span class="line">	E=<span class="number">1</span>;</span><br><span class="line">	_nop_();</span><br><span class="line">	temp=P0;</span><br><span class="line">	_nop_();</span><br><span class="line">	E=<span class="number">0</span>;</span><br><span class="line">	<span class="keyword">return</span>(temp&amp;<span class="number">0x80</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">void</span> Write_Com(char com)		<span class="comment">//LCD1602“写命令”操作</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">while</span>(ReadBusy());</span><br><span class="line">	RS=<span class="number">0</span>;</span><br><span class="line">	RW=<span class="number">0</span>;</span><br><span class="line">	E=<span class="number">0</span>;</span><br><span class="line">	_nop_();</span><br><span class="line">	P0=com;</span><br><span class="line">	_nop_();</span><br><span class="line">	E=<span class="number">1</span>;</span><br><span class="line">	Delay5ms();</span><br><span class="line">	E=<span class="number">0</span>;</span><br><span class="line">	Delay5ms();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">void</span> Write_Dat(char dat)		<span class="comment">//LCD1602“写数据”操作</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">while</span>(ReadBusy());</span><br><span class="line">	RS=<span class="number">1</span>;</span><br><span class="line">	RW=<span class="number">0</span>;</span><br><span class="line">	E=<span class="number">0</span>;</span><br><span class="line">	_nop_();</span><br><span class="line">	P0=dat;</span><br><span class="line">	_nop_();</span><br><span class="line">	E=<span class="number">1</span>;</span><br><span class="line">	Delay5ms();</span><br><span class="line">	E=<span class="number">0</span>;</span><br><span class="line">	Delay5ms();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">void</span> LCD1602_Init()		<span class="comment">//LCD1602初始化</span></span><br><span class="line">&#123;</span><br><span class="line">	Delay5ms();		<span class="comment">//延时15ms，首次写入LCD1602时应给LCD1602一段较长的响应时间</span></span><br><span class="line">	Delay5ms();</span><br><span class="line">	Delay5ms();</span><br><span class="line">	Write_Com(<span class="number">0x38</span>);		<span class="comment">//显示模式设置：16*2显示、5*7点阵，连续写入3次，确保LCD1602初始化成功</span></span><br><span class="line">	Delay5ms();</span><br><span class="line">	Write_Com(<span class="number">0x38</span>);</span><br><span class="line">	Delay5ms();</span><br><span class="line">	Write_Com(<span class="number">0x38</span>);</span><br><span class="line">	Delay5ms();</span><br><span class="line">	Write_Com(<span class="number">0x0c</span>);		<span class="comment">//显示模式设置：开显示、光标不显示、光标不闪烁</span></span><br><span class="line">	Delay5ms();</span><br><span class="line">	Write_Com(<span class="number">0x06</span>);		<span class="comment">//显示模式设置：光标右移，字符不右移</span></span><br><span class="line">	Delay5ms();</span><br><span class="line">	Write_Com(<span class="number">0x01</span>);		<span class="comment">//清除屏幕</span></span><br><span class="line">	Delay5ms();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">void</span> Display_Second(unsigned char x)		<span class="comment">//LCD1602显示“秒”的数值</span></span><br><span class="line">&#123;</span><br><span class="line">	unsigned char i,j;</span><br><span class="line">	i=x/<span class="number">10</span>;		<span class="comment">//取数值的十位</span></span><br><span class="line">	j=x%<span class="number">10</span>;		<span class="comment">//取数值的个位</span></span><br><span class="line">	Write_Com(<span class="number">0x80</span>+<span class="number">0x49</span>);		<span class="comment">//写入在LCD1602上显示的位置</span></span><br><span class="line">	Write_Dat(num[i]);</span><br><span class="line">	Write_Dat(num[j]);</span><br><span class="line">	Delay5ms();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">void</span> Display_Minute(unsigned char x)		<span class="comment">//LCD1602显示“分”的数值</span></span><br><span class="line">&#123;</span><br><span class="line">	unsigned char i,j;</span><br><span class="line">	i=x/<span class="number">10</span>;</span><br><span class="line">	j=x%<span class="number">10</span>;</span><br><span class="line">	Write_Com(<span class="number">0x80</span>+<span class="number">0x46</span>);</span><br><span class="line">	Write_Dat(num[i]);</span><br><span class="line">	Write_Dat(num[j]);</span><br><span class="line">	Delay5ms();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">void</span> Display_Hour(unsigned char x)		<span class="comment">//LCD1602显示“时”的数值</span></span><br><span class="line">&#123;</span><br><span class="line">	unsigned char i,j;</span><br><span class="line">	i=x/<span class="number">10</span>;</span><br><span class="line">	j=x%<span class="number">10</span>;</span><br><span class="line">	Write_Com(<span class="number">0x80</span>+<span class="number">0x43</span>);</span><br><span class="line">	Write_Dat(num[i]);</span><br><span class="line">	Write_Dat(num[j]);</span><br><span class="line">	Delay5ms();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">void</span> Display_Day(unsigned char x)		<span class="comment">//LCD1602显示“日”的数值</span></span><br><span class="line">&#123;</span><br><span class="line">	unsigned char i,j;</span><br><span class="line">	i=x/<span class="number">10</span>;</span><br><span class="line">	j=x%<span class="number">10</span>;</span><br><span class="line">	Write_Com(<span class="number">0x80</span>+<span class="number">0x0c</span>);</span><br><span class="line">	Write_Dat(num[i]);</span><br><span class="line">	Write_Dat(num[j]);</span><br><span class="line">	Delay5ms();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">void</span> Display_Month(unsigned char x)		<span class="comment">//LCD1602显示“月”的数值</span></span><br><span class="line">&#123;</span><br><span class="line">	unsigned char i,j;</span><br><span class="line">	i=x/<span class="number">10</span>;</span><br><span class="line">	j=x%<span class="number">10</span>;</span><br><span class="line">	Write_Com(<span class="number">0x80</span>+<span class="number">0x09</span>);</span><br><span class="line">	Write_Dat(num[i]);</span><br><span class="line">	Write_Dat(num[j]);</span><br><span class="line">	Delay5ms();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">void</span> Display_Year(unsigned char x)		<span class="comment">//LCD1602显示“年”的数值</span></span><br><span class="line">&#123;</span><br><span class="line">	unsigned char i,j;</span><br><span class="line">	i=x/<span class="number">10</span>;</span><br><span class="line">	j=x%<span class="number">10</span>;</span><br><span class="line">	Write_Com(<span class="number">0x80</span>+<span class="number">0x06</span>);</span><br><span class="line">	Write_Dat(num[i]);</span><br><span class="line">	Write_Dat(num[j]);</span><br><span class="line">	Delay5ms();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">void</span> main()</span><br><span class="line">&#123;</span><br><span class="line">	unsigned char second,minute,hour,day,month,year;</span><br><span class="line">	unsigned char temp;		<span class="comment">//暂存从DS1302读出的数据</span></span><br><span class="line">	X();</span><br><span class="line">	LCD1602_Init();</span><br><span class="line">	Write_Com(<span class="number">0x80</span>+<span class="number">0x01</span>);</span><br><span class="line">	Write_Dat(<span class="string">'D'</span>);</span><br><span class="line">	Write_Dat(<span class="string">'A'</span>);</span><br><span class="line">	Write_Dat(<span class="string">'T'</span>);</span><br><span class="line">	Write_Dat(<span class="string">'E'</span>);</span><br><span class="line">	Write_Dat(<span class="string">':'</span>);</span><br><span class="line">	Delay5ms();</span><br><span class="line">	Write_Com(<span class="number">0x80</span>+<span class="number">0x08</span>);</span><br><span class="line">	Write_Dat(<span class="string">'-'</span>);</span><br><span class="line">	Delay5ms();</span><br><span class="line">	Write_Com(<span class="number">0x80</span>+<span class="number">0x0b</span>);</span><br><span class="line">	Write_Dat(<span class="string">'-'</span>);</span><br><span class="line">	Delay5ms();</span><br><span class="line">	Write_Com(<span class="number">0x80</span>+<span class="number">0x45</span>);</span><br><span class="line">	Write_Dat(<span class="string">':'</span>);</span><br><span class="line">	Delay5ms();</span><br><span class="line">	Write_Com(<span class="number">0x80</span>+<span class="number">0x48</span>);</span><br><span class="line">	Write_Dat(<span class="string">':'</span>);</span><br><span class="line">	Delay5ms();</span><br><span class="line">	Init_DS1302();</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">while</span>(<span class="number">1</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		temp=Read_DS1302(<span class="number">0x81</span>);</span><br><span class="line">		second=((temp&amp;<span class="number">0x70</span>)&gt;&gt;<span class="number">4</span>)*<span class="number">10</span>+(temp&amp;<span class="number">0x0f</span>);		<span class="comment">//将“秒”的BCD码转换成对应的ASCII值</span></span><br><span class="line">		Display_Second(second);</span><br><span class="line">		temp=Read_DS1302(<span class="number">0x83</span>);</span><br><span class="line">		minute=((temp&amp;<span class="number">0x70</span>)&gt;&gt;<span class="number">4</span>)*<span class="number">10</span>+(temp&amp;<span class="number">0x0f</span>);		<span class="comment">//将“分”的BCD码转换成对应的ASCII值</span></span><br><span class="line">		Display_Minute(minute);</span><br><span class="line">		temp=Read_DS1302(<span class="number">0x85</span>);</span><br><span class="line">		hour=((temp&amp;<span class="number">0x70</span>)&gt;&gt;<span class="number">4</span>)*<span class="number">10</span>+(temp&amp;<span class="number">0x0f</span>);		<span class="comment">//将“时”的BCD码转换成对应的ASCII值</span></span><br><span class="line">		Display_Hour(hour);</span><br><span class="line">		temp=Read_DS1302(<span class="number">0x87</span>);</span><br><span class="line">		day=((temp&amp;<span class="number">0x70</span>)&gt;&gt;<span class="number">4</span>)*<span class="number">10</span>+(temp&amp;<span class="number">0x0f</span>);		<span class="comment">//将“日”的BCD码转换成对应的ASCII值</span></span><br><span class="line">		Display_Day(day);</span><br><span class="line">		temp=Read_DS1302(<span class="number">0x89</span>);</span><br><span class="line">		month=((temp&amp;<span class="number">0x70</span>)&gt;&gt;<span class="number">4</span>)*<span class="number">10</span>+(temp&amp;<span class="number">0x0f</span>);		<span class="comment">//将“月”的BCD码转换成对应的ASCII值</span></span><br><span class="line">		Display_Month(month);</span><br><span class="line">		temp=Read_DS1302(<span class="number">0x8d</span>);</span><br><span class="line">		year=((temp&amp;<span class="number">0x70</span>)&gt;&gt;<span class="number">4</span>)*<span class="number">10</span>+(temp&amp;<span class="number">0x0f</span>);		<span class="comment">//将“年”的BCD码转换成对应的ASCII值</span></span><br><span class="line">		Display_Year(year);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/05/13/51%E5%8D%95%E7%89%87%E6%9C%BA%20%E2%80%94%E2%80%94%20DS1302%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/DS1302%E6%97%B6%E9%92%9F%E6%A8%A1%E5%9D%97.png" alt></p>
+<p><img src="/2021/05/13/51%E5%8D%95%E7%89%87%E6%9C%BA%20%E2%80%94%E2%80%94%20DS1302%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/LCD1602%E6%A8%A1%E5%9D%97.png" alt></p>
+<hr>
+<p><strong>参考资料：</strong></p>
+<p><a href="http://www.dianyuan.com/upload/community/2014/02/22/1393058389-67878.pdf" target="_blank" rel="noopener">DS1302中文资料</a></p>
+<p><a href="https://blog.csdn.net/m0_37655357/article/details/78314570" target="_blank" rel="noopener">关于实时时钟模块DS1302使用心得</a></p>
+<p><a href="https://blog.csdn.net/lin5103151/article/details/103544509" target="_blank" rel="noopener">时钟芯片DS1302的原理及使用</a></p>
+<p><a href="https://blog.csdn.net/weixin_45859569/article/details/108249101" target="_blank" rel="noopener">DS1302的使用方式 及 51单片机连接DS1302的驱动程序</a></p>
+<p><a href="https://blog.csdn.net/qq_36880027/article/details/80489465" target="_blank" rel="noopener">实时时钟DS1302详细介绍</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/51%E5%8D%95%E7%89%87%E6%9C%BA/" rel="tag"># 51单片机</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/05/08/51%E5%8D%95%E7%89%87%E6%9C%BA%20%E2%80%94%E2%80%94%20IIC%E5%8D%8F%E8%AE%AE%20&%20EEPROM%E8%AF%BB%E5%86%99/" rel="prev" title="51单片机 —— IIC协议 & EEPROM读写">
+      <i class="fa fa-chevron-left"></i> 51单片机 —— IIC协议 & EEPROM读写
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#DS1302引脚定义"><span class="nav-number">1.</span> <span class="nav-text">DS1302引脚定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DS1302命令字"><span class="nav-number">2.</span> <span class="nav-text">DS1302命令字</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DS1302读写时序"><span class="nav-number">3.</span> <span class="nav-text">DS1302读写时序</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#读时序"><span class="nav-number">3.1.</span> <span class="nav-text">读时序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#写时序"><span class="nav-number">3.2.</span> <span class="nav-text">写时序</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DS1302数据地址和传输格式"><span class="nav-number">4.</span> <span class="nav-text">DS1302数据地址和传输格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#举个栗子"><span class="nav-number">5.</span> <span class="nav-text">举个栗子</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="NIMITIZ"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">NIMITIZ</p>
+  <div class="site-description" itemprop="description">生命不息，折腾不止</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">73</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/NIMITIZ" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;NIMITIZ" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:cwn3234733323@gmail.com" title="E-Mail → mailto:cwn3234733323@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+      
+           
+         
+         <div style="">
+  <canvas id="canvas" style="width:60%;">当前浏览器不支持canvas，请更换浏览器后再试</canvas>
+</div>
+<script>
+(function(){
+
+   var digit=
+    [
+        [
+            [0,0,1,1,1,0,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,0,1,1,0],
+            [0,0,1,1,1,0,0]
+        ],//0
+        [
+            [0,0,0,1,1,0,0],
+            [0,1,1,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [1,1,1,1,1,1,1]
+        ],//1
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,1,1],
+            [1,1,1,1,1,1,1]
+        ],//2
+        [
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//3
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,0],
+            [0,0,1,1,1,1,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,1,1,0],
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,1]
+        ],//4
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,1,1,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//5
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//6
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0]
+        ],//7
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//8
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,1,1,0,0,0,0]
+        ],//9
+        [
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0]
+        ]//:
+    ];
+
+var canvas = document.getElementById('canvas');
+
+if(canvas.getContext){
+    var cxt = canvas.getContext('2d');
+    //声明canvas的宽高
+    var H = 100,W = 700;
+    canvas.height = H;
+    canvas.width = W;
+    cxt.fillStyle = '#f00';
+    cxt.fillRect(10,10,50,50);
+
+    //存储时间数据
+    var data = [];
+    //存储运动的小球
+    var balls = [];
+    //设置粒子半径
+    var R = canvas.height/20-1;
+    (function(){
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        //存储时间数字，由十位小时、个位小时、冒号、十位分钟、个位分钟、冒号、十位秒钟、个位秒钟这7个数字组成
+        data.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+    })();
+
+    /*生成点阵数字*/
+    function renderDigit(index,num){
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    cxt.beginPath();
+                    cxt.arc(14*(R+2)*index + j*2*(R+1)+(R+1),i*2*(R+1)+(R+1),R,0,2*Math.PI);
+                    cxt.closePath();
+                    cxt.fill();
+                }
+            }
+        }
+    }
+
+    /*更新时钟*/
+    function updateDigitTime(){
+        var changeNumArray = [];
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        var NewData = [];
+        NewData.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+        for(var i = data.length-1; i >=0 ; i--){
+            //时间发生变化
+            if(NewData[i] !== data[i]){
+                //将变化的数字值和在data数组中的索引存储在changeNumArray数组中
+                changeNumArray.push(i+'_'+(Number(data[i])+1)%10);
+            }
+        }
+        //增加小球
+        for(var i = 0; i< changeNumArray.length; i++){
+            addBalls.apply(this,changeNumArray[i].split('_'));
+        }
+        data = NewData.concat();
+    }
+
+    /*更新小球状态*/
+    function updateBalls(){
+        for(var i = 0; i < balls.length; i++){
+            balls[i].stepY += balls[i].disY;
+            balls[i].x += balls[i].stepX;
+            balls[i].y += balls[i].stepY;
+            if(balls[i].x > W + R || balls[i].y > H + R){
+                balls.splice(i,1);
+                i--;
+            }
+        }
+    }
+
+    /*增加要运动的小球*/
+    function addBalls(index,num){
+        var numArray = [1,2,3];
+        var colorArray =  ["#3BE","#09C","#A6C","#93C","#9C0","#690","#FB3","#F80","#F44","#C00"];
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    var ball = {
+                        x:14*(R+2)*index + j*2*(R+1)+(R+1),
+                        y:i*2*(R+1)+(R+1),
+                        stepX:Math.floor(Math.random() * 4 -2),
+                        stepY:-2*numArray[Math.floor(Math.random()*numArray.length)],
+                        color:colorArray[Math.floor(Math.random()*colorArray.length)],
+                        disY:1
+                    };
+                    balls.push(ball);
+                }
+            }
+        }
+    }
+
+    /*渲染*/
+    function render(){
+        //重置画布宽度，达到清空画布的效果
+        canvas.height = 100;
+        //渲染时钟
+        for(var i = 0; i < data.length; i++){
+            renderDigit(i,data[i]);
+        }
+        //渲染小球
+        for(var i = 0; i < balls.length; i++){
+            cxt.beginPath();
+            cxt.arc(balls[i].x,balls[i].y,R,0,2*Math.PI);
+            cxt.fillStyle = balls[i].color;
+            cxt.closePath();
+            cxt.fill();
+        }
+    }
+
+    clearInterval(oTimer);
+    var oTimer = setInterval(function(){
+        //更新时钟
+        updateDigitTime();
+        //更新小球状态
+        updateBalls();
+        //渲染
+        render();
+    },50);
+}
+
+})();
+</script>
+   </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">NIMITIZ</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">75k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">1:09</span>
+</div>
+
+<br /> #换行
+<!-- 网站运行时间的设置 -->
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("04/15/2020 00:00:00");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'm4huKMbJFhxPsNBUaRNaSsxb-gzGzoHsz',
+      appKey     : 'ikUKWElVr7k7aYAm1PspteAw',
+      placeholder: "ヾﾉ≧∀≦)o 来呀！吐槽一番吧！",
+      avatar     : 'monsterid',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+  
+
+  <script src="/js/activate-power-mode.min.js"></script>
+  <script>
+    POWERMODE.colorful = true;
+    POWERMODE.shake = false;
+    document.body.addEventListener('input', POWERMODE);
+  </script>
+
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>
+
+<!--浏览器搞笑标题-->
+<script type="text/javascript" src="/js/funny_title.js"></script>
+
+<!--动态线条背景-->
+<script type="text/javascript"
+color="220,220,220" opacity='0.9' zIndex="-1" count="200" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+</script>
