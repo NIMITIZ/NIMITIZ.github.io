@@ -23,17 +23,23 @@
     var CONFIG = {"hostname":"www.nimitiz.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":"ture","trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"./public/search.xml"};
   </script>
 
-  <meta name="description" content="生命不息，折腾不止">
-<meta property="og:type" content="website">
-<meta property="og:title" content="小浣熊的技术小站">
-<meta property="og:url" content="https://www.nimitiz.cn/archives/2020/08/index.html">
+  <meta name="description" content="利用子程序对数据段NUM0db 11,12,13,14和NUM1db 12,13,14,15对应的各个数进行求和（即对NUM0[0]和NUM1[0]进行求和，对NUM0[1]和NUM1[1]进行求和······），将结果存储于以1000H起始的数据段中，并输出结果。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="8086汇编语言程序设计简要记录（三）">
+<meta property="og:url" content="https://www.nimitiz.cn/2021/05/13/8086%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95%EF%BC%88%E4%B8%89%EF%BC%89/index.html">
 <meta property="og:site_name" content="小浣熊的技术小站">
-<meta property="og:description" content="生命不息，折腾不止">
+<meta property="og:description" content="利用子程序对数据段NUM0db 11,12,13,14和NUM1db 12,13,14,15对应的各个数进行求和（即对NUM0[0]和NUM1[0]进行求和，对NUM0[1]和NUM1[1]进行求和······），将结果存储于以1000H起始的数据段中，并输出结果。">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/05/13/8086%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95%EF%BC%88%E4%B8%89%EF%BC%89/%E8%B0%83%E8%AF%95%E7%BB%93%E6%9E%9C.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/05/13/8086%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95%EF%BC%88%E4%B8%89%EF%BC%89/%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C.png">
+<meta property="article:published_time" content="2021-05-13T10:09:13.000Z">
+<meta property="article:modified_time" content="2021-05-13T10:10:20.521Z">
 <meta property="article:author" content="NIMITIZ">
+<meta property="article:tag" content="8086汇编语言">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.nimitiz.cn/2021/05/13/8086%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95%EF%BC%88%E4%B8%89%EF%BC%89/%E8%B0%83%E8%AF%95%E7%BB%93%E6%9E%9C.png">
 
-<link rel="canonical" href="https://www.nimitiz.cn/archives/2020/08/">
+<link rel="canonical" href="https://www.nimitiz.cn/2021/05/13/8086%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95%EF%BC%88%E4%B8%89%EF%BC%89/">
 
 
 <script id="page-configurations">
@@ -41,12 +47,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>归档 | 小浣熊的技术小站</title>
+  <title>8086汇编语言程序设计简要记录（三） | 小浣熊的技术小站</title>
   
 
 
@@ -196,117 +202,135 @@
         <div class="content-wrap">
           
 
-          <div class="content archive">
+          <div class="content post posts-expand">
             
 
+    
   
   
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.nimitiz.cn/2021/05/13/8086%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95%EF%BC%88%E4%B8%89%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="NIMITIZ">
+      <meta itemprop="description" content="生命不息，折腾不止">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小浣熊的技术小站">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          8086汇编语言程序设计简要记录（三）
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-05-13 18:09:13 / 修改时间：18:10:20" itemprop="dateCreated datePublished" datetime="2021-05-13T18:09:13+08:00">2021-05-13</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
   
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        
-        <span class="collection-header">不错! 目前共计 74 篇日志。 继续努力。</span>
-      </div>
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/05/13/8086%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95%EF%BC%88%E4%B8%89%EF%BC%89/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/05/13/8086%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95%EF%BC%88%E4%B8%89%EF%BC%89/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>145</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2020</span>
-    </div>
+        <p>利用子程序对数据段NUM0<code>db 11,12,13,14</code>和NUM1<code>db 12,13,14,15</code>对应的各个数进行求和（即对<code>NUM0[0]</code>和<code>NUM1[0]</code>进行求和，对<code>NUM0[1]</code>和<code>NUM1[1]</code>进行求和······），将结果存储于以<code>1000H</code>起始的数据段中，并输出结果。</p>
+<a id="more"></a>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-08-16T19:57:19+08:00"
-              content="2020-08-16">
-          08-16
-        </time>
-      </div>
 
-      <div class="post-title">
-          <a class="post-title-link" href="/2020/08/16/C%E8%AF%AD%E8%A8%80%E7%AC%94%E8%AE%B0%E2%80%94%E2%80%94fgets()%E5%92%8Cfputs()%E5%87%BD%E6%95%B0/" itemprop="url">
-            <span itemprop="name">C语言笔记——fgets()和fputs()函数</span>
-          </a>
-      </div>
 
-    </header>
-  </article>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+<p><strong>源程序：</strong></p>
+<figure class="highlight x86asm"><table><tr><td class="code"><pre><span class="line">DATA <span class="meta">SEGMENT</span></span><br><span class="line">    NUM0 <span class="built_in">DB</span> <span class="number">11</span>,<span class="number">12</span>,<span class="number">13</span>,<span class="number">14</span></span><br><span class="line">    NUM1 <span class="built_in">DB</span> <span class="number">12</span>,<span class="number">13</span>,<span class="number">14</span>,<span class="number">15</span></span><br><span class="line">    ORG <span class="number">1000H</span></span><br><span class="line">    SUM <span class="built_in">DB</span> <span class="number">4</span> DUP(?)</span><br><span class="line">DATA ENDS</span><br><span class="line"></span><br><span class="line">CODE <span class="meta">SEGMENT</span></span><br><span class="line">    <span class="meta">ASSUME</span> <span class="built_in">DS</span>:DATA,<span class="built_in">CS</span>:CODE</span><br><span class="line"></span><br><span class="line"><span class="symbol">    START:</span></span><br><span class="line">    <span class="keyword">MOV</span> <span class="built_in">AX</span>,DATA</span><br><span class="line">    <span class="keyword">MOV</span> <span class="built_in">DS</span>,<span class="built_in">AX</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">MOV</span> <span class="built_in">CX</span>,<span class="number">4</span></span><br><span class="line">    <span class="keyword">LEA</span> <span class="built_in">SI</span>,NUM0     <span class="comment">;取段NUM0的偏移地址</span></span><br><span class="line">    <span class="keyword">LEA</span> <span class="built_in">DI</span>,NUM1     <span class="comment">;取段NUM1的偏移地址</span></span><br><span class="line"></span><br><span class="line"><span class="symbol">    L:</span></span><br><span class="line">    <span class="keyword">MOV</span> <span class="built_in">BL</span>,[<span class="built_in">SI</span>]</span><br><span class="line">    <span class="keyword">MOV</span> <span class="number">BH</span>,[<span class="built_in">DI</span>]</span><br><span class="line">    <span class="keyword">ADD</span> <span class="number">BH</span>,<span class="built_in">BL</span>       <span class="comment">;两数相加</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">PUSH</span> <span class="built_in">SI</span>     <span class="comment">;将段NUM0的偏移地址SI压栈，避免与段SUM的偏移地址SI冲突</span></span><br><span class="line">    <span class="keyword">MOV</span> SUM[<span class="built_in">SI</span>],<span class="number">BH</span>      <span class="comment">;将两数相加的结果写入段SUM</span></span><br><span class="line">    <span class="keyword">INC</span> <span class="built_in">SI</span></span><br><span class="line">    <span class="keyword">POP</span> <span class="built_in">SI</span>      <span class="comment">;将段NUM0的偏移地址SI弹栈</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">CALL</span> DISPLAY        <span class="comment">;调用子程序DISPLAY实现输出功能</span></span><br><span class="line">    <span class="keyword">INC</span> <span class="built_in">SI</span></span><br><span class="line">    <span class="keyword">INC</span> <span class="built_in">DI</span></span><br><span class="line">    <span class="keyword">LOOP</span> L</span><br><span class="line"></span><br><span class="line">    <span class="keyword">MOV</span> <span class="number">AH</span>,<span class="number">4CH</span></span><br><span class="line">    <span class="keyword">INT</span> <span class="number">21H</span></span><br><span class="line"></span><br><span class="line">    DISPLAY PROC        <span class="comment">;子程序DISPLAY</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">MOV</span> <span class="built_in">AL</span>,<span class="number">BH</span>       <span class="comment">;将8位的两数相加之和转换为16位并写入AX作被除数</span></span><br><span class="line">        <span class="keyword">MOV</span> <span class="number">AH</span>,<span class="number">0H</span></span><br><span class="line">        <span class="keyword">MOV</span> <span class="built_in">BL</span>,<span class="number">10</span>       <span class="comment">;8位的除数</span></span><br><span class="line">        <span class="keyword">DIV</span> <span class="built_in">BL</span>      <span class="comment">;SUM/10，取得SUM的十位和个位</span></span><br><span class="line">        <span class="keyword">PUSH</span> <span class="built_in">AX</span>     <span class="comment">;将商和余数压栈（商被写入AL，余数被写入AH）</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">MOV</span> <span class="built_in">DL</span>,<span class="built_in">AL</span></span><br><span class="line">        <span class="keyword">ADD</span> <span class="built_in">DL</span>,<span class="number">30H</span>      <span class="comment">;将SUM的十位转换为其ASCII值，使十位能以字符形式输出</span></span><br><span class="line">        <span class="keyword">MOV</span> <span class="number">AH</span>,<span class="number">2H</span>       <span class="comment">;输出结果</span></span><br><span class="line">        <span class="keyword">INT</span> <span class="number">21H</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">POP</span> <span class="built_in">AX</span>      <span class="comment">;将商和余数弹栈</span></span><br><span class="line">        <span class="keyword">MOV</span> <span class="built_in">DL</span>,<span class="number">AH</span></span><br><span class="line">        <span class="keyword">ADD</span> <span class="built_in">DL</span>,<span class="number">30H</span>      <span class="comment">;将SUM的个位转换为其ASCII值，使个位能以字符形式输出</span></span><br><span class="line">        <span class="keyword">MOV</span> <span class="number">AH</span>,<span class="number">2H</span>       <span class="comment">;输出结果</span></span><br><span class="line">        <span class="keyword">INT</span> <span class="number">21H</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">MOV</span> <span class="built_in">DL</span>,<span class="string">'D'</span>      <span class="comment">;输出字符D</span></span><br><span class="line">        <span class="keyword">MOV</span> <span class="number">AH</span>,<span class="number">2H</span></span><br><span class="line">        <span class="keyword">INT</span> <span class="number">21H</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">MOV</span> <span class="built_in">DL</span>,<span class="number">10</span>       <span class="comment">;输出“换行”</span></span><br><span class="line">        <span class="keyword">MOV</span> <span class="number">AH</span>,<span class="number">2H</span></span><br><span class="line">        <span class="keyword">INT</span> <span class="number">21H</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">RET</span>     <span class="comment">;子程序返回</span></span><br><span class="line">        DISPLAY ENDP</span><br><span class="line"></span><br><span class="line">CODE ENDS</span><br><span class="line">    END START</span><br></pre></td></tr></table></figure>
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-08-14T23:09:21+08:00"
-              content="2020-08-14">
-          08-14
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2020/08/14/C%E8%AF%AD%E8%A8%80%E7%AC%94%E8%AE%B0%E2%80%94%E2%80%94fgetc()%E5%92%8Cfputc()%E5%87%BD%E6%95%B0/" itemprop="url">
-            <span itemprop="name">C语言笔记——fgetc()和fputc()函数</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-08-13T23:55:12+08:00"
-              content="2020-08-13">
-          08-13
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2020/08/13/C%E8%AF%AD%E8%A8%80%E6%96%87%E4%BB%B6%E6%93%8D%E4%BD%9C%E2%80%94%E2%80%94fopen()%E5%87%BD%E6%95%B0/" itemprop="url">
-            <span itemprop="name">C语言文件操作——fopen()函数</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-08-11T00:42:07+08:00"
-              content="2020-08-11">
-          08-11
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2020/08/11/C%E8%AF%AD%E8%A8%80%E9%9A%8F%E6%9C%BA%E6%95%B0/" itemprop="url">
-            <span itemprop="name">C语言随机数</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
+<p><strong>调试结果：</strong></p>
+<p><img src="/2021/05/13/8086%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95%EF%BC%88%E4%B8%89%EF%BC%89/%E8%B0%83%E8%AF%95%E7%BB%93%E6%9E%9C.png" alt></p>
+<p><strong>运行结果：</strong></p>
+<p><img src="/2021/05/13/8086%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95%EF%BC%88%E4%B8%89%EF%BC%89/%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C.png" alt></p>
 
     </div>
-  </div>
-  
-  
-  
 
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/8086%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80/" rel="tag"># 8086汇编语言</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/05/13/51%E5%8D%95%E7%89%87%E6%9C%BA%20%E2%80%94%E2%80%94%20DS1302%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/" rel="prev" title="51单片机 —— DS1302简要记录">
+      <i class="fa fa-chevron-left"></i> 51单片机 —— DS1302简要记录
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
   
 
 
 
           </div>
           
+    <div class="comments" id="valine-comments"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
