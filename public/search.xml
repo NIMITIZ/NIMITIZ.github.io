@@ -255,7 +255,7 @@
       <link href="/2021/03/06/51%E5%8D%95%E7%89%87%E6%9C%BA%E4%B8%AD%E6%96%AD%E4%BC%98%E5%85%88%E7%BA%A7/"/>
       <url>/2021/03/06/51%E5%8D%95%E7%89%87%E6%9C%BA%E4%B8%AD%E6%96%AD%E4%BC%98%E5%85%88%E7%BA%A7/</url>
       
-        <content type="html"><![CDATA[<p>由于自己对51单片机的中断优先级相关觉得比较混乱，有必要做个简单整理。</p><a id="more"></a><h2 id="查询优先级-amp-执行优先级"><a href="#查询优先级-amp-执行优先级" class="headerlink" title="查询优先级&amp;执行优先级"></a>查询优先级&amp;执行优先级</h2><p>51单片机由两种优先级——查询优先级和执行优先级。</p><h3 id="查询优先级"><a href="#查询优先级" class="headerlink" title="查询优先级"></a>查询优先级</h3><p><img src="/2021/03/06/51%E5%8D%95%E7%89%87%E6%9C%BA%E4%B8%AD%E6%96%AD%E4%BC%98%E5%85%88%E7%BA%A7/%E4%B8%AD%E6%96%AD%E6%9F%A5%E8%AF%A2%E6%AC%A1%E5%BA%8F.png" alt></p><p>查询优先级是指当51单片机的多个中断源同时引起中断时，CPU逐个查询中断标志位的次序，高优先级的中断标志位将被优先查询到，<strong>但并不代表查询优先级高的中断一定可以打断正在执行中断处理的低优先级中断</strong>。</p><h4 id="举个栗子"><a href="#举个栗子" class="headerlink" title="举个栗子"></a>举个栗子</h4><ul><li>当定时器中断0和外部中断1同时引起时（没有设置中断优先级控制寄存器），则会首先执行定时器中断0的请求；</li><li>当定时器中断0和外部中断1同时引起且外部中断1正在执行请求时（没有设置中断优先级控制寄存器），外部中断1不能被任何中断（包括定时器中断0）所打断。</li></ul><h3 id="执行优先级"><a href="#执行优先级" class="headerlink" title="执行优先级"></a>执行优先级</h3><p>执行优先级由包括<code>IP</code>（可位寻址）在内的中断优先级控制寄存器来控制。</p><p><img src="/2021/03/06/51%E5%8D%95%E7%89%87%E6%9C%BA%E4%B8%AD%E6%96%AD%E4%BC%98%E5%85%88%E7%BA%A7/%E4%B8%AD%E6%96%AD%E4%BC%98%E5%85%88%E7%BA%A7%E6%8E%A7%E5%88%B6%E5%AF%84%E5%AD%98%E5%99%A8.png" alt></p><ul><li>高两位置0</li><li><code>PT2</code>：定时器中断2优先级控制位</li><li><code>PS</code>：串口中断优先级控制位</li><li><code>PT1</code>：定时器中断1优先级控制位</li><li><code>PX1</code>：外部中断1优先级控制位</li><li><code>PT0</code>：定时器中断0优先级控制位</li><li><code>PX0</code>：外部中断0优先级控制位</li></ul><p>如果只设置<code>IP</code>，执行优先级则只有两级——高优先级（<code>IP</code>中的相应位置1）和低优先级（<code>IP</code>中的相应位置0）。</p><ul><li>当多个中断源同时引起中断时，优先响应执行优先级高的中断；</li><li>同一执行优先级的中断则根据查询优先级依次响应；</li><li>一个正在执行的低优先级中断能被高优先级中断所打断，反之则不能；</li><li>一个正在执行的中断不能被新的同优先级中断所打断。</li></ul><h4 id="举个栗子-1"><a href="#举个栗子-1" class="headerlink" title="举个栗子"></a>举个栗子</h4><p>当<code>IP</code>中的<code>PX1</code>位和<code>PT0</code>位置1，其余位置0时，中断的响应次序依次为：</p><p>定时器中断0 → 外部中断1 → 外部中断0 → 定时器中断1 → 串口中断 → 定时器中断2</p><hr><p><strong>参考资料：</strong></p><p><a href="https://www.cnblogs.com/shirishiqi/p/5542116.html" target="_blank" rel="noopener">51单片机的中断优先级及中断嵌套</a></p><p><a href="http://www.stcmcudata.com/datasheet/stc/STC-AD-PDF/STC89C51RC-RD.pdf" target="_blank" rel="noopener">STC89C52RC官方技术文档</a></p>]]></content>
+        <content type="html"><![CDATA[<p>由于自己对51单片机的中断优先级相关觉得比较混乱，有必要做个简单整理。</p><a id="more"></a><h2 id="查询优先级-amp-执行优先级"><a href="#查询优先级-amp-执行优先级" class="headerlink" title="查询优先级&amp;执行优先级"></a>查询优先级&amp;执行优先级</h2><p>51单片机由两种优先级——查询优先级和执行优先级。</p><h3 id="查询优先级"><a href="#查询优先级" class="headerlink" title="查询优先级"></a>查询优先级</h3><p><img src="/2021/03/06/51%E5%8D%95%E7%89%87%E6%9C%BA%E4%B8%AD%E6%96%AD%E4%BC%98%E5%85%88%E7%BA%A7/%E4%B8%AD%E6%96%AD%E6%9F%A5%E8%AF%A2%E6%AC%A1%E5%BA%8F.png" alt></p><p>查询优先级是指当51单片机的多个中断源同时引起中断时，CPU逐个查询中断标志位的次序，高优先级的中断标志位将被优先查询到，<strong>但并不代表查询优先级高的中断一定可以打断正在执行中断处理的低优先级中断</strong>。查询优先级由51单片机本身的电路来决定，不能设置和更改。</p><h4 id="举个栗子"><a href="#举个栗子" class="headerlink" title="举个栗子"></a>举个栗子</h4><ul><li>当定时器中断0和外部中断1同时引起时（没有设置中断优先级控制寄存器），则会首先执行定时器中断0的请求；</li><li>当定时器中断0和外部中断1同时引起且外部中断1正在执行请求时（没有设置中断优先级控制寄存器），外部中断1不能被任何中断（包括定时器中断0）所打断。</li></ul><h3 id="执行优先级"><a href="#执行优先级" class="headerlink" title="执行优先级"></a>执行优先级</h3><p>执行优先级由中断优先级控制寄存器<code>IP</code>来控制。</p><p><img src="/2021/03/06/51%E5%8D%95%E7%89%87%E6%9C%BA%E4%B8%AD%E6%96%AD%E4%BC%98%E5%85%88%E7%BA%A7/%E4%B8%AD%E6%96%AD%E4%BC%98%E5%85%88%E7%BA%A7%E6%8E%A7%E5%88%B6%E5%AF%84%E5%AD%98%E5%99%A8.png" alt></p><ul><li>高两位置0</li><li><code>PT2</code>：定时器中断2优先级控制位</li><li><code>PS</code>：串口中断优先级控制位</li><li><code>PT1</code>：定时器中断1优先级控制位</li><li><code>PX1</code>：外部中断1优先级控制位</li><li><code>PT0</code>：定时器中断0优先级控制位</li><li><code>PX0</code>：外部中断0优先级控制位</li></ul><p>如果设置了<code>IP</code>，执行优先级则只有两级——高优先级（<code>IP</code>中的相应位置1）和低优先级（<code>IP</code>中的相应位置0）。若没有设置<code>IP</code>，则当多个中断同时产生时，单片机只会根据查询优先级来进行优先选择。</p><ul><li>当多个中断源同时引起中断时，优先响应执行优先级高的中断；</li><li>同一执行优先级的中断则根据查询优先级依次响应；</li><li>一个正在执行的低优先级中断能被高优先级中断所打断，反之则不能；</li><li>一个正在执行的中断不能被新的同优先级中断所打断。</li></ul><h4 id="举个栗子-1"><a href="#举个栗子-1" class="headerlink" title="举个栗子"></a>举个栗子</h4><p>当<code>IP</code>中的<code>PX1</code>位和<code>PT0</code>位置1，其余位置0时，中断的响应次序依次为：</p><p>定时器中断0 → 外部中断1 → 外部中断0 → 定时器中断1 → 串口中断 → 定时器中断2</p><h2 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h2><p>旧型号的51单片机（80C51系列）只有5个中断源，2个（执行）优先级；现在很多新型号的51单片机有更多的中断源和（执行）优先级。</p><hr><p><strong>参考资料：</strong></p><p><a href="https://www.cnblogs.com/shirishiqi/p/5542116.html" target="_blank" rel="noopener">51单片机的中断优先级及中断嵌套</a></p><p><a href="http://www.stcmcudata.com/datasheet/stc/STC-AD-PDF/STC89C51RC-RD.pdf" target="_blank" rel="noopener">STC89C52RC官方技术文档</a></p>]]></content>
       
       
       
@@ -1370,22 +1370,22 @@
     
     
     <entry>
-      <title>(｡･∀･)ﾉﾞ关于我(′▽`〃)</title>
-      <link href="/about/index.html"/>
-      <url>/about/index.html</url>
+      <title>文章分类</title>
+      <link href="/categories/index.html"/>
+      <url>/categories/index.html</url>
       
-        <content type="html"><![CDATA[<p><strong>名字</strong>：小浣熊(&gt;▽&lt;)</p><p><strong>性别</strong>：当然是XY啦(っ*´Д`)っ</p><p><strong>破壳之日</strong>：2002 / 03 / 04</p><p><strong>性格</strong>：偏内向(．． )…，钢铁直男(ノへ￣、)</p><p><strong>特点</strong>：宅…..((/- -)/，喜欢数码产品（相机除外）(*╯3╰)</p><p><strong>原驻点</strong>：广东省江门市鹤山市</p><p><strong>学校</strong>：中山大学新华学院</p><p><strong>学历</strong>：</p><p>大一计算机专业萌新一枚╮(╯▽╰)╭（2019年9月 ~ 2020年6月）</p><p>大二计算机专业菜鸟一只 (つд⊂) （2020年9月 ~ 2021年6月）</p><p><strong>志向</strong>：毕业后打算从事硬件设计和开发(‾◡◝)</p><p><strong>爱好</strong>：</p><p>喜欢<del>玩机搞机</del>折腾计算机（涵盖软、硬件，包括但不限于电脑、手机）（´v｀）；偶尔玩玩Xboxヾ(≧▽≦*)o</p><p><strong>喜欢的游戏</strong>：</p><p>GTA5（R星的给他爱5，三人一狗，没什么好质疑的 ヾ(≧▽≦*)o ）</p><p>荒野大镖客2（见证主角亚瑟·摩根的救赎(ノへ￣、)，骑马、狩猎、旅游观光；人物、剧情、细节都达到近乎完美的神作(๑•̀ㅂ•́)و✧）</p><p>使命召唤系列（每个男生骨子里都刻着一杆枪ε٩(๑&gt; ₃ &lt;)۶з）</p><p><strong>建站初心</strong>：</p><p>本站主要记录自己玩机搞机的部分笔记(つд⊂)，即使没什么人访问也不会在意。</p>]]></content>
+        <content type="html"><![CDATA[]]></content>
       
     </entry>
     
     
     
     <entry>
-      <title>文章分类</title>
-      <link href="/categories/index.html"/>
-      <url>/categories/index.html</url>
+      <title>(｡･∀･)ﾉﾞ关于我(′▽`〃)</title>
+      <link href="/about/index.html"/>
+      <url>/about/index.html</url>
       
-        <content type="html"><![CDATA[]]></content>
+        <content type="html"><![CDATA[<p><strong>名字</strong>：小浣熊(&gt;▽&lt;)</p><p><strong>性别</strong>：当然是XY啦(っ*´Д`)っ</p><p><strong>破壳之日</strong>：2002 / 03 / 04</p><p><strong>性格</strong>：偏内向(．． )…，钢铁直男(ノへ￣、)</p><p><strong>特点</strong>：宅…..((/- -)/，喜欢数码产品（相机除外）(*╯3╰)</p><p><strong>原驻点</strong>：广东省江门市鹤山市</p><p><strong>学校</strong>：中山大学新华学院</p><p><strong>学历</strong>：</p><p>大一计算机专业萌新一枚╮(╯▽╰)╭（2019年9月 ~ 2020年6月）</p><p>大二计算机专业菜鸟一只 (つд⊂) （2020年9月 ~ 2021年6月）</p><p><strong>志向</strong>：毕业后打算从事硬件设计和开发(‾◡◝)</p><p><strong>爱好</strong>：</p><p>喜欢<del>玩机搞机</del>折腾计算机（涵盖软、硬件，包括但不限于电脑、手机）（´v｀）；偶尔玩玩Xboxヾ(≧▽≦*)o</p><p><strong>喜欢的游戏</strong>：</p><p>GTA5（R星的给他爱5，三人一狗，没什么好质疑的 ヾ(≧▽≦*)o ）</p><p>荒野大镖客2（见证主角亚瑟·摩根的救赎(ノへ￣、)，骑马、狩猎、旅游观光；人物、剧情、细节都达到近乎完美的神作(๑•̀ㅂ•́)و✧）</p><p>使命召唤系列（每个男生骨子里都刻着一杆枪ε٩(๑&gt; ₃ &lt;)۶з）</p><p><strong>建站初心</strong>：</p><p>本站主要记录自己玩机搞机的部分笔记(つд⊂)，即使没什么人访问也不会在意。</p>]]></content>
       
     </entry>
     
