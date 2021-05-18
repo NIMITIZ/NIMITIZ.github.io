@@ -424,27 +424,6 @@
     
     
     <entry>
-      <title>Ubuntu 20.04安装Qv2ray</title>
-      <link href="/2020/12/10/Ubuntu%2020.04%E5%AE%89%E8%A3%85Qv2ray/"/>
-      <url>/2020/12/10/Ubuntu%2020.04%E5%AE%89%E8%A3%85Qv2ray/</url>
-      
-        <content type="html"><![CDATA[<p>简单记录一下在Ubuntu 20.04上安装Qv2ray的过程。</p><a id="more"></a><h2 id="安装Qv2ray"><a href="#安装Qv2ray" class="headerlink" title="安装Qv2ray"></a>安装Qv2ray</h2><p>在Terminal中安装Qv2ray，需要借助依赖包snap，但Ubuntu 20.04 LTS已经预装了snap，所以只需要使用以下命令即可安装Qv2ray：</p><figure class="highlight cmake"><table><tr><td class="code"><pre><span class="line">snap <span class="keyword">install</span> qv2ray</span><br></pre></td></tr></table></figure><h2 id="下载安装v2ray-core"><a href="#下载安装v2ray-core" class="headerlink" title="下载安装v2ray-core"></a>下载安装v2ray-core</h2><p>Qv2ray仅仅只是外壳，一个图形化界面，不包含核心程序V2Ray，所以还需要下载安装<a href="https://github.com/v2ray/v2ray-core" target="_blank" rel="noopener">v2ray-core</a>。</p><p>安装.zip文件解压工具unzip和下载工具wget：</p><figure class="highlight cmake"><table><tr><td class="code"><pre><span class="line">apt <span class="keyword">install</span> unzip wget</span><br></pre></td></tr></table></figure><p>下载v2ray-core：</p><figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">wget https:<span class="regexp">//gi</span>thub.com<span class="regexp">/v2fly/</span>v2ray-core<span class="regexp">/releases/</span>download<span class="regexp">/v4.31.0/</span>v2ray-linux-<span class="number">64</span>.zip</span><br></pre></td></tr></table></figure><p>解压文件：</p><figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">unzip v2ray-linux<span class="number">-64.</span>zip</span><br></pre></td></tr></table></figure><p>解压完毕后把目录重命名为<code>v2ray-core</code>（其实不重命名应该也没问题），然后把该目录移动至<code>/home/nimitiz/snap/qv2ray/3605/.config/qv2ray/vcore/</code>。</p><h2 id="设置目录"><a href="#设置目录" class="headerlink" title="设置目录"></a>设置目录</h2><p>运行Qv2ray，在<code>首选项</code> → <code>内核设置</code> 中更改默认设置的<code>V2Ray 核心可执行文件路径</code>和<code>V2Ray 资源目录</code>，更改后如下图所示：</p><p><img src="/2020/12/10/Ubuntu%2020.04%E5%AE%89%E8%A3%85Qv2ray/%E8%B7%AF%E5%BE%84.jpg" alt></p><p>然后运行<code>检查 V2Ray 核心设置</code>，若设置正确，则如下所示：</p><p><img src="/2020/12/10/Ubuntu%2020.04%E5%AE%89%E8%A3%85Qv2ray/%E6%A0%B8%E5%BF%83%E8%AE%BE%E7%BD%AE.jpg" alt></p><p>然后懂的都懂&lt;(￣ˇ￣)/。</p><h2 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h2><p>Qv2ray程序更新：</p><figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">snap <span class="built_in">ref</span>resh</span><br></pre></td></tr></table></figure><hr><p>参考资料：</p><p><a href="https://qv2ray.net/getting-started/" target="_blank" rel="noopener">Qv2ray官方资料</a></p><p><a href="https://github.com/v2ray/v2ray-core" target="_blank" rel="noopener">GitHub上的v2ray-core项目</a></p>]]></content>
-      
-      
-      
-        <tags>
-            
-            <tag> Linux </tag>
-            
-            <tag> 科学上网 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>Java笔记——类与对象（三）</title>
       <link href="/2020/12/07/Java%E7%AC%94%E8%AE%B0%E2%80%94%E2%80%94%E7%B1%BB%E4%B8%8E%E5%AF%B9%E8%B1%A1%EF%BC%88%E4%B8%89%EF%BC%89/"/>
       <url>/2020/12/07/Java%E7%AC%94%E8%AE%B0%E2%80%94%E2%80%94%E7%B1%BB%E4%B8%8E%E5%AF%B9%E8%B1%A1%EF%BC%88%E4%B8%89%EF%BC%89/</url>
@@ -570,25 +549,6 @@
         <tags>
             
             <tag> Linux </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>V2Ray的安装和配置</title>
-      <link href="/2020/10/31/V2Ray%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E9%85%8D%E7%BD%AE/"/>
-      <url>/2020/10/31/V2Ray%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E9%85%8D%E7%BD%AE/</url>
-      
-        <content type="html"><![CDATA[<p>因某些政策的原因，本文基本不进行解释。</p><a id="more"></a><h2 id="服务端的安装"><a href="#服务端的安装" class="headerlink" title="服务端的安装"></a>服务端的安装</h2><p>操作系统：Ubuntu 20.10</p><figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">bash &lt;(curl -L https:<span class="regexp">//</span>raw.githubusercontent.com<span class="regexp">/v2fly/</span>fhs-install-v2ray<span class="regexp">/master/i</span>nstall-release.sh)</span><br></pre></td></tr></table></figure><h2 id="服务端的配置"><a href="#服务端的配置" class="headerlink" title="服务端的配置"></a>服务端的配置</h2><p>对V2Ray的配置文件<code>config.json</code>进行编辑；</p><p><code>config.json</code>的路径：<code>/usr/local/etc/v2ray/config.json</code>，其他Linux发行版和其他版本的Ubuntu可能会有所不同。</p><figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"inbounds"</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"port"</span>: <span class="number">128</span>, <span class="comment">// 服务器监听端口</span></span><br><span class="line">      <span class="attr">"protocol"</span>: <span class="string">"vmess"</span>,    <span class="comment">// 主传入协议</span></span><br><span class="line">      <span class="attr">"settings"</span>: &#123;</span><br><span class="line">        <span class="attr">"clients"</span>: [</span><br><span class="line">          &#123;</span><br><span class="line">            <span class="attr">"id"</span>: <span class="string">"&lt;UUID&gt;"</span>,</span><br><span class="line">            <span class="attr">"alterId"</span>: <span class="number">64</span></span><br><span class="line">          &#125;</span><br><span class="line">        ]</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">"outbounds"</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"protocol"</span>: <span class="string">"freedom"</span>,  <span class="comment">// 主传出协议</span></span><br><span class="line">      <span class="attr">"settings"</span>: &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h2 id="V2Ray的管理"><a href="#V2Ray的管理" class="headerlink" title="V2Ray的管理"></a>V2Ray的管理</h2><ul><li><p>启动V2Ray</p><figure class="highlight crmsh"><table><tr><td class="code"><pre><span class="line">service v2ray <span class="literal">start</span></span><br></pre></td></tr></table></figure></li></ul><ul><li><p>停止V2Ray</p><figure class="highlight arduino"><table><tr><td class="code"><pre><span class="line">service v2ray <span class="built_in">stop</span></span><br></pre></td></tr></table></figure></li></ul><ul><li><p>更新V2Ray</p><figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">bash &lt;(curl -L https:<span class="regexp">//</span>raw.githubusercontent.com<span class="regexp">/v2fly/</span>fhs-install-v2ray<span class="regexp">/master/i</span>nstall-release.sh)</span><br></pre></td></tr></table></figure></li></ul><ul><li><p>移除V2Ray</p><figure class="highlight vim"><table><tr><td class="code"><pre><span class="line">bash &lt;(curl -L http<span class="variable">s:</span>//raw.githubusercontent.<span class="keyword">com</span>/v2fly/fhs-install-v2ray/master/install-release.<span class="keyword">sh</span>) --<span class="built_in">remove</span></span><br></pre></td></tr></table></figure></li></ul><hr><p>整理自</p><p><a href="https://github.com/v2fly/fhs-install-v2ray/blob/master/README.zh-Hans-CN.md" target="_blank" rel="noopener">fhs-install-v2ray</a></p><p><a href="https://toutyrater.github.io/" target="_blank" rel="noopener">V2Ray 配置指南</a></p>]]></content>
-      
-      
-      
-        <tags>
-            
-            <tag> 科学上网 </tag>
             
         </tags>
       
@@ -1251,44 +1211,6 @@
     
     
     <entry>
-      <title>V2Ray一键脚本</title>
-      <link href="/2020/06/02/V2Ray%E4%B8%80%E9%94%AE%E8%84%9A%E6%9C%AC/"/>
-      <url>/2020/06/02/V2Ray%E4%B8%80%E9%94%AE%E8%84%9A%E6%9C%AC/</url>
-      
-        <content type="html"><![CDATA[<p>懂的自然懂，我就不解释了（～￣▽￣～）。</p><a id="more"></a><h2 id="脚本安装"><a href="#脚本安装" class="headerlink" title="脚本安装"></a>脚本安装</h2><p><a href="https://www.hijk.pw/" target="_blank" rel="noopener">hijk</a>的V2Ray一键脚本</p><figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">bash &lt;(curl -sL https:<span class="regexp">//</span>raw.githubusercontent.com<span class="regexp">/hijkpw/</span>scripts<span class="regexp">/master/u</span>buntu_install_v2ray.sh)</span><br></pre></td></tr></table></figure><p>操作系统： Ubuntu 20.04</p><p>加密方式： auto</p><p>传输协议： tcp</p><h2 id="V2Ray管理"><a href="#V2Ray管理" class="headerlink" title="V2Ray管理"></a>V2Ray管理</h2><p>查看V2Ray运行状态或配置信息</p><figure class="highlight armasm"><table><tr><td class="code"><pre><span class="line"><span class="keyword">bash </span>&lt;(curl -<span class="built_in">sL</span> https://raw.githubusercontent.com/hijkpw/scripts/master/ubuntu_install_v2ray.sh) <span class="meta">info</span></span><br></pre></td></tr></table></figure><p>启动</p><figure class="highlight crmsh"><table><tr><td class="code"><pre><span class="line">systemctl <span class="literal">start</span> v2ray</span><br></pre></td></tr></table></figure><p>停止</p><figure class="highlight arduino"><table><tr><td class="code"><pre><span class="line">systemctl <span class="built_in">stop</span> v2ray</span><br></pre></td></tr></table></figure><p>重启</p><figure class="highlight maxima"><table><tr><td class="code"><pre><span class="line">systemctl <span class="built_in">restart</span> v2ray</span><br></pre></td></tr></table></figure><p>更改端口最简单的方法： 重新运行一键脚本</p><p>更新到最新版本的方法： 重新运行一键脚本</p><p>卸载</p><figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">bash &lt;(curl -sL https:<span class="regexp">//</span>raw.githubusercontent.com<span class="regexp">/hijkpw/</span>scripts<span class="regexp">/master/u</span>buntu_install_v2ray.sh) uninstall</span><br></pre></td></tr></table></figure>]]></content>
-      
-      
-      
-        <tags>
-            
-            <tag> 科学上网 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>ShadowsocksR一键脚本</title>
-      <link href="/2020/06/01/ShadowsocksR%E4%B8%80%E9%94%AE%E8%84%9A%E6%9C%AC/"/>
-      <url>/2020/06/01/ShadowsocksR%E4%B8%80%E9%94%AE%E8%84%9A%E6%9C%AC/</url>
-      
-        <content type="html"><![CDATA[<p>本文仅为自己的笔记，懂的自然懂，我就不必解释了ᕕ( ᐛ )ᕗ。</p><a id="more"></a><h2 id="一键脚本安装"><a href="#一键脚本安装" class="headerlink" title="一键脚本安装"></a>一键脚本安装</h2><p><a href="https://www.hijk.pw" target="_blank" rel="noopener">hijk</a>提供的ShadowsocksR一键脚本</p><figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">bash &lt;(curl -sL https:<span class="regexp">//</span>raw.githubusercontent.com<span class="regexp">/hijkpw/</span>scripts<span class="regexp">/master/u</span>buntu_install_ssr.sh)</span><br></pre></td></tr></table></figure><p>操作系统： Ubuntu 20.04</p><p>加密方式： aes-256-cfb</p><p>协议： auth_aes128_sha1</p><p>混淆： plain</p><h2 id="ShadowsocksR管理"><a href="#ShadowsocksR管理" class="headerlink" title="ShadowsocksR管理"></a>ShadowsocksR管理</h2><p>查看ShadowsocksR运行状态或配置</p><figure class="highlight armasm"><table><tr><td class="code"><pre><span class="line"><span class="keyword">bash </span>&lt;(curl -<span class="built_in">sL</span> https://raw.githubusercontent.com/hijkpw/scripts/master/ubuntu_install_ssr.sh) <span class="meta">info</span></span><br></pre></td></tr></table></figure><ul><li><p>ShadowsocksR管理命令： </p><ul><li><p>启动： </p><figure class="highlight crmsh"><table><tr><td class="code"><pre><span class="line">systemctl <span class="literal">start</span> shadowsocksR</span><br></pre></td></tr></table></figure></li><li><p>停止： </p><figure class="highlight arduino"><table><tr><td class="code"><pre><span class="line">systemctl <span class="built_in">stop</span> shadowsocksR</span><br></pre></td></tr></table></figure></li><li><p>重启： </p><figure class="highlight ebnf"><table><tr><td class="code"><pre><span class="line"><span class="attribute">systemctl restart shadowsocksR</span></span><br></pre></td></tr></table></figure></li></ul></li></ul><p>更改密码、端口和混淆参数：重新运行一键脚本</p><p>将ShadowsocksR升级到最新版本： 重新运行一键脚本</p><p>卸载ShadowsocksR： </p><figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">bash &lt;(curl -sL https:<span class="regexp">//</span>raw.githubusercontent.com<span class="regexp">/hijkpw/</span>scripts<span class="regexp">/master/u</span>buntu_install_ssr.sh) uninstall</span><br></pre></td></tr></table></figure>]]></content>
-      
-      
-      
-        <tags>
-            
-            <tag> 科学上网 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>whereis，locate，find命令笔记</title>
       <link href="/2020/05/31/whereis%EF%BC%8Clocate%EF%BC%8Cfind%E5%91%BD%E4%BB%A4%E7%AC%94%E8%AE%B0/"/>
       <url>/2020/05/31/whereis%EF%BC%8Clocate%EF%BC%8Cfind%E5%91%BD%E4%BB%A4%E7%AC%94%E8%AE%B0/</url>
@@ -1448,22 +1370,22 @@
     
     
     <entry>
-      <title>文章分类</title>
-      <link href="/categories/index.html"/>
-      <url>/categories/index.html</url>
+      <title>(｡･∀･)ﾉﾞ关于我(′▽`〃)</title>
+      <link href="/about/index.html"/>
+      <url>/about/index.html</url>
       
-        <content type="html"><![CDATA[]]></content>
+        <content type="html"><![CDATA[<p><strong>名字</strong>：小浣熊(&gt;▽&lt;)</p><p><strong>性别</strong>：当然是XY啦(っ*´Д`)っ</p><p><strong>破壳之日</strong>：2002 / 03 / 04</p><p><strong>性格</strong>：偏内向(．． )…，钢铁直男(ノへ￣、)</p><p><strong>特点</strong>：宅…..((/- -)/，喜欢数码产品（相机除外）(*╯3╰)</p><p><strong>原驻点</strong>：广东省江门市鹤山市</p><p><strong>学校</strong>：中山大学新华学院</p><p><strong>学历</strong>：</p><p>大一计算机专业萌新一枚╮(╯▽╰)╭（2019年9月 ~ 2020年6月）</p><p>大二计算机专业菜鸟一只 (つд⊂) （2020年9月 ~ 2021年6月）</p><p><strong>志向</strong>：毕业后打算从事硬件设计和开发(‾◡◝)</p><p><strong>爱好</strong>：</p><p>喜欢<del>玩机搞机</del>折腾计算机（涵盖软、硬件，包括但不限于电脑、手机）（´v｀）；偶尔玩玩Xboxヾ(≧▽≦*)o</p><p><strong>喜欢的游戏</strong>：</p><p>GTA5（R星的给他爱5，三人一狗，没什么好质疑的 ヾ(≧▽≦*)o ）</p><p>荒野大镖客2（见证主角亚瑟·摩根的救赎(ノへ￣、)，骑马、狩猎、旅游观光；人物、剧情、细节都达到近乎完美的神作(๑•̀ㅂ•́)و✧）</p><p>使命召唤系列（每个男生骨子里都刻着一杆枪ε٩(๑&gt; ₃ &lt;)۶з）</p><p><strong>建站初心</strong>：</p><p>本站主要记录自己玩机搞机的部分笔记(つд⊂)，即使没什么人访问也不会在意。</p>]]></content>
       
     </entry>
     
     
     
     <entry>
-      <title>(｡･∀･)ﾉﾞ关于我(′▽`〃)</title>
-      <link href="/about/index.html"/>
-      <url>/about/index.html</url>
+      <title>文章分类</title>
+      <link href="/categories/index.html"/>
+      <url>/categories/index.html</url>
       
-        <content type="html"><![CDATA[<p><strong>名字</strong>：小浣熊(&gt;▽&lt;)</p><p><strong>性别</strong>：当然是XY啦(っ*´Д`)っ</p><p><strong>破壳之日</strong>：2002 / 03 / 04</p><p><strong>性格</strong>：偏内向(．． )…，钢铁直男(ノへ￣、)</p><p><strong>特点</strong>：宅…..((/- -)/，喜欢数码产品（相机除外）(*╯3╰)</p><p><strong>原驻点</strong>：广东省江门市鹤山市</p><p><strong>学校</strong>：中山大学新华学院</p><p><strong>学历</strong>：</p><p>大一计算机专业萌新一枚╮(╯▽╰)╭（2019年9月 ~ 2020年6月）</p><p>大二计算机专业菜鸟一只 (つд⊂) （2020年9月 ~ 2021年6月）</p><p><strong>志向</strong>：毕业后打算从事硬件设计和开发(‾◡◝)</p><p><strong>爱好</strong>：</p><p>喜欢<del>玩机搞机</del>折腾计算机（涵盖软、硬件，包括但不限于电脑、手机）（´v｀）；偶尔玩玩Xboxヾ(≧▽≦*)o</p><p><strong>喜欢的游戏</strong>：</p><p>GTA5（R星的给他爱5，三人一狗，没什么好质疑的 ヾ(≧▽≦*)o ）</p><p>荒野大镖客2（见证主角亚瑟·摩根的救赎(ノへ￣、)，骑马、狩猎、旅游观光；人物、剧情、细节都达到近乎完美的神作(๑•̀ㅂ•́)و✧）</p><p>使命召唤系列（每个男生骨子里都刻着一杆枪ε٩(๑&gt; ₃ &lt;)۶з）</p><p><strong>建站初心</strong>：</p><p>本站主要记录自己玩机搞机的部分笔记(つд⊂)，即使没什么人访问也不会在意。</p>]]></content>
+        <content type="html"><![CDATA[]]></content>
       
     </entry>
     
