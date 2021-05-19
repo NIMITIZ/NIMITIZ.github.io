@@ -2,23 +2,30 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://www.nimitiz.cn/2021/03/06/51%E5%8D%95%E7%89%87%E6%9C%BA%E4%B8%AD%E6%96%AD%E4%BC%98%E5%85%88%E7%BA%A7/</loc>
-    
-    <lastmod>2021-05-18T15:11:44.898Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://www.nimitiz.cn/2021/05/17/%E4%BF%A1%E5%8F%B7%E9%87%8F%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/</loc>
     
-    <lastmod>2021-05-17T08:28:33.354Z</lastmod>
+    <lastmod>2021-05-19T04:50:54.669Z</lastmod>
     
   </url>
   
   <url>
     <loc>https://www.nimitiz.cn/2021/01/21/%E5%85%B3%E4%BA%8E%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B%E7%9A%84%E4%B8%80%E4%BA%9B%E7%AC%94%E8%AE%B0/</loc>
     
-    <lastmod>2021-05-17T07:35:20.220Z</lastmod>
+    <lastmod>2021-05-19T04:48:07.220Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.nimitiz.cn/2020/07/31/Linux%E5%B0%8F%E8%AE%B0%E2%80%94%E2%80%94APT%E5%92%8CDpkg/</loc>
+    
+    <lastmod>2021-05-18T16:50:57.176Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.nimitiz.cn/2021/03/06/51%E5%8D%95%E7%89%87%E6%9C%BA%E4%B8%AD%E6%96%AD%E4%BC%98%E5%85%88%E7%BA%A7/</loc>
+    
+    <lastmod>2021-05-18T15:11:44.898Z</lastmod>
     
   </url>
   
@@ -467,13 +474,6 @@
     <loc>https://www.nimitiz.cn/2020/08/14/C%E8%AF%AD%E8%A8%80%E7%AC%94%E8%AE%B0%E2%80%94%E2%80%94fgetc()%E5%92%8Cfputc()%E5%87%BD%E6%95%B0/</loc>
     
     <lastmod>2020-08-15T15:04:50.170Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.nimitiz.cn/2020/07/31/Linux%E5%B0%8F%E8%AE%B0%E2%80%94%E2%80%94APT%E5%92%8CDpkg/</loc>
-    
-    <lastmod>2020-07-31T06:02:56.441Z</lastmod>
     
   </url>
   
