@@ -23,20 +23,19 @@
     var CONFIG = {"hostname":"www.nimitiz.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":"ture","trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"./public/search.xml"};
   </script>
 
-  <meta name="description" content="昨天开始折腾如何通过C语言实现进制转换，简单记录一下 (つ´ω&#96;)つ 。">
+  <meta name="description" content="开放式系统互联模型（英语：Open System Interconnection Model，缩写：OSI；简称为OSI模型）是一种概念模型，由国际标准化组织提出的一个试图使各种计算机在世界范围内互连为网络的标准框架。该模型将通信系统中的数据流划分为七个层，从跨通信介质传输位的物理实现到分布式应用程序数据的最高层表示。每个中间层为其上一层提供功能，其自身功能则由其下一层提供。功能的类别通过标准的通">
 <meta property="og:type" content="article">
-<meta property="og:title" content="C语言实现进制转换">
-<meta property="og:url" content="https://www.nimitiz.cn/2020/09/12/C%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0%E8%BF%9B%E5%88%B6%E8%BD%AC%E6%8D%A2/index.html">
+<meta property="og:title" content="OSI模型简要记录">
+<meta property="og:url" content="https://www.nimitiz.cn/2021/05/22/OSI%E6%A8%A1%E5%9E%8B%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/index.html">
 <meta property="og:site_name" content="小浣熊的技术小站">
-<meta property="og:description" content="昨天开始折腾如何通过C语言实现进制转换，简单记录一下 (つ´ω&#96;)つ 。">
+<meta property="og:description" content="开放式系统互联模型（英语：Open System Interconnection Model，缩写：OSI；简称为OSI模型）是一种概念模型，由国际标准化组织提出的一个试图使各种计算机在世界范围内互连为网络的标准框架。该模型将通信系统中的数据流划分为七个层，从跨通信介质传输位的物理实现到分布式应用程序数据的最高层表示。每个中间层为其上一层提供功能，其自身功能则由其下一层提供。功能的类别通过标准的通">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2020-09-12T02:50:31.000Z">
-<meta property="article:modified_time" content="2020-09-12T02:51:09.240Z">
+<meta property="article:published_time" content="2021-05-22T06:01:38.537Z">
+<meta property="article:modified_time" content="2021-05-22T10:22:05.315Z">
 <meta property="article:author" content="NIMITIZ">
-<meta property="article:tag" content="C语言">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://www.nimitiz.cn/2020/09/12/C%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0%E8%BF%9B%E5%88%B6%E8%BD%AC%E6%8D%A2/">
+<link rel="canonical" href="https://www.nimitiz.cn/2021/05/22/OSI%E6%A8%A1%E5%9E%8B%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/">
 
 
 <script id="page-configurations">
@@ -49,7 +48,7 @@
   };
 </script>
 
-  <title>C语言实现进制转换 | 小浣熊的技术小站</title>
+  <title>OSI模型简要记录 | 小浣熊的技术小站</title>
   
 
 
@@ -206,7 +205,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://www.nimitiz.cn/2020/09/12/C%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0%E8%BF%9B%E5%88%B6%E8%BD%AC%E6%8D%A2/">
+    <link itemprop="mainEntityOfPage" href="https://www.nimitiz.cn/2021/05/22/OSI%E6%A8%A1%E5%9E%8B%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -219,7 +218,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          C语言实现进制转换
+          OSI模型简要记录
         </h1>
 
         <div class="post-meta">
@@ -230,7 +229,16 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2020-09-12 10:50:31 / 修改时间：10:51:09" itemprop="dateCreated datePublished" datetime="2020-09-12T10:50:31+08:00">2020-09-12</time>
+              <time title="创建时间：2021-05-22 14:01:38 / 修改时间：18:22:05" itemprop="dateCreated datePublished" datetime="2021-05-22T14:01:38+08:00">2021-05-22</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
+                </span>
             </span>
 
           
@@ -249,8 +257,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2020/09/12/C%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0%E8%BF%9B%E5%88%B6%E8%BD%AC%E6%8D%A2/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/09/12/C%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0%E8%BF%9B%E5%88%B6%E8%BD%AC%E6%8D%A2/" itemprop="commentCount"></span>
+    <a title="valine" href="/2021/05/22/OSI%E6%A8%A1%E5%9E%8B%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/05/22/OSI%E6%A8%A1%E5%9E%8B%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -260,14 +268,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>34</span>
+              <span>2.1k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
+              <span>2 分钟</span>
             </span>
 
         </div>
@@ -279,11 +287,90 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>昨天开始折腾如何通过C语言实现进制转换，简单记录一下 (つ´ω`)つ 。</p>
+        <p>开放式系统互联模型（英语：Open System Interconnection Model，缩写：OSI；简称为OSI模型）是一种概念模型，由国际标准化组织提出的一个试图使各种计算机在世界范围内互连为网络的标准框架。该模型将通信系统中的数据流划分为七个层，从跨通信介质传输位的物理实现到分布式应用程序数据的最高层表示。每个中间层为其上一层提供功能，其自身功能则由其下一层提供。功能的类别通过标准的通信协议在软件中实现。</p>
+<p>​                                                                                                                                                                        ——<a href="https://zh.wikipedia.org/wiki/OSI%E6%A8%A1%E5%9E%8B" target="_blank" rel="noopener">维基百科</a></p>
 <a id="more"></a>
 
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;math.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">MENU</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"***********************************************"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"                    进制转换                    "</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"               1.二进制转换十进制                  "</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"               2.十进制转换二进制                  "</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"               3.八进制转换十进制                  "</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"               4.十进制转换八进制                  "</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"               5.十进制转十六进制                  "</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"               6.十六进制转十进制                  "</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"                   0.退出程序                      "</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"***********************************************"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">TwoToTen</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"输入一个待转换的二进制整数："</span>);</span><br><span class="line">    <span class="keyword">int</span> number;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%lld"</span>,&amp;number);</span><br><span class="line">    <span class="keyword">int</span> m=number;</span><br><span class="line">    <span class="keyword">int</span> n,i=<span class="number">0</span>,sum=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(m!=<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        n=m%<span class="number">10</span>;</span><br><span class="line">        m/=<span class="number">10</span>;</span><br><span class="line">        sum+=n*<span class="built_in">pow</span>(<span class="number">2</span>,i);</span><br><span class="line">        i++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"二进制整数 %lld 转换为十进制整数 %d"</span>,number,sum);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">TenToTwo</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"输入一个待转换的十进制整数："</span>);</span><br><span class="line">    <span class="keyword">int</span> number;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;number);</span><br><span class="line">    <span class="keyword">int</span> m=number;</span><br><span class="line">    <span class="keyword">int</span> n,i=<span class="number">0</span>,a[<span class="number">512</span>];</span><br><span class="line">    <span class="keyword">while</span>(m&gt;<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        n=m%<span class="number">2</span>;</span><br><span class="line">        m/=<span class="number">2</span>;</span><br><span class="line">        a[i]=n;</span><br><span class="line">        i++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"十进制整数 %d 转换为二进制整数 "</span>,number);</span><br><span class="line">    <span class="keyword">for</span>(i--;i&gt;=<span class="number">0</span>;i--)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%d"</span>,a[i]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">EightToTen</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"输入一个待转换的八进制整数："</span>);</span><br><span class="line">    <span class="keyword">int</span> number;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;number);</span><br><span class="line">    <span class="keyword">int</span> m=number;</span><br><span class="line">    <span class="keyword">int</span> n,i=<span class="number">0</span>,sum=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(m!=<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        n=m%<span class="number">10</span>;</span><br><span class="line">        m/=<span class="number">10</span>;</span><br><span class="line">        sum+=n*<span class="built_in">pow</span>(<span class="number">8</span>,i);</span><br><span class="line">        i++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"八进制整数 %d 转换为十进制整数 %d"</span>,number,sum);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">TenToEight</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"输入一个待转换的十进制整数："</span>);</span><br><span class="line">    <span class="keyword">int</span> number;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;number);</span><br><span class="line">    <span class="keyword">int</span> m=number;</span><br><span class="line">    <span class="keyword">int</span> n,i=<span class="number">0</span>,a[<span class="number">512</span>];</span><br><span class="line">    <span class="keyword">while</span>(m&gt;<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        n=m%<span class="number">8</span>;</span><br><span class="line">        m/=<span class="number">8</span>;</span><br><span class="line">        a[i]=n;</span><br><span class="line">        i++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"十进制整数 %d 转换为八进制整数 "</span>,number);</span><br><span class="line">    <span class="keyword">for</span>(i--;i&gt;=<span class="number">0</span>;i--)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%d"</span>,a[i]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">TenToSixteen</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"输入一个待转换的十进制整数："</span>);</span><br><span class="line">    <span class="keyword">int</span> number;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;number);</span><br><span class="line">    <span class="keyword">char</span> arr[]=<span class="string">"0123456789abcdef"</span>;</span><br><span class="line">    <span class="keyword">int</span> m=number;</span><br><span class="line">    <span class="keyword">int</span> n,i=<span class="number">0</span>,a[<span class="number">512</span>];</span><br><span class="line">    <span class="keyword">while</span>(m&gt;<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        n=m%<span class="number">16</span>;</span><br><span class="line">        m/=<span class="number">16</span>;</span><br><span class="line">        a[i]=arr[n];</span><br><span class="line">        i++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"十进制整数 %d 转换为十六进制整数 "</span>,number);</span><br><span class="line">    <span class="keyword">for</span>(i--;i&gt;=<span class="number">0</span>;i--)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%c"</span>,a[i]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">SixteenToTen</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"输入一个待转换的十六进制整数："</span>);</span><br><span class="line">    <span class="keyword">int</span> number;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%x"</span>,&amp;number);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"十六进制整数 %x 转换为十进制整数 %d"</span>,number,number);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        MENU();</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"输入0~6以选择需要执行的操作："</span>);</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;n);</span><br><span class="line">        <span class="keyword">switch</span>(n)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">1</span>:TwoToTen();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">2</span>:TenToTwo();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">3</span>:EightToTen();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">4</span>:TenToEight();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">5</span>:TenToSixteen();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">6</span>:SixteenToTen();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">0</span>:<span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+<p>说人话，OSI模型就是将整个网络体系划分为若干个不同的层级，每个层级包含有若干协议，软、硬件厂商根据不同层级的不同协议来开发对应的产品（与特定的技术无关），有利于不同厂商开发的产品能互相协同运作。</p>
+<p>OSI模型一共划分为七层：</p>
+<ul>
+<li><p>应用层【第七层】（Application）</p>
+</li>
+<li><p>表示层【第六层】（Presentation）</p>
+</li>
+<li><p>会话层【第五层】（Session）</p>
+</li>
+<li><p>传输层【第四层】（Transport）</p>
+</li>
+<li><p>网络层【第三层】（Network）</p>
+</li>
+<li><p>数据链路层【第二层】（Data Link）</p>
+</li>
+<li><p>物理层【第一层】（Physical）</p>
+</li>
+</ul>
+<h2 id="应用层"><a href="#应用层" class="headerlink" title="应用层"></a>应用层</h2><p>应用层是OSI模型的最高层，该层级直接接触用户数据，是用户以及应用程序和网络之间的接口（<strong>应用程序不属于应用层</strong>），直接面向用户和应用程序实现各种网络交互服务。</p>
+<p>待传输数据的出现始于应用层，应用程序准备好数据后，就可以向表示层传递。</p>
+<p><code>数据内容</code></p>
+<h3 id="协议"><a href="#协议" class="headerlink" title="协议"></a>协议</h3><p>归属于应用层的协议有以下（非全部）：</p>
+<p>HTTP    超文本传输协议</p>
+<p>HTTPS    安全超文本传输协议</p>
+<p>SMTP    简单邮件传输协议</p>
+<p>FTP    文件传输协议</p>
+<p>POP3    邮局协议第3版</p>
+<p>IMAP4    因特网信息访问协议第4版</p>
+<p>SOCKS    安全套接字协议</p>
+<p>DNS    域名解析协议</p>
+<p>DHCP    动态主机配置协议</p>
+<p>NTP    网络时间协议</p>
+<p>应用程序（例如QQ、微信、钉钉、Twitter、TeamViewer）的私有协议</p>
+<h2 id="表示层"><a href="#表示层" class="headerlink" title="表示层"></a>表示层</h2><p>表示层是OSI模型的第六层，该层对来自应用层的数据进行处理，例如数据格式的处理（用户程序之间在数据格式表示上可能存在差异）、数据编码（不同设备（操作系统、计算机体系等方面的差异）对某些信息（例如数据类型）的表示方式可能不同）、数据压缩和解压（减少数据的传输量）、数据加密和解密（提高数据传输的安全性），以此来迎合接收方。数据处理完毕后，将会被送入会话层。</p>
+<p><code>数据内容</code></p>
+<h3 id="协议-1"><a href="#协议-1" class="headerlink" title="协议"></a>协议</h3><p>归属于表示层的协议有如下（非全部）：</p>
+<p>AES    高级加密标准</p>
+<p>DES    数据加密标准</p>
+<p>H.264    视频解码</p>
+<h2 id="会话层"><a href="#会话层" class="headerlink" title="会话层"></a>会话层</h2><p>会话层是OSI模型的第五层，该层接收到来自表示层的数据后，负责在数据传输中设置和维护两台计算机之间的通信连接。用户或应用程序提供目标方的远程地址（例如域名，但<strong>不包括IP地址和MAC地址</strong>），通过单工、半双工或全双工的方式来建立会话连接。建立好会话连接后，数据将会被送入传输层。</p>
+<p><code>数据内容</code></p>
+<h3 id="协议-2"><a href="#协议-2" class="headerlink" title="协议"></a>协议</h3><p>归属于会话层的协议有如下（非全部）：</p>
+<p>SSL    安全套接层协议</p>
+<p>TLS    传输层安全协议</p>
+<p>RPC    远程过程调用协议</p>
+<h2 id="传输层"><a href="#传输层" class="headerlink" title="传输层"></a>传输层</h2><p>传输层是OSI模型的第四层，是通信子网和资源子网的接口（OSI模型的上三层的主要任务可归纳为数据处理，下三层则为数据通信），向上三层屏蔽下三层的数据通信的细节。传输层可对来自会话层的数据进行流量控制（将数据分割成小块）、多路传输（避免拥塞）。同时，传输层还为数据加上<strong>源端口</strong>和<strong>目的端口</strong>（告知接收方数据从哪来和到哪去）。</p>
+<p><code>[源目端口]|数据内容</code></p>
+<h3 id="协议-3"><a href="#协议-3" class="headerlink" title="协议"></a>协议</h3><p>归属于传输层的协议有如下（非全部）：</p>
+<p>TCP    传输控制协议</p>
+<p>UDP    用户数据报协议</p>
+<h2 id="网络层"><a href="#网络层" class="headerlink" title="网络层"></a>网络层</h2><p>网络层是OSI模型的第三层，也是通信子网的最高层，在下两层的基础上向资源子网提供服务，该层控制数据链路层与传输层之间的信息转发，建立、维持和终止网络的连接。<strong>网络层主要解决不同子网之间的通信</strong>，会给数据追加<strong>源IP地址</strong>和<strong>目的IP地址</strong>。当源节点和目的节点之间存在多条路径时，网络层可根据路由算法为数据选择最佳路径。网络层还对<strong>从源节点到目的节点之间</strong>的流量进行控制，防止阻塞。</p>
+<p><code>[源目IP地址]|[源目端口]|数据内容</code></p>
+<h3 id="协议-4"><a href="#协议-4" class="headerlink" title="协议"></a>协议</h3><p>归属于网络层的协议有如下（非全部）：</p>
+<p>IP    互联网协议</p>
+<p>IPv6    互联网协议第6版</p>
+<h2 id="数据链路层"><a href="#数据链路层" class="headerlink" title="数据链路层"></a>数据链路层</h2><p>数据链路层是OSI模型的第二层，负责建立和管理节点之间的链路。网络层的主要功能是在物理层提供的比特流的基础上，通过各种控制协议（例如在数据尾部追加检测数据完整性的FSC帧校验），提供可靠的通过物理介质传输数据的方法。同时，网络层为数据追加<strong>源MAC地址</strong>和<strong>目的MAC地址</strong>来<strong>解决子网内部的寻址问题</strong>。</p>
+<p><code>[源目MAC地址]|[源目IP地址]|[源目端口]|数据内容|[FSC帧校验]</code></p>
+<h3 id="协议-5"><a href="#协议-5" class="headerlink" title="协议"></a>协议</h3><p>归属于数据链路层的协议有如下（非全部）：</p>
+<p>ARP    地址解析协议</p>
+<p>RARP    逆向地址解析协议</p>
+<p>Modbus    串行链路协议</p>
+<p>CAN    控制器局域网总线协议</p>
+<p>PPP    点到点通信协议</p>
+<h2 id="物理层"><a href="#物理层" class="headerlink" title="物理层"></a>物理层</h2><p>机械、电子、定时接口通信信道上的原始比特流传输。</p>
+<p><code>100111010111010110110100001101101011</code></p>
+<p>归属于物理层的协议有如下（非全部）：</p>
+<p>LoRa    Semtech开发的远距离无线电技术</p>
+<p>BLE    蓝牙低能耗</p>
+<p>RS-232</p>
+<p>RS-485</p>
+<p>令牌传送网络</p>
+<p>RJ45</p>
+<hr>
+<p><strong>参考资料</strong>：</p>
+<p><a href="https://blog.csdn.net/qq_16093323/article/details/79582554?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522162158153116780261954897%2522%252C%2522scm%2522%253A%252220140713.130102334.pc%255Fall.%2522%257D&request_id=162158153116780261954897&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~first_rank_v2~rank_v29-18-79582554.first_rank_v2_pc_rank_v29&utm_term=OSI%E6%A8%A1%E5%9E%8B&spm=1018.2226.3001.4187" target="_blank" rel="noopener">OSI七层模型基础知识及各层常见应用</a></p>
+<p><a href="https://blog.csdn.net/qq_41923622/article/details/85805003?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522162158153116780261954897%2522%252C%2522scm%2522%253A%252220140713.130102334.pc%255Fall.%2522%257D&request_id=162158153116780261954897&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~first_rank_v2~rank_v29-30-85805003.first_rank_v2_pc_rank_v29&utm_term=OSI%E6%A8%A1%E5%9E%8B&spm=1018.2226.3001.4187" target="_blank" rel="noopener">OSI 七层模型和TCP/IP模型及对应协议（详解）</a></p>
+<p><a href="https://blog.csdn.net/yaopeng_2005/article/details/7064869?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522162158105716780269823021%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=162158105716780269823021&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduend~default-2-7064869.first_rank_v2_pc_rank_v29&utm_term=OSI%E6%A8%A1%E5%9E%8B&spm=1018.2226.3001.4187" target="_blank" rel="noopener">OSI七层模型详解</a></p>
+<p><a href="https://sspai.com/post/64659" target="_blank" rel="noopener">小白也能看懂的网络基础 03 | OSI 模型是如何工作的</a></p>
+<p><a href="https://www.cloudflare.com/zh-cn/learning/ddos/glossary/open-systems-interconnection-model-osi/" target="_blank" rel="noopener">什么是 OSI 模型？</a></p>
+<p><a href="http://www.colasoft.com.cn/download/protocols_map.php" target="_blank" rel="noopener">科来网络通讯协议图2020版</a></p>
 
     </div>
 
@@ -292,9 +379,6 @@
     
 
       <footer class="post-footer">
-          <div class="post-tags">
-              <a href="/tags/C%E8%AF%AD%E8%A8%80/" rel="tag"># C语言</a>
-          </div>
 
         
 
@@ -302,13 +386,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/09/05/%E4%BD%BF%E7%94%A8Nextcloud%E6%90%AD%E5%BB%BA%E7%A7%81%E6%9C%89%E4%BA%91%E5%AD%98%E5%82%A8%EF%BC%88%E5%85%A5%E9%97%A8%EF%BC%89/" rel="prev" title="使用Nextcloud搭建私有云存储（入门）">
-      <i class="fa fa-chevron-left"></i> 使用Nextcloud搭建私有云存储（入门）
+    <a href="/2021/05/17/%E4%BF%A1%E5%8F%B7%E9%87%8F%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/" rel="prev" title="信号量简要记录">
+      <i class="fa fa-chevron-left"></i> 信号量简要记录
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2020/09/13/Windows%E7%BC%96%E7%A8%8B%E5%B0%8F%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/" rel="next" title="Windows编程小记（一）">
-      Windows编程小记（一） <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -368,6 +449,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#应用层"><span class="nav-number">1.</span> <span class="nav-text">应用层</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#协议"><span class="nav-number">1.1.</span> <span class="nav-text">协议</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#表示层"><span class="nav-number">2.</span> <span class="nav-text">表示层</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#协议-1"><span class="nav-number">2.1.</span> <span class="nav-text">协议</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#会话层"><span class="nav-number">3.</span> <span class="nav-text">会话层</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#协议-2"><span class="nav-number">3.1.</span> <span class="nav-text">协议</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#传输层"><span class="nav-number">4.</span> <span class="nav-text">传输层</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#协议-3"><span class="nav-number">4.1.</span> <span class="nav-text">协议</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网络层"><span class="nav-number">5.</span> <span class="nav-text">网络层</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#协议-4"><span class="nav-number">5.1.</span> <span class="nav-text">协议</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据链路层"><span class="nav-number">6.</span> <span class="nav-text">数据链路层</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#协议-5"><span class="nav-number">6.1.</span> <span class="nav-text">协议</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#物理层"><span class="nav-number">7.</span> <span class="nav-text">物理层</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

@@ -23,20 +23,17 @@
     var CONFIG = {"hostname":"www.nimitiz.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":"ture","trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"./public/search.xml"};
   </script>
 
-  <meta name="description" content="昨天开始折腾如何通过C语言实现进制转换，简单记录一下 (つ´ω&#96;)つ 。">
-<meta property="og:type" content="article">
-<meta property="og:title" content="C语言实现进制转换">
-<meta property="og:url" content="https://www.nimitiz.cn/2020/09/12/C%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0%E8%BF%9B%E5%88%B6%E8%BD%AC%E6%8D%A2/index.html">
+  <meta name="description" content="生命不息，折腾不止">
+<meta property="og:type" content="website">
+<meta property="og:title" content="小浣熊的技术小站">
+<meta property="og:url" content="https://www.nimitiz.cn/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/index.html">
 <meta property="og:site_name" content="小浣熊的技术小站">
-<meta property="og:description" content="昨天开始折腾如何通过C语言实现进制转换，简单记录一下 (つ´ω&#96;)つ 。">
+<meta property="og:description" content="生命不息，折腾不止">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2020-09-12T02:50:31.000Z">
-<meta property="article:modified_time" content="2020-09-12T02:51:09.240Z">
 <meta property="article:author" content="NIMITIZ">
-<meta property="article:tag" content="C语言">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://www.nimitiz.cn/2020/09/12/C%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0%E8%BF%9B%E5%88%B6%E8%BD%AC%E6%8D%A2/">
+<link rel="canonical" href="https://www.nimitiz.cn/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">
 
 
 <script id="page-configurations">
@@ -44,12 +41,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : true,
+    isPost : false,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>C语言实现进制转换 | 小浣熊的技术小站</title>
+  <title>分类: 计算机网络 | 小浣熊的技术小站</title>
   
 
 
@@ -199,129 +196,57 @@
         <div class="content-wrap">
           
 
-          <div class="content post posts-expand">
+          <div class="content category">
             
 
-    
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://www.nimitiz.cn/2020/09/12/C%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0%E8%BF%9B%E5%88%B6%E8%BD%AC%E6%8D%A2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="NIMITIZ">
-      <meta itemprop="description" content="生命不息，折腾不止">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小浣熊的技术小站">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          C语言实现进制转换
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2020-09-12 10:50:31 / 修改时间：10:51:09" itemprop="dateCreated datePublished" datetime="2020-09-12T10:50:31+08:00">2020-09-12</time>
-            </span>
-
-          
-            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span id="busuanzi_value_page_pv"></span>
-            </span>
   
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2020/09/12/C%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0%E8%BF%9B%E5%88%B6%E8%BD%AC%E6%8D%A2/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/09/12/C%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0%E8%BF%9B%E5%88%B6%E8%BD%AC%E6%8D%A2/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>34</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
+  <div class="post-block">
+    <div class="posts-collapse">
+      <div class="collection-title">
+        <h2 class="collection-header">计算机网络
+          <small>分类</small>
+        </h2>
+      </div>
 
       
-        <p>昨天开始折腾如何通过C语言实现进制转换，简单记录一下 (つ´ω`)つ 。</p>
-<a id="more"></a>
-
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;math.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">MENU</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"***********************************************"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"                    进制转换                    "</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"               1.二进制转换十进制                  "</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"               2.十进制转换二进制                  "</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"               3.八进制转换十进制                  "</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"               4.十进制转换八进制                  "</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"               5.十进制转十六进制                  "</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"               6.十六进制转十进制                  "</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"                   0.退出程序                      "</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"***********************************************"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">TwoToTen</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"输入一个待转换的二进制整数："</span>);</span><br><span class="line">    <span class="keyword">int</span> number;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%lld"</span>,&amp;number);</span><br><span class="line">    <span class="keyword">int</span> m=number;</span><br><span class="line">    <span class="keyword">int</span> n,i=<span class="number">0</span>,sum=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(m!=<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        n=m%<span class="number">10</span>;</span><br><span class="line">        m/=<span class="number">10</span>;</span><br><span class="line">        sum+=n*<span class="built_in">pow</span>(<span class="number">2</span>,i);</span><br><span class="line">        i++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"二进制整数 %lld 转换为十进制整数 %d"</span>,number,sum);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">TenToTwo</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"输入一个待转换的十进制整数："</span>);</span><br><span class="line">    <span class="keyword">int</span> number;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;number);</span><br><span class="line">    <span class="keyword">int</span> m=number;</span><br><span class="line">    <span class="keyword">int</span> n,i=<span class="number">0</span>,a[<span class="number">512</span>];</span><br><span class="line">    <span class="keyword">while</span>(m&gt;<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        n=m%<span class="number">2</span>;</span><br><span class="line">        m/=<span class="number">2</span>;</span><br><span class="line">        a[i]=n;</span><br><span class="line">        i++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"十进制整数 %d 转换为二进制整数 "</span>,number);</span><br><span class="line">    <span class="keyword">for</span>(i--;i&gt;=<span class="number">0</span>;i--)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%d"</span>,a[i]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">EightToTen</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"输入一个待转换的八进制整数："</span>);</span><br><span class="line">    <span class="keyword">int</span> number;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;number);</span><br><span class="line">    <span class="keyword">int</span> m=number;</span><br><span class="line">    <span class="keyword">int</span> n,i=<span class="number">0</span>,sum=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(m!=<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        n=m%<span class="number">10</span>;</span><br><span class="line">        m/=<span class="number">10</span>;</span><br><span class="line">        sum+=n*<span class="built_in">pow</span>(<span class="number">8</span>,i);</span><br><span class="line">        i++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"八进制整数 %d 转换为十进制整数 %d"</span>,number,sum);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">TenToEight</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"输入一个待转换的十进制整数："</span>);</span><br><span class="line">    <span class="keyword">int</span> number;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;number);</span><br><span class="line">    <span class="keyword">int</span> m=number;</span><br><span class="line">    <span class="keyword">int</span> n,i=<span class="number">0</span>,a[<span class="number">512</span>];</span><br><span class="line">    <span class="keyword">while</span>(m&gt;<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        n=m%<span class="number">8</span>;</span><br><span class="line">        m/=<span class="number">8</span>;</span><br><span class="line">        a[i]=n;</span><br><span class="line">        i++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"十进制整数 %d 转换为八进制整数 "</span>,number);</span><br><span class="line">    <span class="keyword">for</span>(i--;i&gt;=<span class="number">0</span>;i--)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%d"</span>,a[i]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">TenToSixteen</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"输入一个待转换的十进制整数："</span>);</span><br><span class="line">    <span class="keyword">int</span> number;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;number);</span><br><span class="line">    <span class="keyword">char</span> arr[]=<span class="string">"0123456789abcdef"</span>;</span><br><span class="line">    <span class="keyword">int</span> m=number;</span><br><span class="line">    <span class="keyword">int</span> n,i=<span class="number">0</span>,a[<span class="number">512</span>];</span><br><span class="line">    <span class="keyword">while</span>(m&gt;<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        n=m%<span class="number">16</span>;</span><br><span class="line">        m/=<span class="number">16</span>;</span><br><span class="line">        a[i]=arr[n];</span><br><span class="line">        i++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"十进制整数 %d 转换为十六进制整数 "</span>,number);</span><br><span class="line">    <span class="keyword">for</span>(i--;i&gt;=<span class="number">0</span>;i--)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%c"</span>,a[i]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">SixteenToTen</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"输入一个待转换的十六进制整数："</span>);</span><br><span class="line">    <span class="keyword">int</span> number;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%x"</span>,&amp;number);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"十六进制整数 %x 转换为十进制整数 %d"</span>,number,number);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        MENU();</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"输入0~6以选择需要执行的操作："</span>);</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;n);</span><br><span class="line">        <span class="keyword">switch</span>(n)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">1</span>:TwoToTen();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">2</span>:TenToTwo();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">3</span>:EightToTen();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">4</span>:TenToEight();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">5</span>:TenToSixteen();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">6</span>:SixteenToTen();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">0</span>:<span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
+    <div class="collection-year">
+      <span class="collection-header">2021</span>
     </div>
 
-    
-    
-    
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
 
-      <footer class="post-footer">
-          <div class="post-tags">
-              <a href="/tags/C%E8%AF%AD%E8%A8%80/" rel="tag"># C语言</a>
-          </div>
+      <div class="post-meta">
+        <time itemprop="dateCreated"
+              datetime="2021-05-22T14:01:38+08:00"
+              content="2021-05-22">
+          05-22
+        </time>
+      </div>
 
-        
+      <div class="post-title">
+          <a class="post-title-link" href="/2021/05/22/OSI%E6%A8%A1%E5%9E%8B%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/" itemprop="url">
+            <span itemprop="name">OSI模型简要记录</span>
+          </a>
+      </div>
 
-
-        
-    <div class="post-nav">
-      <div class="post-nav-item">
-    <a href="/2020/09/05/%E4%BD%BF%E7%94%A8Nextcloud%E6%90%AD%E5%BB%BA%E7%A7%81%E6%9C%89%E4%BA%91%E5%AD%98%E5%82%A8%EF%BC%88%E5%85%A5%E9%97%A8%EF%BC%89/" rel="prev" title="使用Nextcloud搭建私有云存储（入门）">
-      <i class="fa fa-chevron-left"></i> 使用Nextcloud搭建私有云存储（入门）
-    </a></div>
-      <div class="post-nav-item">
-    <a href="/2020/09/13/Windows%E7%BC%96%E7%A8%8B%E5%B0%8F%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/" rel="next" title="Windows编程小记（一）">
-      Windows编程小记（一） <i class="fa fa-chevron-right"></i>
-    </a></div>
-    </div>
-      </footer>
-    
+    </header>
   </article>
+
+    </div>
+  </div>
   
   
+  
+
   
 
 
 
           </div>
           
-    <div class="comments" id="valine-comments"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
