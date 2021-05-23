@@ -4,6 +4,25 @@
   
     
     <entry>
+      <title>TCP&amp;UDP简要整理</title>
+      <link href="/2021/05/23/TCP&amp;UDP%E7%AE%80%E8%A6%81%E6%95%B4%E7%90%86/"/>
+      <url>/2021/05/23/TCP&amp;UDP%E7%AE%80%E8%A6%81%E6%95%B4%E7%90%86/</url>
+      
+        <content type="html"><![CDATA[<p>简要记录一下TCP/IP模型、TCP的三次握手与四次挥手、TCP&amp;UDP的比较。</p><a id="more"></a><h2 id="TCP-IP模型"><a href="#TCP-IP模型" class="headerlink" title="TCP/IP模型"></a>TCP/IP模型</h2><p>TCP/IP模型是互联网的基础，包括了一系列网络协议，例如TCP、UDP、IP、FTP、HTTP等，这些协议可以分为四层、由上至下分别为应用层、传输层、网络层、链路层。</p><h3 id="TCP-IP模型-amp-OSI七层模型"><a href="#TCP-IP模型-amp-OSI七层模型" class="headerlink" title="TCP/IP模型&amp;OSI七层模型"></a>TCP/IP模型&amp;OSI七层模型</h3><p><img src="/2021/05/23/TCP&UDP%E7%AE%80%E8%A6%81%E6%95%B4%E7%90%86/%E6%A6%82%E5%BF%B5%E5%B1%82%E6%A8%A1%E5%9E%8B.png" alt></p><h2 id="TCP的三次握手与四次挥手"><a href="#TCP的三次握手与四次挥手" class="headerlink" title="TCP的三次握手与四次挥手"></a>TCP的三次握手与四次挥手</h2><h3 id="建立连接——三次握手"><a href="#建立连接——三次握手" class="headerlink" title="建立连接——三次握手"></a>建立连接——三次握手</h3><ul><li><strong>第一次握手</strong>：客户端向服务端发送建立连接请求报文<strong>连接<code>SYN</code></strong>（序号<code>Seq</code>=x）</li><li><strong>第二次握手</strong>：服务端返回<strong>连接<code>SYN</code></strong>和<strong>确认<code>ACK</code></strong>（序号<code>Seq</code>=y、确认号<code>Ack</code>=x+1）</li><li><strong>第三次握手</strong>：客户端发送<strong>确认<code>ACK</code></strong>（确认号<code>Ack</code>=y+1）</li></ul><p><img src="/2021/05/23/TCP&UDP%E7%AE%80%E8%A6%81%E6%95%B4%E7%90%86/TCP%E5%BB%BA%E7%AB%8B%E8%BF%9E%E6%8E%A5.png" alt></p><p>三次握手的关键是确认对方接收到自己发送的数据包，计算机会记录该数据包的序号<code>Seq</code>，当收到对方返回的数据包后，检测数据包的确认号<code>Ack</code>，若<code>Ack</code>=<code>Seq</code>+1，则表示对方正确接收到自己发送的数据包。</p><h3 id="断开连接——四次挥手"><a href="#断开连接——四次挥手" class="headerlink" title="断开连接——四次挥手"></a>断开连接——四次挥手</h3><ul><li><strong>第一次挥手</strong>：客户端向服务端发送断开连接请求报文<strong>断开<code>FIN</code></strong>（序号<code>Seq</code>=x）</li><li><strong>第二次挥手</strong>：服务端返回<strong>确认<code>ACK</code></strong>（序号<code>Seq</code>=y、确认号<code>Ack</code>=x+1）</li><li><strong>第三次挥手</strong>：服务端发送表示可以断开连接的报文<strong>断开<code>FIN</code></strong>（序号<code>Seq</code>=y+1、确认号：<code>Ack</code>=x+1）</li><li><strong>第四次挥手</strong>：客户端返回<strong>确认<code>ACK</code></strong>（序号<code>Seq</code>=x+1、确认号<code>Ack</code>=y+2）</li></ul><p><img src="/2021/05/23/TCP&UDP%E7%AE%80%E8%A6%81%E6%95%B4%E7%90%86/TCP%E6%96%AD%E5%BC%80%E8%BF%9E%E6%8E%A5.png" alt></p><h2 id="TCP-amp-UDP的比较"><a href="#TCP-amp-UDP的比较" class="headerlink" title="TCP&amp;UDP的比较"></a>TCP&amp;UDP的比较</h2><h3 id="UDP"><a href="#UDP" class="headerlink" title="UDP"></a>UDP</h3><p>UDP是一种<strong>面向报文</strong>的<strong>无连接</strong>的协议，支持<strong>单播、多播、广播</strong>的传输方式，<strong>只负责数据的发送</strong>，无法获知数据是否被接收方安全完整地接收，<strong>具有不可靠性</strong>；但由于头部开销小（仅有8字节），数据传输效率高，适用于对<strong>传输实时性要求高</strong>的应用（例如通话、直播）。</p><h3 id="TCP"><a href="#TCP" class="headerlink" title="TCP"></a>TCP</h3><p>TCP是一种<strong>面向连接</strong>的协议，<strong>在数据传输前必须在发送方和接收方之间建立连接，可靠性高</strong>；只支持<strong>点对点</strong>的单播传输方式，提供全双工通信，在不保留报文边界的情况下以<strong>字节流</strong>的方式进行数据传输；适用于对<strong>传输可靠性要求高</strong>的应用（例如文件传输）。</p><hr><p><strong>参考资料：</strong></p><p><a href="https://www.cnblogs.com/fundebug/p/differences-of-tcp-and-udp.html" target="_blank" rel="noopener">一文搞懂TCP与UDP的区别</a></p><p><a href="https://blog.csdn.net/weixin_45393094/article/details/104965561" target="_blank" rel="noopener">我终于搞懂了TCP的三次握手和四次挥手（图片案例超详解）</a></p><p><a href="https://blog.csdn.net/qq_38950316/article/details/81087809?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522162158064016780274151270%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=162158064016780274151270&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduend~default-5-81087809.first_rank_v2_pc_rank_v29&utm_term=%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%EF%BC%8C%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B&spm=1018.2226.3001.4187" target="_blank" rel="noopener">TCP的三次握手与四次挥手理解及面试题（很全面）</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 计算机网络 </category>
+          
+      </categories>
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>OSI模型简要记录</title>
       <link href="/2021/05/22/OSI%E6%A8%A1%E5%9E%8B%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/"/>
       <url>/2021/05/22/OSI%E6%A8%A1%E5%9E%8B%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/</url>
