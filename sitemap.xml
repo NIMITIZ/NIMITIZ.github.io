@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://www.nimitiz.cn/links/index.html</loc>
+    
+    <lastmod>2021-05-26T09:52:08.611Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://www.nimitiz.cn/2021/05/23/TCP&UDP%E7%AE%80%E8%A6%81%E6%95%B4%E7%90%86/</loc>
     
     <lastmod>2021-05-23T00:27:08.041Z</lastmod>
@@ -348,13 +355,6 @@
     <loc>https://www.nimitiz.cn/2020/07/28/%E4%BD%BF%E7%94%A8Termux%E4%BC%A0%E8%BE%93%E6%96%87%E4%BB%B6/</loc>
     
     <lastmod>2020-12-01T04:53:55.686Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.nimitiz.cn/links/index.html</loc>
-    
-    <lastmod>2020-11-23T12:59:00.169Z</lastmod>
     
   </url>
   
