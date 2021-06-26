@@ -23,20 +23,22 @@
     var CONFIG = {"hostname":"www.nimitiz.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":"ture","trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"./public/search.xml"};
   </script>
 
-  <meta name="description" content="昨天开始折腾如何通过C语言实现进制转换，简单记录一下 (つ´ω&#96;)つ 。">
+  <meta name="description" content="DNS域名解析包括两种查询方式，一种是递归查询，另一种是迭代查询。客户端在查询IP地址时，向本地域名服务器进行递归查询；若本地域名服务器的数据库有相应数据，则直接返回相应数据；若无相应数据，则本地域名服务器从向根域名服务器开始，进行迭代查询，直至获得最终结果。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="C语言实现进制转换">
-<meta property="og:url" content="https://www.nimitiz.cn/2020/09/12/C%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0%E8%BF%9B%E5%88%B6%E8%BD%AC%E6%8D%A2/index.html">
+<meta property="og:title" content="DNS解析简要笔记">
+<meta property="og:url" content="https://www.nimitiz.cn/2021/06/26/DNS%E8%A7%A3%E6%9E%90%E7%AE%80%E8%A6%81%E7%AC%94%E8%AE%B0/index.html">
 <meta property="og:site_name" content="小浣熊的技术小站">
-<meta property="og:description" content="昨天开始折腾如何通过C语言实现进制转换，简单记录一下 (つ´ω&#96;)つ 。">
+<meta property="og:description" content="DNS域名解析包括两种查询方式，一种是递归查询，另一种是迭代查询。客户端在查询IP地址时，向本地域名服务器进行递归查询；若本地域名服务器的数据库有相应数据，则直接返回相应数据；若无相应数据，则本地域名服务器从向根域名服务器开始，进行迭代查询，直至获得最终结果。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2020-09-12T02:50:31.000Z">
-<meta property="article:modified_time" content="2020-09-12T02:51:09.240Z">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/06/26/DNS%E8%A7%A3%E6%9E%90%E7%AE%80%E8%A6%81%E7%AC%94%E8%AE%B0/%E9%80%92%E5%BD%92%E6%9F%A5%E8%AF%A2.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/06/26/DNS%E8%A7%A3%E6%9E%90%E7%AE%80%E8%A6%81%E7%AC%94%E8%AE%B0/%E8%BF%AD%E4%BB%A3%E6%9F%A5%E8%AF%A2.png">
+<meta property="article:published_time" content="2021-06-26T11:55:56.000Z">
+<meta property="article:modified_time" content="2021-06-26T12:02:50.493Z">
 <meta property="article:author" content="NIMITIZ">
-<meta property="article:tag" content="C语言">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.nimitiz.cn/2021/06/26/DNS%E8%A7%A3%E6%9E%90%E7%AE%80%E8%A6%81%E7%AC%94%E8%AE%B0/%E9%80%92%E5%BD%92%E6%9F%A5%E8%AF%A2.png">
 
-<link rel="canonical" href="https://www.nimitiz.cn/2020/09/12/C%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0%E8%BF%9B%E5%88%B6%E8%BD%AC%E6%8D%A2/">
+<link rel="canonical" href="https://www.nimitiz.cn/2021/06/26/DNS%E8%A7%A3%E6%9E%90%E7%AE%80%E8%A6%81%E7%AC%94%E8%AE%B0/">
 
 
 <script id="page-configurations">
@@ -49,7 +51,7 @@
   };
 </script>
 
-  <title>C语言实现进制转换 | 小浣熊的技术小站</title>
+  <title>DNS解析简要笔记 | 小浣熊的技术小站</title>
   
 
 
@@ -206,7 +208,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://www.nimitiz.cn/2020/09/12/C%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0%E8%BF%9B%E5%88%B6%E8%BD%AC%E6%8D%A2/">
+    <link itemprop="mainEntityOfPage" href="https://www.nimitiz.cn/2021/06/26/DNS%E8%A7%A3%E6%9E%90%E7%AE%80%E8%A6%81%E7%AC%94%E8%AE%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -219,7 +221,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          C语言实现进制转换
+          DNS解析简要笔记
         </h1>
 
         <div class="post-meta">
@@ -230,7 +232,16 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2020-09-12 10:50:31 / 修改时间：10:51:09" itemprop="dateCreated datePublished" datetime="2020-09-12T10:50:31+08:00">2020-09-12</time>
+              <time title="创建时间：2021-06-26 19:55:56 / 修改时间：20:02:50" itemprop="dateCreated datePublished" datetime="2021-06-26T19:55:56+08:00">2021-06-26</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
+                </span>
             </span>
 
           
@@ -249,8 +260,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2020/09/12/C%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0%E8%BF%9B%E5%88%B6%E8%BD%AC%E6%8D%A2/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/09/12/C%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0%E8%BF%9B%E5%88%B6%E8%BD%AC%E6%8D%A2/" itemprop="commentCount"></span>
+    <a title="valine" href="/2021/06/26/DNS%E8%A7%A3%E6%9E%90%E7%AE%80%E8%A6%81%E7%AC%94%E8%AE%B0/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/06/26/DNS%E8%A7%A3%E6%9E%90%E7%AE%80%E8%A6%81%E7%AC%94%E8%AE%B0/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -260,7 +271,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>34</span>
+              <span>770</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -279,11 +290,25 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>昨天开始折腾如何通过C语言实现进制转换，简单记录一下 (つ´ω`)つ 。</p>
+        <p>DNS域名解析包括两种查询方式，一种是<code>递归查询</code>，另一种是<code>迭代查询</code>。客户端在查询IP地址时，向本地域名服务器进行递归查询；若本地域名服务器的数据库有相应数据，则直接返回相应数据；若无相应数据，则本地域名服务器从向根域名服务器开始，进行迭代查询，直至获得最终结果。</p>
 <a id="more"></a>
 
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;math.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">MENU</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"***********************************************"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"                    进制转换                    "</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"               1.二进制转换十进制                  "</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"               2.十进制转换二进制                  "</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"               3.八进制转换十进制                  "</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"               4.十进制转换八进制                  "</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"               5.十进制转十六进制                  "</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"               6.十六进制转十进制                  "</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"                   0.退出程序                      "</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"***********************************************"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">TwoToTen</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"输入一个待转换的二进制整数："</span>);</span><br><span class="line">    <span class="keyword">int</span> number;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%lld"</span>,&amp;number);</span><br><span class="line">    <span class="keyword">int</span> m=number;</span><br><span class="line">    <span class="keyword">int</span> n,i=<span class="number">0</span>,sum=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(m!=<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        n=m%<span class="number">10</span>;</span><br><span class="line">        m/=<span class="number">10</span>;</span><br><span class="line">        sum+=n*<span class="built_in">pow</span>(<span class="number">2</span>,i);</span><br><span class="line">        i++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"二进制整数 %lld 转换为十进制整数 %d"</span>,number,sum);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">TenToTwo</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"输入一个待转换的十进制整数："</span>);</span><br><span class="line">    <span class="keyword">int</span> number;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;number);</span><br><span class="line">    <span class="keyword">int</span> m=number;</span><br><span class="line">    <span class="keyword">int</span> n,i=<span class="number">0</span>,a[<span class="number">512</span>];</span><br><span class="line">    <span class="keyword">while</span>(m&gt;<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        n=m%<span class="number">2</span>;</span><br><span class="line">        m/=<span class="number">2</span>;</span><br><span class="line">        a[i]=n;</span><br><span class="line">        i++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"十进制整数 %d 转换为二进制整数 "</span>,number);</span><br><span class="line">    <span class="keyword">for</span>(i--;i&gt;=<span class="number">0</span>;i--)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%d"</span>,a[i]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">EightToTen</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"输入一个待转换的八进制整数："</span>);</span><br><span class="line">    <span class="keyword">int</span> number;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;number);</span><br><span class="line">    <span class="keyword">int</span> m=number;</span><br><span class="line">    <span class="keyword">int</span> n,i=<span class="number">0</span>,sum=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(m!=<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        n=m%<span class="number">10</span>;</span><br><span class="line">        m/=<span class="number">10</span>;</span><br><span class="line">        sum+=n*<span class="built_in">pow</span>(<span class="number">8</span>,i);</span><br><span class="line">        i++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"八进制整数 %d 转换为十进制整数 %d"</span>,number,sum);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">TenToEight</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"输入一个待转换的十进制整数："</span>);</span><br><span class="line">    <span class="keyword">int</span> number;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;number);</span><br><span class="line">    <span class="keyword">int</span> m=number;</span><br><span class="line">    <span class="keyword">int</span> n,i=<span class="number">0</span>,a[<span class="number">512</span>];</span><br><span class="line">    <span class="keyword">while</span>(m&gt;<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        n=m%<span class="number">8</span>;</span><br><span class="line">        m/=<span class="number">8</span>;</span><br><span class="line">        a[i]=n;</span><br><span class="line">        i++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"十进制整数 %d 转换为八进制整数 "</span>,number);</span><br><span class="line">    <span class="keyword">for</span>(i--;i&gt;=<span class="number">0</span>;i--)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%d"</span>,a[i]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">TenToSixteen</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"输入一个待转换的十进制整数："</span>);</span><br><span class="line">    <span class="keyword">int</span> number;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;number);</span><br><span class="line">    <span class="keyword">char</span> arr[]=<span class="string">"0123456789abcdef"</span>;</span><br><span class="line">    <span class="keyword">int</span> m=number;</span><br><span class="line">    <span class="keyword">int</span> n,i=<span class="number">0</span>,a[<span class="number">512</span>];</span><br><span class="line">    <span class="keyword">while</span>(m&gt;<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        n=m%<span class="number">16</span>;</span><br><span class="line">        m/=<span class="number">16</span>;</span><br><span class="line">        a[i]=arr[n];</span><br><span class="line">        i++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"十进制整数 %d 转换为十六进制整数 "</span>,number);</span><br><span class="line">    <span class="keyword">for</span>(i--;i&gt;=<span class="number">0</span>;i--)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%c"</span>,a[i]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">SixteenToTen</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"输入一个待转换的十六进制整数："</span>);</span><br><span class="line">    <span class="keyword">int</span> number;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%x"</span>,&amp;number);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"十六进制整数 %x 转换为十进制整数 %d"</span>,number,number);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        MENU();</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"输入0~6以选择需要执行的操作："</span>);</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;n);</span><br><span class="line">        <span class="keyword">switch</span>(n)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">1</span>:TwoToTen();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">2</span>:TenToTwo();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">3</span>:EightToTen();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">4</span>:TenToEight();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">5</span>:TenToSixteen();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">6</span>:SixteenToTen();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">0</span>:<span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+
+
+
+<h2 id="递归查询"><a href="#递归查询" class="headerlink" title="递归查询"></a>递归查询</h2><p>DNS服务器若不能直接响应解析请求，它将继续请求其它的DNS服务器，直到获得最终的查询结果。查询结果可以是<strong>域名主机的IP地址</strong>，或者是<strong>域名无法解析</strong>。无论哪种结果，DNS服务器都会将结果返回给客户端。</p>
+<h3 id="举个栗子"><a href="#举个栗子" class="headerlink" title="举个栗子"></a>举个栗子</h3><p>当本地域名服务器接收了客户端的查询请求后，本地域名服务器将以客户端的身份向其它DNS服务器查询结果，最后本地域名服务器将最终结果反馈给客户端。<strong>客户端只需要等待最终结果，不需要理会查询过程和中间结果。</strong></p>
+<p><img src="/2021/06/26/DNS%E8%A7%A3%E6%9E%90%E7%AE%80%E8%A6%81%E7%AC%94%E8%AE%B0/%E9%80%92%E5%BD%92%E6%9F%A5%E8%AF%A2.png" alt></p>
+<h2 id="迭代查询"><a href="#迭代查询" class="headerlink" title="迭代查询"></a>迭代查询</h2><p>如果DNS服务器查找不到相应记录，则会向客户端返回一个可能知道结果的域名服务器IP地址，由客户端继续向该可能知道结果的域名服务器发送查询请求，该域名服务器可能会返回给客户端另一个域名服务器IP地址，或返回最终查询结果。</p>
+<h3 id="举个栗子-1"><a href="#举个栗子-1" class="headerlink" title="举个栗子"></a>举个栗子</h3><p>本地域名服务器向根域名服务器发送查询请求，根域名服务器并没有相应记录，只向本地服务器返回一个顶级域名服务器IP地址，引导本地域名服务器向该顶级域名服务器进行查询······直至最后，本地域名服务器获得最终结果。</p>
+<p><img src="/2021/06/26/DNS%E8%A7%A3%E6%9E%90%E7%AE%80%E8%A6%81%E7%AC%94%E8%AE%B0/%E8%BF%AD%E4%BB%A3%E6%9F%A5%E8%AF%A2.png" alt></p>
+<h2 id="DNS传输层协议"><a href="#DNS传输层协议" class="headerlink" title="DNS传输层协议"></a>DNS传输层协议</h2><p>DNS域名服务器使用53号端口，且同时支持UDP和TCP协议。DNS在进行区域传输（即主服务器与用作冗余备份的从服务器进行数据同步）的时候，因为传送的数据量大，所以使用TCP协议；DNS在进行域名解析的时候，因为数据传送量小，所以使用UDP协议，不需要经过TCP的三次握手，响应速度更快，服务器负载更低。</p>
+<hr>
+<p><strong>参考资料</strong>：</p>
+<p><a href="https://mp.weixin.qq.com/s?__biz=Mzg5NDYxNDU2Ng==&mid=2247503177&idx=1&sn=b09bf1cb0644a9ff5b33c7858b7fb4ac&chksm=c01e6000f769e916e3c2f27cebd794c19c9fef73d0e7c859d95de6937829f15e4edd2ae3ae3c&scene=178&cur_album_id=1877121685477195781#rd" target="_blank" rel="noopener">36 张图详解 DNS ：网络世界的导航</a></p>
+<p><a href="https://blog.csdn.net/baidu_37964071/article/details/80500825?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522162469543016780264022376%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=162469543016780264022376&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~blog~baidu_landing_v2~default-6-80500825.nonecase&utm_term=DNS%E6%9F%A5%E8%AF%A2&spm=1018.2226.3001.4450" target="_blank" rel="noopener">DNS（域名解析协议）详解</a></p>
+<p><a href="https://www.cnblogs.com/wuyepeng/p/9835839.html" target="_blank" rel="noopener">DNS用的是TCP协议还是UDP协议</a></p>
 
     </div>
 
@@ -292,9 +317,6 @@
     
 
       <footer class="post-footer">
-          <div class="post-tags">
-              <a href="/tags/C%E8%AF%AD%E8%A8%80/" rel="tag"># C语言</a>
-          </div>
 
         
 
@@ -302,13 +324,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/09/05/%E4%BD%BF%E7%94%A8Nextcloud%E6%90%AD%E5%BB%BA%E7%A7%81%E6%9C%89%E4%BA%91%E5%AD%98%E5%82%A8%EF%BC%88%E5%85%A5%E9%97%A8%EF%BC%89/" rel="prev" title="使用Nextcloud搭建私有云存储（入门）">
-      <i class="fa fa-chevron-left"></i> 使用Nextcloud搭建私有云存储（入门）
+    <a href="/2021/06/04/%E5%9F%BA%E4%BA%8E51%E5%8D%95%E7%89%87%E6%9C%BA%E7%9A%84%E7%BA%A2%E5%A4%96%E8%A7%A3%E7%A0%81/" rel="prev" title="基于51单片机的红外解码">
+      <i class="fa fa-chevron-left"></i> 基于51单片机的红外解码
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2020/09/13/Windows%E7%BC%96%E7%A8%8B%E5%B0%8F%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/" rel="next" title="Windows编程小记（一）">
-      Windows编程小记（一） <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -368,6 +387,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#递归查询"><span class="nav-number">1.</span> <span class="nav-text">递归查询</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#举个栗子"><span class="nav-number">1.1.</span> <span class="nav-text">举个栗子</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#迭代查询"><span class="nav-number">2.</span> <span class="nav-text">迭代查询</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#举个栗子-1"><span class="nav-number">2.1.</span> <span class="nav-text">举个栗子</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DNS传输层协议"><span class="nav-number">3.</span> <span class="nav-text">DNS传输层协议</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
