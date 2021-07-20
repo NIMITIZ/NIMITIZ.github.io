@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-bounce.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.nimitiz.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":"ture","trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"./public/search.xml"};
+  </script>
+
+  <meta name="description" content="地址解析协议（英语：Address Resolution Protocol，缩写：ARP）是一个通过解析网络层地址（IP地址）来找寻数据链路层地址（MAC地址）的网络传输协议；ARP协议是以IP地址为线索，定位下一个应接收数据包的主机MAC地址，若目标主机不在同一链路上，则会查找下一跳路由器的MAC地址。ARP协议在IPv4中极其重要，只适用于IPv4，而IPv6使用邻居发现协议（英语：Neigh">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ARP协议简要记录">
+<meta property="og:url" content="https://www.nimitiz.cn/2021/07/02/ARP%E5%8D%8F%E8%AE%AE%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/index.html">
+<meta property="og:site_name" content="小浣熊的技术小站">
+<meta property="og:description" content="地址解析协议（英语：Address Resolution Protocol，缩写：ARP）是一个通过解析网络层地址（IP地址）来找寻数据链路层地址（MAC地址）的网络传输协议；ARP协议是以IP地址为线索，定位下一个应接收数据包的主机MAC地址，若目标主机不在同一链路上，则会查找下一跳路由器的MAC地址。ARP协议在IPv4中极其重要，只适用于IPv4，而IPv6使用邻居发现协议（英语：Neigh">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/07/02/ARP%E5%8D%8F%E8%AE%AE%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/ARP%E8%A7%A3%E6%9E%90%E8%BF%87%E7%A8%8B.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/07/02/ARP%E5%8D%8F%E8%AE%AE%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/%E4%B8%BB%E6%9C%BAA%E6%9F%A5%E7%9C%8BARP%E8%A1%A8.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/07/02/ARP%E5%8D%8F%E8%AE%AE%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/ARP%E8%AF%B7%E6%B1%82.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/07/02/ARP%E5%8D%8F%E8%AE%AE%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/ARP%E5%93%8D%E5%BA%94.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/07/02/ARP%E5%8D%8F%E8%AE%AE%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/ARP%E8%A1%A8.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/07/02/ARP%E5%8D%8F%E8%AE%AE%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/ARP%E8%8E%B7%E5%8F%96MAC%E5%9C%B0%E5%9D%80.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/07/02/ARP%E5%8D%8F%E8%AE%AE%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/ARP%E7%BC%93%E5%AD%98.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/07/02/ARP%E5%8D%8F%E8%AE%AE%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/ARP%E8%A1%A8%E9%A1%B9%E7%B1%BB%E5%9E%8B.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/07/02/ARP%E5%8D%8F%E8%AE%AE%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/%E4%BB%A3%E7%90%86ARP.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/07/02/ARP%E5%8D%8F%E8%AE%AE%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/%E4%BB%A3%E7%90%86ARP%E8%AF%B7%E6%B1%82.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/07/02/ARP%E5%8D%8F%E8%AE%AE%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/%E4%BB%A3%E7%90%86ARP%E5%93%8D%E5%BA%94.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/07/02/ARP%E5%8D%8F%E8%AE%AE%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/%E5%85%8D%E8%B4%B9ARP.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/07/02/ARP%E5%8D%8F%E8%AE%AE%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/%E5%B9%BF%E6%92%AD%E5%85%8D%E8%B4%B9ARP.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/07/02/ARP%E5%8D%8F%E8%AE%AE%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/ARP%E6%8A%A5%E6%96%87%E6%A0%BC%E5%BC%8F.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/07/02/ARP%E5%8D%8F%E8%AE%AE%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/ARP%E6%8A%A5%E6%96%87%E5%AD%97%E6%AE%B5%E5%90%AB%E4%B9%89.png">
+<meta property="article:published_time" content="2021-07-02T14:51:31.000Z">
+<meta property="article:modified_time" content="2021-07-02T14:52:12.000Z">
+<meta property="article:author" content="NIMITIZ">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.nimitiz.cn/2021/07/02/ARP%E5%8D%8F%E8%AE%AE%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/ARP%E8%A7%A3%E6%9E%90%E8%BF%87%E7%A8%8B.png">
+
+<link rel="canonical" href="https://www.nimitiz.cn/2021/07/02/ARP%E5%8D%8F%E8%AE%AE%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>ARP协议简要记录 | 小浣熊的技术小站</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+  
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">小浣熊的技术小站</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-友链">
+
+    <a href="/links/" rel="section"><i class="fa fa-link fa-fw"></i>友链</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/NIMITIZ" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.nimitiz.cn/2021/07/02/ARP%E5%8D%8F%E8%AE%AE%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="NIMITIZ">
+      <meta itemprop="description" content="生命不息，折腾不止">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小浣熊的技术小站">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ARP协议简要记录
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-07-02 22:51:31 / 修改时间：22:52:12" itemprop="dateCreated datePublished" datetime="2021-07-02T22:51:31+08:00">2021-07-02</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/07/02/ARP%E5%8D%8F%E8%AE%AE%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/07/02/ARP%E5%8D%8F%E8%AE%AE%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.8k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>地址解析协议（英语：Address Resolution Protocol，缩写：ARP）是一个通过解析网络层地址（IP地址）来找寻数据链路层地址（MAC地址）的网络传输协议；ARP协议是以IP地址为线索，定位下一个应接收数据包的主机MAC地址，若目标主机不在同一链路上，则会查找下一跳路由器的MAC地址。ARP协议在IPv4中极其重要，<strong>只适用于IPv4</strong>，而IPv6使用邻居发现协议（英语：Neighbor Discovery Protocol简称：NDP或ND）。</p>
+<a id="more"></a>
+
+
+
+
+
+<h2 id="ARP的工作机制"><a href="#ARP的工作机制" class="headerlink" title="ARP的工作机制"></a>ARP的工作机制</h2><p>假设主机<code>A</code>向同一网段上的主机<code>B</code>发送数据。主机<code>A</code>的IP地址为<code>10.0.0.1</code>，主机<code>B</code>的IP地址为<code>10.0.0.2</code>，主机<code>C</code>的IP地址为<code>10.0.0.3</code>。三台主机均不知道对方的MAC地址。ARP地址解析过程如下：</p>
+<p><img src="/2021/07/02/ARP%E5%8D%8F%E8%AE%AE%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/ARP%E8%A7%A3%E6%9E%90%E8%BF%87%E7%A8%8B.png" alt></p>
+<p>主机<code>A</code>首先检查自己的ARP缓存表，确定是否有主机<code>B</code>的IP地址对应表项。如果有，则直接使用表项中的MAC地址进行封装，封装成帧后发送给主机<code>B</code>。</p>
+<p><img src="/2021/07/02/ARP%E5%8D%8F%E8%AE%AE%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/%E4%B8%BB%E6%9C%BAA%E6%9F%A5%E7%9C%8BARP%E8%A1%A8.png" alt></p>
+<p>若主机<code>A</code>的ARP缓存表没有对应的表项，就<strong>广播</strong>发送一个<strong>ARP请求报文</strong>，源IP地址和源MAC地址是主机<code>A</code>，目的IP地址是主机<code>B</code>，<strong>目的MAC地址</strong>是广播MAC地址，即<strong><code>FFFF-FFFF-FFFF</code></strong>。</p>
+<p><img src="/2021/07/02/ARP%E5%8D%8F%E8%AE%AE%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/ARP%E8%AF%B7%E6%B1%82.png" alt></p>
+<p>当主机<code>B</code>发现ARP请求报文中的目的IP地址是自己时，主机<code>B</code>发送<strong>ARP响应报文</strong>给主机<code>A</code>，源IP地址和源MAC地址是主机<code>B</code>，目的IP地址和目的MAC地址是主机<code>A</code>；同时，<strong>主机<code>B</code>的ARP缓存表记录主机<code>A</code>的IP地址和MAC地址的对应关系</strong>。</p>
+<p><img src="/2021/07/02/ARP%E5%8D%8F%E8%AE%AE%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/ARP%E5%93%8D%E5%BA%94.png" alt></p>
+<p>主机<code>C</code>也收到了ARP请求报文，但目的IP地址不是自己，所以不会进行响应。但<strong>主机<code>C</code>会将主机<code>A</code>的映射关系添加到自己的ARP缓存表中</strong>，并丢弃ARP请求报文。</p>
+<p><img src="/2021/07/02/ARP%E5%8D%8F%E8%AE%AE%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/ARP%E8%A1%A8.png" alt></p>
+<p>主机<code>A</code>收到ARP响应报文后，添加主机<code>B</code>的映射关系，<strong>同时用主机<code>B</code>的MAC地址作为目的MAC地址封装成帧，并发送给主机<code>B</code></strong>。</p>
+<p><img src="/2021/07/02/ARP%E5%8D%8F%E8%AE%AE%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/ARP%E8%8E%B7%E5%8F%96MAC%E5%9C%B0%E5%9D%80.png" alt></p>
+<p>ARP缓存表中的表项在老化时间（aging time）内是有效的，若老化时间内未被使用，表项就会被删除。</p>
+<p><img src="/2021/07/02/ARP%E5%8D%8F%E8%AE%AE%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/ARP%E7%BC%93%E5%AD%98.png" alt></p>
+<p>ARP表项分为<strong>动态ARP表项</strong>和<strong>静态ARP表项</strong>：</p>
+<ul>
+<li><strong>动态ARP表项</strong>由ARP动态获取，<strong>若老化时间内未被使用，表项就会被自动删除</strong>；</li>
+<li><strong>静态ARP表项</strong>是<strong>手动</strong>配置，<strong>不会老化</strong>，<strong>优先级高于动态ARP表项</strong>，<strong>可以将相应的动态ARP表项覆盖</strong>。</li>
+</ul>
+<p><img src="/2021/07/02/ARP%E5%8D%8F%E8%AE%AE%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/ARP%E8%A1%A8%E9%A1%B9%E7%B1%BB%E5%9E%8B.png" alt></p>
+<h2 id="代理ARP"><a href="#代理ARP" class="headerlink" title="代理ARP"></a>代理ARP</h2><p>ARP广播报文会被路由器隔离，没有默认网关、网段不同的主机互相通信时，连接这两个网络的路由器可以响应这个ARP请求，该过程叫做<code>代理ARP</code>（Proxy ARP）。</p>
+<p><img src="/2021/07/02/ARP%E5%8D%8F%E8%AE%AE%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/%E4%BB%A3%E7%90%86ARP.png" alt></p>
+<p>主机<code>A</code>与另一网段的主机<code>B</code>通信，主机<code>A</code>直接发送ARP请求，解析主机<code>B</code>的MAC地址。运行了代理ARP的路由器收到ARP请求后，代替主机<code>A</code>在<code>20.0.0.0</code>网段发出ARP请求，解析主机<code>B</code>的地址。</p>
+<p><img src="/2021/07/02/ARP%E5%8D%8F%E8%AE%AE%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/%E4%BB%A3%E7%90%86ARP%E8%AF%B7%E6%B1%82.png" alt></p>
+<p>主机B收到路由器发出的ARP请求后，返回ARP响应报文，告知自己的MAC地址是<code>2222-2222-2222</code>。路由器收到ARP响应后，也向主机<code>A</code>返回ARP响应报文，但目的MAC地址是与<code>10.0.0.0</code>网段连接的端口MAC地址<code>1010-1010-1010</code>。主机<code>A</code>收到报文后，在ARP缓存表中添加IP地址<code>20.0.0.1</code>和MAC地址<code>1010-1010-1010</code>的映射表项。</p>
+<p><img src="/2021/07/02/ARP%E5%8D%8F%E8%AE%AE%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/%E4%BB%A3%E7%90%86ARP%E5%93%8D%E5%BA%94.png" alt></p>
+<h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ul>
+<li>主机不用了解网络的物理详情，可以假定是一个平面网络，只需通过发送ARP请求就能达到目标；</li>
+<li>屏蔽了分离的网络，主机不用修改IP地址和子网掩码就可以与现有的网络互通。</li>
+</ul>
+<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><ul>
+<li>增加了网段中的ARP流量，不适合用于大规模网络；</li>
+<li>主机需要更大的ARP缓存表才能处理IP地址和MAC地址的映射；</li>
+<li>安全性降低。</li>
+</ul>
+<h2 id="免费ARP"><a href="#免费ARP" class="headerlink" title="免费ARP"></a>免费ARP</h2><p><strong>免费ARP</strong>是一种特殊的ARP请求，当主机启动的时候，通过发送一个免费ARP请求来请求<strong>自己</strong>的IP地址的MAC地址。</p>
+<p><img src="/2021/07/02/ARP%E5%8D%8F%E8%AE%AE%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/%E5%85%8D%E8%B4%B9ARP.png" alt></p>
+<p>普通ARP报文中的目的IP地址是其它主机的IP地址；而免费ARP报文中的<strong>目的IP地址是自己的IP地址</strong>。</p>
+<p><img src="/2021/07/02/ARP%E5%8D%8F%E8%AE%AE%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/%E5%B9%BF%E6%92%AD%E5%85%8D%E8%B4%B9ARP.png" alt></p>
+<h3 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h3><ul>
+<li>起到一个<strong>宣告</strong>作用。免费ARP将数据包广播发送，<strong>不需要回应</strong>，只为告知其它主机自己的IP地址和MAC地址。</li>
+<li><strong>检测IP地址冲突</strong>。当一台主机发送了免费ARP请求报文后，若<strong>收到ARP响应报文</strong>，则说明网络内已存在使用该IP地址的主机。</li>
+<li>更新其它主机的ARP缓存表。若某主机因某些原因导致MAC地址变更，而其它主机的ARP缓存表仍保留着该主机原来的MAC地址，则可以通过免费ARP来更新其它主机的ARP缓存表。</li>
+</ul>
+<h2 id="ARP报文"><a href="#ARP报文" class="headerlink" title="ARP报文"></a>ARP报文</h2><p>ARP报文分为<strong>ARP请求报文</strong>和<strong>ARP响应报文</strong>，它们的报文格式相同，但各字段的取值不同。</p>
+<p><img src="/2021/07/02/ARP%E5%8D%8F%E8%AE%AE%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/ARP%E6%8A%A5%E6%96%87%E6%A0%BC%E5%BC%8F.png" alt></p>
+<p>ARP报文中各字段的含义如下：</p>
+<p><img src="/2021/07/02/ARP%E5%8D%8F%E8%AE%AE%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/ARP%E6%8A%A5%E6%96%87%E5%AD%97%E6%AE%B5%E5%90%AB%E4%B9%89.png" alt></p>
+<hr>
+<p><strong>参考资料</strong>：</p>
+<p><a href="https://mp.weixin.qq.com/s?__biz=Mzg5NDYxNDU2Ng==&mid=2247503273&idx=1&sn=5ed5b29d9fbf3b92b5863f44719410c7&chksm=c01e60e0f769e9f609b9db5335919906a5a4fb01cbde8aa4f7689cf7829def3a85536008e6e4&scene=178&cur_album_id=1877121685477195781#rd" target="_blank" rel="noopener">36 张图详解 ARP ：网络世界没有我，你哪也别想去</a></p>
+<p><a href="https://www.cisco.com/c/zh_cn/support/docs/ip/dynamic-address-allocation-resolution/13718-5.pdf" target="_blank" rel="noopener">代理ARP - Cisco</a></p>
+<p><a href="https://www.cnblogs.com/cxuanBlog/p/14265315.html" target="_blank" rel="noopener">一文详解 ARP 协议</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/06/29/DHCP%E5%8D%8F%E8%AE%AE%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/" rel="prev" title="DHCP协议简要记录">
+      <i class="fa fa-chevron-left"></i> DHCP协议简要记录
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/07/09/ICMP%E5%8D%8F%E8%AE%AE%E7%AE%80%E8%A6%81%E6%95%B4%E7%90%86%E8%AE%B0%E5%BD%95/" rel="next" title="ICMP协议简要整理记录">
+      ICMP协议简要整理记录 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#ARP的工作机制"><span class="nav-number">1.</span> <span class="nav-text">ARP的工作机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代理ARP"><span class="nav-number">2.</span> <span class="nav-text">代理ARP</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#优点"><span class="nav-number">2.1.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缺点"><span class="nav-number">2.2.</span> <span class="nav-text">缺点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#免费ARP"><span class="nav-number">3.</span> <span class="nav-text">免费ARP</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#作用"><span class="nav-number">3.1.</span> <span class="nav-text">作用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ARP报文"><span class="nav-number">4.</span> <span class="nav-text">ARP报文</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="NIMITIZ"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">NIMITIZ</p>
+  <div class="site-description" itemprop="description">生命不息，折腾不止</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/NIMITIZ" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;NIMITIZ" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:cwn3234733323@gmail.com" title="E-Mail → mailto:cwn3234733323@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+      
+           
+         
+         <div style="">
+  <canvas id="canvas" style="width:60%;">当前浏览器不支持canvas，请更换浏览器后再试</canvas>
+</div>
+<script>
+(function(){
+
+   var digit=
+    [
+        [
+            [0,0,1,1,1,0,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,0,1,1,0],
+            [0,0,1,1,1,0,0]
+        ],//0
+        [
+            [0,0,0,1,1,0,0],
+            [0,1,1,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [1,1,1,1,1,1,1]
+        ],//1
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,1,1],
+            [1,1,1,1,1,1,1]
+        ],//2
+        [
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//3
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,0],
+            [0,0,1,1,1,1,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,1,1,0],
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,1]
+        ],//4
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,1,1,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//5
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//6
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0]
+        ],//7
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//8
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,1,1,0,0,0,0]
+        ],//9
+        [
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0]
+        ]//:
+    ];
+
+var canvas = document.getElementById('canvas');
+
+if(canvas.getContext){
+    var cxt = canvas.getContext('2d');
+    //声明canvas的宽高
+    var H = 100,W = 700;
+    canvas.height = H;
+    canvas.width = W;
+    cxt.fillStyle = '#f00';
+    cxt.fillRect(10,10,50,50);
+
+    //存储时间数据
+    var data = [];
+    //存储运动的小球
+    var balls = [];
+    //设置粒子半径
+    var R = canvas.height/20-1;
+    (function(){
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        //存储时间数字，由十位小时、个位小时、冒号、十位分钟、个位分钟、冒号、十位秒钟、个位秒钟这7个数字组成
+        data.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+    })();
+
+    /*生成点阵数字*/
+    function renderDigit(index,num){
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    cxt.beginPath();
+                    cxt.arc(14*(R+2)*index + j*2*(R+1)+(R+1),i*2*(R+1)+(R+1),R,0,2*Math.PI);
+                    cxt.closePath();
+                    cxt.fill();
+                }
+            }
+        }
+    }
+
+    /*更新时钟*/
+    function updateDigitTime(){
+        var changeNumArray = [];
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        var NewData = [];
+        NewData.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+        for(var i = data.length-1; i >=0 ; i--){
+            //时间发生变化
+            if(NewData[i] !== data[i]){
+                //将变化的数字值和在data数组中的索引存储在changeNumArray数组中
+                changeNumArray.push(i+'_'+(Number(data[i])+1)%10);
+            }
+        }
+        //增加小球
+        for(var i = 0; i< changeNumArray.length; i++){
+            addBalls.apply(this,changeNumArray[i].split('_'));
+        }
+        data = NewData.concat();
+    }
+
+    /*更新小球状态*/
+    function updateBalls(){
+        for(var i = 0; i < balls.length; i++){
+            balls[i].stepY += balls[i].disY;
+            balls[i].x += balls[i].stepX;
+            balls[i].y += balls[i].stepY;
+            if(balls[i].x > W + R || balls[i].y > H + R){
+                balls.splice(i,1);
+                i--;
+            }
+        }
+    }
+
+    /*增加要运动的小球*/
+    function addBalls(index,num){
+        var numArray = [1,2,3];
+        var colorArray =  ["#3BE","#09C","#A6C","#93C","#9C0","#690","#FB3","#F80","#F44","#C00"];
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    var ball = {
+                        x:14*(R+2)*index + j*2*(R+1)+(R+1),
+                        y:i*2*(R+1)+(R+1),
+                        stepX:Math.floor(Math.random() * 4 -2),
+                        stepY:-2*numArray[Math.floor(Math.random()*numArray.length)],
+                        color:colorArray[Math.floor(Math.random()*colorArray.length)],
+                        disY:1
+                    };
+                    balls.push(ball);
+                }
+            }
+        }
+    }
+
+    /*渲染*/
+    function render(){
+        //重置画布宽度，达到清空画布的效果
+        canvas.height = 100;
+        //渲染时钟
+        for(var i = 0; i < data.length; i++){
+            renderDigit(i,data[i]);
+        }
+        //渲染小球
+        for(var i = 0; i < balls.length; i++){
+            cxt.beginPath();
+            cxt.arc(balls[i].x,balls[i].y,R,0,2*Math.PI);
+            cxt.fillStyle = balls[i].color;
+            cxt.closePath();
+            cxt.fill();
+        }
+    }
+
+    clearInterval(oTimer);
+    var oTimer = setInterval(function(){
+        //更新时钟
+        updateDigitTime();
+        //更新小球状态
+        updateBalls();
+        //渲染
+        render();
+    },50);
+}
+
+})();
+</script>
+   </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">NIMITIZ</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">91k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">1:23</span>
+</div>
+
+<br /> #换行
+<!-- 网站运行时间的设置 -->
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("04/15/2020 00:00:00");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'm4huKMbJFhxPsNBUaRNaSsxb-gzGzoHsz',
+      appKey     : 'ikUKWElVr7k7aYAm1PspteAw',
+      placeholder: "ヾﾉ≧∀≦)o 来呀！吐槽一番吧！",
+      avatar     : 'monsterid',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+  
+
+  <script src="/js/activate-power-mode.min.js"></script>
+  <script>
+    POWERMODE.colorful = true;
+    POWERMODE.shake = false;
+    document.body.addEventListener('input', POWERMODE);
+  </script>
+
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>
+
+<!--浏览器搞笑标题-->
+<script type="text/javascript" src="/js/funny_title.js"></script>
+
+<!--动态线条背景-->
+<script type="text/javascript"
+color="220,220,220" opacity='0.9' zIndex="-1" count="200" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+</script>

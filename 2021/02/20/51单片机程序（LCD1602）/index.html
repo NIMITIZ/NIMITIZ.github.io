@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-bounce.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.nimitiz.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":"ture","trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"./public/search.xml"};
+  </script>
+
+  <meta name="description" content="很久没玩过51单片机了(．． )…，整理一下玩LCD1602模块的一些笔记。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="51单片机程序（LCD1602）">
+<meta property="og:url" content="https://www.nimitiz.cn/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/index.html">
+<meta property="og:site_name" content="小浣熊的技术小站">
+<meta property="og:description" content="很久没玩过51单片机了(．． )…，整理一下玩LCD1602模块的一些笔记。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/1602%E6%8E%A5%E5%8F%A3.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/%E8%AF%BB%E6%93%8D%E4%BD%9C%E6%97%B6%E5%BA%8F.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/%E8%AF%BB%E6%93%8D%E4%BD%9C%E6%97%B6%E5%BA%8F%E5%9B%BE.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/%E5%86%99%E6%93%8D%E4%BD%9C%E6%97%B6%E5%BA%8F.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/%E5%86%99%E6%93%8D%E4%BD%9C%E6%97%B6%E5%BA%8F%E5%9B%BE.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/%E7%BB%84%E5%90%88%E9%80%89%E6%8B%A9%E6%96%B9%E5%BC%8F.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/%E7%8A%B6%E6%80%81%E5%AD%97%E8%AF%B4%E6%98%8E.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/%E6%B8%85%E6%98%BE%E7%A4%BA.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/%E5%BD%92%E4%BD%8D.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/%E8%AE%BE%E7%BD%AE%E8%BE%93%E5%85%A5%E6%A8%A1%E5%BC%8F.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/%E6%98%BE%E7%A4%BA%E5%BC%80%E5%85%B3%E6%8E%A7%E5%88%B6.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/%E6%B8%B8%E6%A0%87%E6%88%96%E6%98%BE%E7%A4%BA%E7%A7%BB%E4%BD%8D%E5%85%83%EF%BC%880%EF%BC%89.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/%E6%B8%B8%E6%A0%87%E6%88%96%E6%98%BE%E7%A4%BA%E7%A7%BB%E4%BD%8D%E5%85%83%EF%BC%881%EF%BC%89.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/%E5%8A%9F%E8%83%BD%E8%AE%BE%E7%BD%AE.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/CGRAM%E5%9C%B0%E5%9D%80%E8%AE%BE%E7%BD%AE.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/DDRAM%E5%9C%B0%E5%9D%80%E8%AE%BE%E7%BD%AE%EF%BC%880%EF%BC%89.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/DDRAM%E5%9C%B0%E5%9D%80%E8%AE%BE%E7%BD%AE%EF%BC%881%EF%BC%89.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/%E8%AF%BB%E5%BF%99%E6%A0%87%E5%BF%97BF%E5%92%8CAC.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/%E5%86%99%E6%95%B0%E6%8D%AE%E5%88%B0CGRAM%E6%88%96DDRAM.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/%E4%BB%8ECGRAM%E6%88%96DDRAM%E4%B8%AD%E8%AF%BB%E6%95%B0%E6%8D%AE.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/%E5%9C%B0%E5%9D%80%E5%AF%B9%E5%BA%94%E5%85%B3%E7%B3%BB.png">
+<meta property="article:published_time" content="2021-02-20T08:21:54.000Z">
+<meta property="article:modified_time" content="2021-03-21T05:12:52.000Z">
+<meta property="article:author" content="NIMITIZ">
+<meta property="article:tag" content="51单片机">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.nimitiz.cn/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/1602%E6%8E%A5%E5%8F%A3.png">
+
+<link rel="canonical" href="https://www.nimitiz.cn/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>51单片机程序（LCD1602） | 小浣熊的技术小站</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+  
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">小浣熊的技术小站</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-友链">
+
+    <a href="/links/" rel="section"><i class="fa fa-link fa-fw"></i>友链</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/NIMITIZ" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.nimitiz.cn/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="NIMITIZ">
+      <meta itemprop="description" content="生命不息，折腾不止">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小浣熊的技术小站">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          51单片机程序（LCD1602）
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-02-20 16:21:54" itemprop="dateCreated datePublished" datetime="2021-02-20T16:21:54+08:00">2021-02-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-03-21 13:12:52" itemprop="dateModified" datetime="2021-03-21T13:12:52+08:00">2021-03-21</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.8k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>很久没玩过51单片机了(．． )…，整理一下玩LCD1602模块的一些笔记。</p>
+<a id="more"></a>
+
+
+
+<p>LCD1602液晶显示模块可显示<code>2行、16字/行</code>的字符，绝大部分的LCD1602液晶显示模块都是基于HD77480及其兼容芯片来设计的。</p>
+<p>单片机： <a href="http://www.stcmcudata.com/datasheet/STC89C52.pdf" target="_blank" rel="noopener">STC89C52</a><br>开发板： <a href="http://www.prechin.net/forum.php?mod=viewthread&tid=35264" target="_blank" rel="noopener">HC6800-MS</a></p>
+<p><img src="/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/1602%E6%8E%A5%E5%8F%A3.png" alt></p>
+<h2 id="LCD1602引脚"><a href="#LCD1602引脚" class="headerlink" title="LCD1602引脚"></a>LCD1602引脚</h2><ul>
+<li><code>VSS</code>：电源地</li>
+<li><code>VDD</code>：电源正极</li>
+<li><code>V0</code>：液晶显示偏压信号，连接电位器，用于调节液晶显示的对比度</li>
+<li><code>RS</code>：数据/命令选择端，当<code>RS=1</code>时，从<code>D0</code>到<code>D7</code>读/写数据；当<code>RS=0</code>时，从<code>D0</code>到<code>D7</code>读状态或写指令</li>
+<li><code>RW</code>：读/写选择端，当<code>RW=1</code>时，进行读操作；当<code>RW=0</code>时，进行写操作</li>
+<li><code>E</code>：使能端。进行读操作时，要使<code>E</code>处于高电平；进行写操作时，要使<code>E</code>处于下降沿</li>
+<li><code>D0</code>~<code>D7</code>：并行输入/输出端</li>
+<li><code>A</code>：背光源的正极</li>
+<li><code>K</code>：背光源的负极</li>
+</ul>
+<h2 id="基本操作时序"><a href="#基本操作时序" class="headerlink" title="基本操作时序"></a>基本操作时序</h2><h3 id="读操作时序"><a href="#读操作时序" class="headerlink" title="读操作时序"></a>读操作时序</h3><p><img src="/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/%E8%AF%BB%E6%93%8D%E4%BD%9C%E6%97%B6%E5%BA%8F.png" alt></p>
+<p><img src="/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/%E8%AF%BB%E6%93%8D%E4%BD%9C%E6%97%B6%E5%BA%8F%E5%9B%BE.png" alt></p>
+<h3 id="写操作时序"><a href="#写操作时序" class="headerlink" title="写操作时序"></a>写操作时序</h3><p><img src="/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/%E5%86%99%E6%93%8D%E4%BD%9C%E6%97%B6%E5%BA%8F.png" alt></p>
+<p><img src="/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/%E5%86%99%E6%93%8D%E4%BD%9C%E6%97%B6%E5%BA%8F%E5%9B%BE.png" alt></p>
+<h2 id="寄存器"><a href="#寄存器" class="headerlink" title="寄存器"></a>寄存器</h2><p>LCD1602模块有两个8位寄存器，分别为指令寄存器和数据寄存器，可以通过<code>RS</code>和<code>R/W</code>输入信号的组合来选择指定的寄存器进行相应的操作。</p>
+<p><img src="/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/%E7%BB%84%E5%90%88%E9%80%89%E6%8B%A9%E6%96%B9%E5%BC%8F.png" alt></p>
+<ul>
+<li><p>读状态：</p>
+<ul>
+<li>输入：<code>RS=0</code>、<code>RW=1</code>、<code>E=1</code></li>
+<li>输出：<code>&lt;D0~D7&gt;=&lt;状态字&gt;</code></li>
+</ul>
+</li>
+<li><p>写指令：</p>
+<ul>
+<li>输入：<code>RS=0</code>、<code>RW=0</code>、<code>&lt;D0~D7&gt;=&lt;指令码&gt;</code>、<code>E=&lt;高脉冲&gt;</code></li>
+<li>输出：无</li>
+</ul>
+</li>
+<li><p>读数据：</p>
+<ul>
+<li>输入：<code>RS=1</code>、<code>RW=1</code>、<code>E=1</code></li>
+<li>输出：<code>&lt;D0~D7&gt;=&lt;数据&gt;</code></li>
+</ul>
+</li>
+<li><p>写数据：</p>
+<ul>
+<li>输入：<code>RS=1</code>、<code>RW=0</code>、<code>&lt;D0~D7&gt;=&lt;数据&gt;</code>、<code>E=&lt;高脉冲&gt;</code></li>
+<li>输出：无</li>
+</ul>
+</li>
+</ul>
+<h2 id="状态字说明"><a href="#状态字说明" class="headerlink" title="状态字说明"></a>状态字说明</h2><p><img src="/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/%E7%8A%B6%E6%80%81%E5%AD%97%E8%AF%B4%E6%98%8E.png" alt></p>
+<ul>
+<li><code>D7</code>：读写操作使能，当<code>D7=1</code>时，禁止读写；当<code>D7=0</code>时，允许读写</li>
+<li><code>D6~0</code>：当前数据地址指针的数值</li>
+</ul>
+<p>因为LCD1602搭载的芯片运算速度较慢，当模块正在进行内部操作时，不接受任何外部指令和数据，此时，忙标志位<code>BF</code>为高电平。所以每次进行读写操作前，都必须进行读忙，将状态标志位<code>BF</code>读到<code>D7</code>，确保<code>D7=0</code>。</p>
+<h2 id="LCD1602指令"><a href="#LCD1602指令" class="headerlink" title="LCD1602指令"></a>LCD1602指令</h2><p>51单片机可以直接访问LCD1602的指令寄存器和数据寄存器，在LCD1602进行内部操作前，来自51单片机的控制信息和数据将分别暂存于此，这些控制信息和数据的组合即为LCD1602的指令。</p>
+<h3 id="清显示"><a href="#清显示" class="headerlink" title="清显示"></a>清显示</h3><p><img src="/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/%E6%B8%85%E6%98%BE%E7%A4%BA.png" alt></p>
+<h3 id="归位"><a href="#归位" class="headerlink" title="归位"></a>归位</h3><p><img src="/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/%E5%BD%92%E4%BD%8D.png" alt></p>
+<h3 id="设置输入模式"><a href="#设置输入模式" class="headerlink" title="设置输入模式"></a>设置输入模式</h3><p><img src="/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/%E8%AE%BE%E7%BD%AE%E8%BE%93%E5%85%A5%E6%A8%A1%E5%BC%8F.png" alt></p>
+<h3 id="显示开-关控制"><a href="#显示开-关控制" class="headerlink" title="显示开/关控制"></a>显示开/关控制</h3><p><img src="/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/%E6%98%BE%E7%A4%BA%E5%BC%80%E5%85%B3%E6%8E%A7%E5%88%B6.png" alt></p>
+<h3 id="游标或显示移位元"><a href="#游标或显示移位元" class="headerlink" title="游标或显示移位元"></a>游标或显示移位元</h3><p><img src="/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/%E6%B8%B8%E6%A0%87%E6%88%96%E6%98%BE%E7%A4%BA%E7%A7%BB%E4%BD%8D%E5%85%83%EF%BC%880%EF%BC%89.png" alt></p>
+<p><img src="/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/%E6%B8%B8%E6%A0%87%E6%88%96%E6%98%BE%E7%A4%BA%E7%A7%BB%E4%BD%8D%E5%85%83%EF%BC%881%EF%BC%89.png" alt></p>
+<h3 id="功能设置"><a href="#功能设置" class="headerlink" title="功能设置"></a>功能设置</h3><p><img src="/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/%E5%8A%9F%E8%83%BD%E8%AE%BE%E7%BD%AE.png" alt></p>
+<h3 id="CGRAM地址设置"><a href="#CGRAM地址设置" class="headerlink" title="CGRAM地址设置"></a>CGRAM地址设置</h3><p><img src="/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/CGRAM%E5%9C%B0%E5%9D%80%E8%AE%BE%E7%BD%AE.png" alt></p>
+<h3 id="DDRAM地址设置"><a href="#DDRAM地址设置" class="headerlink" title="DDRAM地址设置"></a>DDRAM地址设置</h3><p><img src="/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/DDRAM%E5%9C%B0%E5%9D%80%E8%AE%BE%E7%BD%AE%EF%BC%880%EF%BC%89.png" alt></p>
+<p><img src="/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/DDRAM%E5%9C%B0%E5%9D%80%E8%AE%BE%E7%BD%AE%EF%BC%881%EF%BC%89.png" alt></p>
+<h3 id="读忙标志BF和AC"><a href="#读忙标志BF和AC" class="headerlink" title="读忙标志BF和AC"></a>读忙标志BF和AC</h3><p><img src="/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/%E8%AF%BB%E5%BF%99%E6%A0%87%E5%BF%97BF%E5%92%8CAC.png" alt></p>
+<h3 id="写数据到CGRAM或DDRAM"><a href="#写数据到CGRAM或DDRAM" class="headerlink" title="写数据到CGRAM或DDRAM"></a>写数据到CGRAM或DDRAM</h3><p><img src="/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/%E5%86%99%E6%95%B0%E6%8D%AE%E5%88%B0CGRAM%E6%88%96DDRAM.png" alt></p>
+<h3 id="从CGRAM或DDRAM中读数据"><a href="#从CGRAM或DDRAM中读数据" class="headerlink" title="从CGRAM或DDRAM中读数据"></a>从CGRAM或DDRAM中读数据</h3><p><img src="/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/%E4%BB%8ECGRAM%E6%88%96DDRAM%E4%B8%AD%E8%AF%BB%E6%95%B0%E6%8D%AE.png" alt></p>
+<h2 id="CGROM、DDRAM和CGRAM"><a href="#CGROM、DDRAM和CGRAM" class="headerlink" title="CGROM、DDRAM和CGRAM"></a>CGROM、DDRAM和CGRAM</h2><p>在LCD1602模块内，与字符显示相关的存储器有CGROM、DDRAM、CGRAM。对于显示一些常用字符，其字模数据已存储于CGROM中，再调用时，只需使用语法<code>P=&lt;常用字符&gt;;</code>即可调用；但如果需要显示CGROM中不存在的字符，则必须先在CGRAM中自定义，再写入DDRAM。</p>
+<h3 id="CGROM"><a href="#CGROM" class="headerlink" title="CGROM"></a>CGROM</h3><p>CGROM内存储了192个常用字符的字模数据，只能读出，不能写入。这些字模数据恰好与其对应的字符的ASCII值相等，因此，单片机会根据某常用字符的ASCII值从CGROM中读出与之值相等的字符数据，并将该字符数据写入DDRAM，即可显示对应的常用字符。另外，在CGROM中，地址<code>0x00</code> ~ <code>0x07</code>内容为空，由用户在CGRAM中进行自定义，再调用自定义的字符。</p>
+<h3 id="DDRAM"><a href="#DDRAM" class="headerlink" title="DDRAM"></a>DDRAM</h3><p>DDRAM用于存储从CGROM或CGRAM读出的需要LCD1602显示的字符的字模数据，容量为80字节，地址范围：</p>
+<ul>
+<li><code>0x00</code> ~ <code>0x27</code></li>
+<li><code>0x40</code> ~ <code>0x67</code></li>
+</ul>
+<p>其中用于存储需要显示的字符的字模数据的两段为：</p>
+<ul>
+<li><code>0x00</code> ~ <code>0x0f</code></li>
+<li><code>0x40</code> ~ <code>0x4f</code></li>
+</ul>
+<p>其余部分用于存储字符显示相关的设置，例如字符的移动。</p>
+<p><img src="/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/%E5%9C%B0%E5%9D%80%E5%AF%B9%E5%BA%94%E5%85%B3%E7%B3%BB.png" alt></p>
+<h3 id="CGRAM"><a href="#CGRAM" class="headerlink" title="CGRAM"></a>CGRAM</h3><p>CGRAM用于存储自定义的字符的字模数据，可自定义8个点阵列大小为<code>5×7</code>的字符或4个点阵列大小为<code>5×11</code>的字符。以<code>5×7</code>模式为例，一个字模数据大小为8字节，需要8个地址来表示，每8个地址组成一个地址段，存储一个字模数据；第一个地址段的起始为<code>0x40</code>，该地址段对应CGROM中的地址<code>0x00</code>；第二个地址段的起始为<code>0x48</code>，该地址段对应CGROM中的地址<code>0x01</code>；第三个地址段的起始为<code>0x50</code>，该地址段对应CGROM中的地址<code>0x02</code>，依此类推。</p>
+<h2 id="举个栗子"><a href="#举个栗子" class="headerlink" title="举个栗子"></a>举个栗子</h2><figure class="highlight reasonml"><table><tr><td class="code"><pre><span class="line"><span class="comment">//显示已有的字符</span></span><br><span class="line"></span><br><span class="line">#<span class="keyword">include</span>&lt;reg51.h&gt;</span><br><span class="line">#<span class="keyword">include</span>&lt;intrins.h&gt;		<span class="comment">//包含有_nop_()函数定义的头文件，若使用12MHz的晶振，_nop_()函数起到延时1微秒的效果，_nop_()函数延时的时长由晶振频率决定</span></span><br><span class="line">sbit RS=P2^<span class="number">6</span>;</span><br><span class="line">sbit RW=P2^<span class="number">5</span>;</span><br><span class="line">sbit E=P2^<span class="number">7</span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">char</span> Text0<span class="literal">[]</span>=<span class="string">"Hello,"</span>;		<span class="comment">//定义LCD1602第一行显示的字符</span></span><br><span class="line"><span class="built_in">char</span> Text1<span class="literal">[]</span>=<span class="string">"world!"</span>;		<span class="comment">//定义LCD1602第二行显示的字符</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">int</span> <span class="constructor">ReadBusy()</span>		<span class="comment">//定义一个用于读忙的函数</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="built_in">int</span> temp;</span><br><span class="line">	RS=<span class="number">0</span>;</span><br><span class="line">	RW=<span class="number">1</span>;</span><br><span class="line">	<span class="constructor">_nop_()</span>;</span><br><span class="line">	P0=<span class="number">0xff</span>;		<span class="comment">//在电子电路中，高电平容易被低电平拉低，而低电平一般不能被高电平拉高，所以在读取某I/O端数据时，将该I/O端置1，确保原来的数据不受影响</span></span><br><span class="line">	<span class="constructor">_nop_()</span>;</span><br><span class="line">	E=<span class="number">1</span>;</span><br><span class="line">	<span class="constructor">_nop_()</span>;</span><br><span class="line">	temp=P0;		<span class="comment">//读取LCD1602的状态字</span></span><br><span class="line">	<span class="constructor">_nop_()</span>;</span><br><span class="line">	E=<span class="number">0</span>;</span><br><span class="line">	return(temp&amp;<span class="number">0x80</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void <span class="constructor">Delay5ms()</span>		<span class="comment">//定义一个延时5毫秒的函数</span></span><br><span class="line">&#123;</span><br><span class="line">	unsigned <span class="built_in">char</span> i,j;</span><br><span class="line">	i=<span class="number">59</span>;</span><br><span class="line">	j=<span class="number">90</span>;</span><br><span class="line">	<span class="keyword">do</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">while</span>(--j);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">while</span>(--i);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void <span class="constructor">Write_Com(<span class="params">char</span> <span class="params">com</span>)</span>		<span class="comment">//定义一个用于写命令的函数</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">while</span>(<span class="constructor">ReadBusy()</span>);</span><br><span class="line">	RS=<span class="number">0</span>;</span><br><span class="line">	RW=<span class="number">0</span>;</span><br><span class="line">	<span class="constructor">_nop_()</span>;</span><br><span class="line">	P0=com;		<span class="comment">//准备写入命令</span></span><br><span class="line">	<span class="constructor">_nop_()</span>;</span><br><span class="line">	E=<span class="number">1</span>;		<span class="comment">//当使能端为高电平时，写入命令</span></span><br><span class="line">	<span class="constructor">Delay5ms()</span>;</span><br><span class="line">	E=<span class="number">0</span>;		<span class="comment">//命令写入完成后，要将使能端的高电平拉低</span></span><br><span class="line">	<span class="constructor">Delay5ms()</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void <span class="constructor">Write_Dat(<span class="params">char</span> <span class="params">dat</span>)</span>		<span class="comment">//定义一个用于写数据的函数</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">while</span>(<span class="constructor">ReadBusy()</span>);</span><br><span class="line">	RS=<span class="number">1</span>;</span><br><span class="line">	RW=<span class="number">0</span>;</span><br><span class="line">	<span class="constructor">_nop_()</span>;</span><br><span class="line">	P0=dat;</span><br><span class="line">	<span class="constructor">_nop_()</span>;</span><br><span class="line">	E=<span class="number">1</span>;</span><br><span class="line">	<span class="constructor">Delay5ms()</span>;</span><br><span class="line">	E=<span class="number">0</span>;</span><br><span class="line">	<span class="constructor">Delay5ms()</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void init<span class="literal">()</span>		<span class="comment">//定义一个用于初始化LCD1602的函数</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="constructor">Delay5ms()</span>;		<span class="comment">//延时15毫秒</span></span><br><span class="line">	<span class="constructor">Delay5ms()</span>;</span><br><span class="line">	<span class="constructor">Delay5ms()</span>;</span><br><span class="line">	<span class="constructor">Write_Com(0x38)</span>;		<span class="comment">//设置显示模式</span></span><br><span class="line">	<span class="constructor">Delay5ms()</span>;</span><br><span class="line">	<span class="constructor">Write_Com(0x38)</span>;</span><br><span class="line">	<span class="constructor">Delay5ms()</span>;</span><br><span class="line">	<span class="constructor">Write_Com(0x38)</span>;</span><br><span class="line">	<span class="constructor">Write_Com(0x0c)</span>;		<span class="comment">//设置显示开关及光标</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void main<span class="literal">()</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="built_in">int</span> i,j;</span><br><span class="line">	init<span class="literal">()</span>;</span><br><span class="line">	<span class="constructor">Write_Com(0x80)</span>;		<span class="comment">//设置指针指向显示第一行的第一个字符的DDRAM地址</span></span><br><span class="line">	for(i=<span class="number">0</span>;i&lt;<span class="number">6</span>;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="constructor">Write_Dat(Text0[<span class="params">i</span>])</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="constructor">Write_Com(0x80+0x40)</span>;		<span class="comment">//设置指针指向显示第二行的第一个字符的DDRAM地址</span></span><br><span class="line">	for(j=<span class="number">0</span>;j&lt;<span class="number">6</span>;j++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="constructor">Write_Dat(Text1[<span class="params">j</span>])</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"><span class="comment">//显示自定义字符</span></span><br><span class="line"></span><br><span class="line">#include&lt;reg51.h&gt;</span><br><span class="line">#include&lt;<span class="built_in">int</span>rins.h&gt;</span><br><span class="line">sbit RS=P2^<span class="number">6</span>;</span><br><span class="line">sbit RW=P2^<span class="number">5</span>;</span><br><span class="line">sbit E=P2^<span class="number">7</span>;</span><br><span class="line"></span><br><span class="line">char Image0[]=&#123;<span class="number">0x08</span>,<span class="number">0x1F</span>,<span class="number">0x12</span>,<span class="number">0x0F</span>,<span class="number">0x0A</span>,<span class="number">0x1F</span>,<span class="number">0x02</span>,<span class="number">0x00</span>&#125;;		<span class="comment">//汉字“年”的字模数据</span></span><br><span class="line">char Image1[]=&#123;<span class="number">0x0F</span>,<span class="number">0x09</span>,<span class="number">0x0F</span>,<span class="number">0x09</span>,<span class="number">0x0F</span>,<span class="number">0x09</span>,<span class="number">0x13</span>,<span class="number">0x00</span>&#125;;		<span class="comment">//汉字“月”的字模数据</span></span><br><span class="line">char Image2[]=&#123;<span class="number">0x1F</span>,<span class="number">0x11</span>,<span class="number">0x11</span>,<span class="number">0x1F</span>,<span class="number">0x11</span>,<span class="number">0x11</span>,<span class="number">0x1F</span>,<span class="number">0x00</span>&#125;;		<span class="comment">//汉字“日”的字模数据</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">int</span> ReadBusy()</span><br><span class="line">&#123;</span><br><span class="line">	<span class="built_in">int</span> temp;</span><br><span class="line">	RS=<span class="number">0</span>;</span><br><span class="line">	RW=<span class="number">1</span>;</span><br><span class="line">	_nop_();</span><br><span class="line">	P0=<span class="number">0xff</span>;</span><br><span class="line">	_nop_();</span><br><span class="line">	E=<span class="number">1</span>;</span><br><span class="line">	_nop_();</span><br><span class="line">	temp=P0;</span><br><span class="line">	_nop_();</span><br><span class="line">	E=<span class="number">0</span>;</span><br><span class="line">	<span class="keyword">return</span>(temp&amp;<span class="number">0x80</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">void</span> Delay5ms()</span><br><span class="line">&#123;</span><br><span class="line">	unsigned char i,j;</span><br><span class="line">	i=<span class="number">59</span>;</span><br><span class="line">	j=<span class="number">90</span>;</span><br><span class="line">	<span class="keyword">do</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">while</span>(--j);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">while</span>(--i);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">void</span> Write_Com(char com)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">while</span>(ReadBusy());</span><br><span class="line">	RS=<span class="number">0</span>;</span><br><span class="line">	RW=<span class="number">0</span>;</span><br><span class="line">	_nop_();</span><br><span class="line">	P0=com;</span><br><span class="line">	_nop_();</span><br><span class="line">	E=<span class="number">1</span>;</span><br><span class="line">	Delay5ms();</span><br><span class="line">	E=<span class="number">0</span>;</span><br><span class="line">	Delay5ms();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">void</span> Write_Dat(char dat)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">while</span>(ReadBusy());</span><br><span class="line">	RS=<span class="number">1</span>;</span><br><span class="line">	RW=<span class="number">0</span>;</span><br><span class="line">	_nop_();</span><br><span class="line">	P0=dat;</span><br><span class="line">	_nop_();</span><br><span class="line">	E=<span class="number">1</span>;</span><br><span class="line">	Delay5ms();</span><br><span class="line">	E=<span class="number">0</span>;</span><br><span class="line">	Delay5ms();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">void</span> init()</span><br><span class="line">&#123;</span><br><span class="line">	Delay5ms();</span><br><span class="line">	Delay5ms();</span><br><span class="line">	Delay5ms();</span><br><span class="line">	Write_Com(<span class="number">0x38</span>);</span><br><span class="line">	Delay5ms();</span><br><span class="line">	Write_Com(<span class="number">0x38</span>);</span><br><span class="line">	Delay5ms();</span><br><span class="line">	Write_Com(<span class="number">0x38</span>);</span><br><span class="line">	Write_Com(<span class="number">0x0c</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">void</span> main()</span><br><span class="line">&#123;</span><br><span class="line">	<span class="built_in">int</span> x,y,z;</span><br><span class="line">	init();</span><br><span class="line">	Write_Com(<span class="number">0x40</span>);		<span class="comment">//设置指针指向CGRAM中第一个地址段的起始（5x7模式中一个字模数据大小为8字节，即需要8个地址来表示）</span></span><br><span class="line">	<span class="keyword">for</span>(x=<span class="number">0</span>;x&lt;sizeof(Image0);x++)		<span class="comment">//写入字模数据</span></span><br><span class="line">	&#123;</span><br><span class="line">		Write_Dat(Image0[x]);</span><br><span class="line">	&#125;</span><br><span class="line">	Write_Com(<span class="number">0x48</span>);</span><br><span class="line">	<span class="keyword">for</span>(y=<span class="number">0</span>;y&lt;sizeof(Image1);y++)</span><br><span class="line">	&#123;</span><br><span class="line">		Write_Dat(Image1[y]);</span><br><span class="line">	&#125;</span><br><span class="line">	Write_Com(<span class="number">0x50</span>);</span><br><span class="line">	<span class="keyword">for</span>(z=<span class="number">0</span>;z&lt;sizeof(Image2);z++)</span><br><span class="line">	&#123;</span><br><span class="line">		Write_Dat(Image2[z]);</span><br><span class="line">	&#125;</span><br><span class="line">	Write_Com(<span class="number">0x80</span>+<span class="number">0x00</span>);		<span class="comment">//0x80+0x00等效于0x80</span></span><br><span class="line">	Write_Dat(<span class="number">0x00</span>);		<span class="comment">//将CGRAM中第一个地址段存储的字模数据写入DDRAM</span></span><br><span class="line">	Write_Com(<span class="number">0x80</span>+<span class="number">0x02</span>);</span><br><span class="line">	Write_Dat(<span class="number">0x01</span>);</span><br><span class="line">	Write_Com(<span class="number">0x80</span>+<span class="number">0x04</span>);</span><br><span class="line">	Write_Dat(<span class="number">0x02</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<hr>
+<p>本文内容如有错误，请在评论区多多指教，非常感谢φ(≧ω≦*)♪。</p>
+<p><strong>参考资料</strong></p>
+<p><a href="https://blog.csdn.net/u013151320/article/details/46663167" target="_blank" rel="noopener">51单片机LCD1602程序详解</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/166184285" target="_blank" rel="noopener">超详细讲解，LCD1602电路与驱动</a></p>
+<p><a href="https://blog.csdn.net/ROC_CHAO/article/details/107125314" target="_blank" rel="noopener">基于51单片机点亮LCD1602+自定义字符</a></p>
+<p><a href="https://blog.csdn.net/imxlw00/article/details/90316745?ops_request_misc=%25257B%252522request%25255Fid%252522%25253A%252522161370745016780261912211%252522%25252C%252522scm%252522%25253A%25252220140713.130102334.pc%25255Fall.%252522%25257D&request_id=161370745016780261912211&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~first_rank_v2~rank_v29-6-90316745.first_rank_v2_pc_rank_v29_10&utm_term=51%25E5%258D%2595%25E7%2589%2587%25E6%259C%25BA+CGRAM" target="_blank" rel="noopener">单片机 1602 CGRAM、CGROM及DDRAM的作用</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/51%E5%8D%95%E7%89%87%E6%9C%BA/" rel="tag"># 51单片机</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/02/18/Cloudreve%20%E2%80%94%E2%80%94%20%E5%B9%B4%E8%BD%BB%E4%BA%BA%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%A7%81%E4%BA%BA%E4%BA%91%E7%9B%98/" rel="prev" title="Cloudreve —— 年轻人的第一个私人云盘">
+      <i class="fa fa-chevron-left"></i> Cloudreve —— 年轻人的第一个私人云盘
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/03/03/51%E5%8D%95%E7%89%87%E6%9C%BA%E2%80%94%E2%80%94UART%E9%80%9A%E4%BF%A1%E7%AE%80%E5%8D%95%E8%AE%B0%E5%BD%95/" rel="next" title="51单片机——UART通信简单记录">
+      51单片机——UART通信简单记录 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#LCD1602引脚"><span class="nav-number">1.</span> <span class="nav-text">LCD1602引脚</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本操作时序"><span class="nav-number">2.</span> <span class="nav-text">基本操作时序</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#读操作时序"><span class="nav-number">2.1.</span> <span class="nav-text">读操作时序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#写操作时序"><span class="nav-number">2.2.</span> <span class="nav-text">写操作时序</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#寄存器"><span class="nav-number">3.</span> <span class="nav-text">寄存器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#状态字说明"><span class="nav-number">4.</span> <span class="nav-text">状态字说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LCD1602指令"><span class="nav-number">5.</span> <span class="nav-text">LCD1602指令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#清显示"><span class="nav-number">5.1.</span> <span class="nav-text">清显示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#归位"><span class="nav-number">5.2.</span> <span class="nav-text">归位</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设置输入模式"><span class="nav-number">5.3.</span> <span class="nav-text">设置输入模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#显示开-关控制"><span class="nav-number">5.4.</span> <span class="nav-text">显示开&#x2F;关控制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#游标或显示移位元"><span class="nav-number">5.5.</span> <span class="nav-text">游标或显示移位元</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#功能设置"><span class="nav-number">5.6.</span> <span class="nav-text">功能设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CGRAM地址设置"><span class="nav-number">5.7.</span> <span class="nav-text">CGRAM地址设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DDRAM地址设置"><span class="nav-number">5.8.</span> <span class="nav-text">DDRAM地址设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#读忙标志BF和AC"><span class="nav-number">5.9.</span> <span class="nav-text">读忙标志BF和AC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#写数据到CGRAM或DDRAM"><span class="nav-number">5.10.</span> <span class="nav-text">写数据到CGRAM或DDRAM</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#从CGRAM或DDRAM中读数据"><span class="nav-number">5.11.</span> <span class="nav-text">从CGRAM或DDRAM中读数据</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CGROM、DDRAM和CGRAM"><span class="nav-number">6.</span> <span class="nav-text">CGROM、DDRAM和CGRAM</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CGROM"><span class="nav-number">6.1.</span> <span class="nav-text">CGROM</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DDRAM"><span class="nav-number">6.2.</span> <span class="nav-text">DDRAM</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CGRAM"><span class="nav-number">6.3.</span> <span class="nav-text">CGRAM</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#举个栗子"><span class="nav-number">7.</span> <span class="nav-text">举个栗子</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="NIMITIZ"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">NIMITIZ</p>
+  <div class="site-description" itemprop="description">生命不息，折腾不止</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/NIMITIZ" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;NIMITIZ" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:cwn3234733323@gmail.com" title="E-Mail → mailto:cwn3234733323@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+      
+           
+         
+         <div style="">
+  <canvas id="canvas" style="width:60%;">当前浏览器不支持canvas，请更换浏览器后再试</canvas>
+</div>
+<script>
+(function(){
+
+   var digit=
+    [
+        [
+            [0,0,1,1,1,0,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,0,1,1,0],
+            [0,0,1,1,1,0,0]
+        ],//0
+        [
+            [0,0,0,1,1,0,0],
+            [0,1,1,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [1,1,1,1,1,1,1]
+        ],//1
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,1,1],
+            [1,1,1,1,1,1,1]
+        ],//2
+        [
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//3
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,0],
+            [0,0,1,1,1,1,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,1,1,0],
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,1]
+        ],//4
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,1,1,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//5
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//6
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0]
+        ],//7
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//8
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,1,1,0,0,0,0]
+        ],//9
+        [
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0]
+        ]//:
+    ];
+
+var canvas = document.getElementById('canvas');
+
+if(canvas.getContext){
+    var cxt = canvas.getContext('2d');
+    //声明canvas的宽高
+    var H = 100,W = 700;
+    canvas.height = H;
+    canvas.width = W;
+    cxt.fillStyle = '#f00';
+    cxt.fillRect(10,10,50,50);
+
+    //存储时间数据
+    var data = [];
+    //存储运动的小球
+    var balls = [];
+    //设置粒子半径
+    var R = canvas.height/20-1;
+    (function(){
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        //存储时间数字，由十位小时、个位小时、冒号、十位分钟、个位分钟、冒号、十位秒钟、个位秒钟这7个数字组成
+        data.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+    })();
+
+    /*生成点阵数字*/
+    function renderDigit(index,num){
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    cxt.beginPath();
+                    cxt.arc(14*(R+2)*index + j*2*(R+1)+(R+1),i*2*(R+1)+(R+1),R,0,2*Math.PI);
+                    cxt.closePath();
+                    cxt.fill();
+                }
+            }
+        }
+    }
+
+    /*更新时钟*/
+    function updateDigitTime(){
+        var changeNumArray = [];
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        var NewData = [];
+        NewData.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+        for(var i = data.length-1; i >=0 ; i--){
+            //时间发生变化
+            if(NewData[i] !== data[i]){
+                //将变化的数字值和在data数组中的索引存储在changeNumArray数组中
+                changeNumArray.push(i+'_'+(Number(data[i])+1)%10);
+            }
+        }
+        //增加小球
+        for(var i = 0; i< changeNumArray.length; i++){
+            addBalls.apply(this,changeNumArray[i].split('_'));
+        }
+        data = NewData.concat();
+    }
+
+    /*更新小球状态*/
+    function updateBalls(){
+        for(var i = 0; i < balls.length; i++){
+            balls[i].stepY += balls[i].disY;
+            balls[i].x += balls[i].stepX;
+            balls[i].y += balls[i].stepY;
+            if(balls[i].x > W + R || balls[i].y > H + R){
+                balls.splice(i,1);
+                i--;
+            }
+        }
+    }
+
+    /*增加要运动的小球*/
+    function addBalls(index,num){
+        var numArray = [1,2,3];
+        var colorArray =  ["#3BE","#09C","#A6C","#93C","#9C0","#690","#FB3","#F80","#F44","#C00"];
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    var ball = {
+                        x:14*(R+2)*index + j*2*(R+1)+(R+1),
+                        y:i*2*(R+1)+(R+1),
+                        stepX:Math.floor(Math.random() * 4 -2),
+                        stepY:-2*numArray[Math.floor(Math.random()*numArray.length)],
+                        color:colorArray[Math.floor(Math.random()*colorArray.length)],
+                        disY:1
+                    };
+                    balls.push(ball);
+                }
+            }
+        }
+    }
+
+    /*渲染*/
+    function render(){
+        //重置画布宽度，达到清空画布的效果
+        canvas.height = 100;
+        //渲染时钟
+        for(var i = 0; i < data.length; i++){
+            renderDigit(i,data[i]);
+        }
+        //渲染小球
+        for(var i = 0; i < balls.length; i++){
+            cxt.beginPath();
+            cxt.arc(balls[i].x,balls[i].y,R,0,2*Math.PI);
+            cxt.fillStyle = balls[i].color;
+            cxt.closePath();
+            cxt.fill();
+        }
+    }
+
+    clearInterval(oTimer);
+    var oTimer = setInterval(function(){
+        //更新时钟
+        updateDigitTime();
+        //更新小球状态
+        updateBalls();
+        //渲染
+        render();
+    },50);
+}
+
+})();
+</script>
+   </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">NIMITIZ</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">91k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">1:23</span>
+</div>
+
+<br /> #换行
+<!-- 网站运行时间的设置 -->
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("04/15/2020 00:00:00");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'm4huKMbJFhxPsNBUaRNaSsxb-gzGzoHsz',
+      appKey     : 'ikUKWElVr7k7aYAm1PspteAw',
+      placeholder: "ヾﾉ≧∀≦)o 来呀！吐槽一番吧！",
+      avatar     : 'monsterid',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+  
+
+  <script src="/js/activate-power-mode.min.js"></script>
+  <script>
+    POWERMODE.colorful = true;
+    POWERMODE.shake = false;
+    document.body.addEventListener('input', POWERMODE);
+  </script>
+
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>
+
+<!--浏览器搞笑标题-->
+<script type="text/javascript" src="/js/funny_title.js"></script>
+
+<!--动态线条背景-->
+<script type="text/javascript"
+color="220,220,220" opacity='0.9' zIndex="-1" count="200" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+</script>

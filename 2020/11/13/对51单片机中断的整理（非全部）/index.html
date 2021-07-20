@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-bounce.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.nimitiz.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":"ture","trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"./public/search.xml"};
+  </script>
+
+  <meta name="description" content="先整理记录外部中断和定时器中断(っ・Д・)っ。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="对51单片机中断的整理（非全部）">
+<meta property="og:url" content="https://www.nimitiz.cn/2020/11/13/%E5%AF%B951%E5%8D%95%E7%89%87%E6%9C%BA%E4%B8%AD%E6%96%AD%E7%9A%84%E6%95%B4%E7%90%86%EF%BC%88%E9%9D%9E%E5%85%A8%E9%83%A8%EF%BC%89/index.html">
+<meta property="og:site_name" content="小浣熊的技术小站">
+<meta property="og:description" content="先整理记录外部中断和定时器中断(っ・Д・)っ。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.nimitiz.cn/images/%E5%AF%B951%E5%8D%95%E7%89%87%E6%9C%BA%E4%B8%AD%E6%96%AD%E7%9A%84%E6%95%B4%E7%90%86%EF%BC%88%E9%9D%9E%E5%85%A8%E9%83%A8%EF%BC%89/MCU.png">
+<meta property="og:image" content="https://www.nimitiz.cn/images/%E5%AF%B951%E5%8D%95%E7%89%87%E6%9C%BA%E4%B8%AD%E6%96%AD%E7%9A%84%E6%95%B4%E7%90%86%EF%BC%88%E9%9D%9E%E5%85%A8%E9%83%A8%EF%BC%89/LED%E6%A8%A1%E5%9D%97.png">
+<meta property="og:image" content="https://www.nimitiz.cn/images/%E5%AF%B951%E5%8D%95%E7%89%87%E6%9C%BA%E4%B8%AD%E6%96%AD%E7%9A%84%E6%95%B4%E7%90%86%EF%BC%88%E9%9D%9E%E5%85%A8%E9%83%A8%EF%BC%89/%E7%8B%AC%E7%AB%8B%E6%8C%89%E9%94%AE.png">
+<meta property="og:image" content="https://www.nimitiz.cn/images/%E5%AF%B951%E5%8D%95%E7%89%87%E6%9C%BA%E4%B8%AD%E6%96%AD%E7%9A%84%E6%95%B4%E7%90%86%EF%BC%88%E9%9D%9E%E5%85%A8%E9%83%A8%EF%BC%89/MCU.png">
+<meta property="article:published_time" content="2020-11-13T15:28:02.000Z">
+<meta property="article:modified_time" content="2021-04-28T10:32:26.000Z">
+<meta property="article:author" content="NIMITIZ">
+<meta property="article:tag" content="51单片机">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.nimitiz.cn/images/%E5%AF%B951%E5%8D%95%E7%89%87%E6%9C%BA%E4%B8%AD%E6%96%AD%E7%9A%84%E6%95%B4%E7%90%86%EF%BC%88%E9%9D%9E%E5%85%A8%E9%83%A8%EF%BC%89/MCU.png">
+
+<link rel="canonical" href="https://www.nimitiz.cn/2020/11/13/%E5%AF%B951%E5%8D%95%E7%89%87%E6%9C%BA%E4%B8%AD%E6%96%AD%E7%9A%84%E6%95%B4%E7%90%86%EF%BC%88%E9%9D%9E%E5%85%A8%E9%83%A8%EF%BC%89/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>对51单片机中断的整理（非全部） | 小浣熊的技术小站</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+  
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">小浣熊的技术小站</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-友链">
+
+    <a href="/links/" rel="section"><i class="fa fa-link fa-fw"></i>友链</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/NIMITIZ" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.nimitiz.cn/2020/11/13/%E5%AF%B951%E5%8D%95%E7%89%87%E6%9C%BA%E4%B8%AD%E6%96%AD%E7%9A%84%E6%95%B4%E7%90%86%EF%BC%88%E9%9D%9E%E5%85%A8%E9%83%A8%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="NIMITIZ">
+      <meta itemprop="description" content="生命不息，折腾不止">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小浣熊的技术小站">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          对51单片机中断的整理（非全部）
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-11-13 23:28:02" itemprop="dateCreated datePublished" datetime="2020-11-13T23:28:02+08:00">2020-11-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-04-28 18:32:26" itemprop="dateModified" datetime="2021-04-28T18:32:26+08:00">2021-04-28</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/11/13/%E5%AF%B951%E5%8D%95%E7%89%87%E6%9C%BA%E4%B8%AD%E6%96%AD%E7%9A%84%E6%95%B4%E7%90%86%EF%BC%88%E9%9D%9E%E5%85%A8%E9%83%A8%EF%BC%89/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/13/%E5%AF%B951%E5%8D%95%E7%89%87%E6%9C%BA%E4%B8%AD%E6%96%AD%E7%9A%84%E6%95%B4%E7%90%86%EF%BC%88%E9%9D%9E%E5%85%A8%E9%83%A8%EF%BC%89/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.1k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>先整理记录外部中断和定时器中断(っ・Д・)っ。</p>
+<a id="more"></a>
+
+<p>单片机： <a href="http://www.stcmcudata.com/datasheet/STC89C52.pdf" target="_blank" rel="noopener">STC89C52</a><br>开发板： <a href="http://www.prechin.net/forum.php?mod=viewthread&tid=35264" target="_blank" rel="noopener">HC6800-MS</a></p>
+<p><img src="/images/%E5%AF%B951%E5%8D%95%E7%89%87%E6%9C%BA%E4%B8%AD%E6%96%AD%E7%9A%84%E6%95%B4%E7%90%86%EF%BC%88%E9%9D%9E%E5%85%A8%E9%83%A8%EF%BC%89/MCU.png" alt></p>
+<p><img src="/images/%E5%AF%B951%E5%8D%95%E7%89%87%E6%9C%BA%E4%B8%AD%E6%96%AD%E7%9A%84%E6%95%B4%E7%90%86%EF%BC%88%E9%9D%9E%E5%85%A8%E9%83%A8%EF%BC%89/LED%E6%A8%A1%E5%9D%97.png" alt></p>
+<p><img src="/images/%E5%AF%B951%E5%8D%95%E7%89%87%E6%9C%BA%E4%B8%AD%E6%96%AD%E7%9A%84%E6%95%B4%E7%90%86%EF%BC%88%E9%9D%9E%E5%85%A8%E9%83%A8%EF%BC%89/%E7%8B%AC%E7%AB%8B%E6%8C%89%E9%94%AE.png" alt></p>
+<h2 id="相关的特殊功能寄存器"><a href="#相关的特殊功能寄存器" class="headerlink" title="相关的特殊功能寄存器"></a>相关的特殊功能寄存器</h2><h3 id="定时器控制寄存器TCON"><a href="#定时器控制寄存器TCON" class="headerlink" title="定时器控制寄存器TCON"></a>定时器控制寄存器TCON</h3><table>
+<thead>
+<tr>
+<th>位</th>
+<th>符号</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>IT0</td>
+<td>外部中断0触发方式选择位。置0，则为低电平触发；置1，则为负跳变触发。</td>
+</tr>
+<tr>
+<td>1</td>
+<td>IE0</td>
+<td>外部中断0请求标志位。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>IT1</td>
+<td>外部中断1触发方式选择位。置0，则为低电平触发；置1，则为负跳变触发。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>IE1</td>
+<td>外部中断1请求标志位。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>TR0</td>
+<td>定时器0运行控制位。软件置1来启动定时器；软件清零来停止定时器。</td>
+</tr>
+<tr>
+<td>5</td>
+<td>TF0</td>
+<td>定时器0中断标志位。</td>
+</tr>
+<tr>
+<td>6</td>
+<td>TR1</td>
+<td>定时器1运行控制位。软件置1来启动定时器；软件清零来停止定时器。</td>
+</tr>
+<tr>
+<td>7</td>
+<td>TF1</td>
+<td>定时器1中断标志位。</td>
+</tr>
+</tbody></table>
+<h3 id="中断允许寄存器IE"><a href="#中断允许寄存器IE" class="headerlink" title="中断允许寄存器IE"></a>中断允许寄存器IE</h3><table>
+<thead>
+<tr>
+<th align="center">位</th>
+<th align="center">符号</th>
+<th align="center">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">0</td>
+<td align="center">EX0</td>
+<td align="center">外部中断0允许位。</td>
+</tr>
+<tr>
+<td align="center">1</td>
+<td align="center">ET0</td>
+<td align="center">定时器中断0允许位。</td>
+</tr>
+<tr>
+<td align="center">2</td>
+<td align="center">EX1</td>
+<td align="center">外部中断1允许位。</td>
+</tr>
+<tr>
+<td align="center">3</td>
+<td align="center">ET1</td>
+<td align="center">定时器中断1允许位。</td>
+</tr>
+<tr>
+<td align="center">4</td>
+<td align="center">ES</td>
+<td align="center">串口中断允许位。</td>
+</tr>
+<tr>
+<td align="center">5</td>
+<td align="center">/</td>
+<td align="center">/</td>
+</tr>
+<tr>
+<td align="center">6</td>
+<td align="center">/</td>
+<td align="center">/</td>
+</tr>
+<tr>
+<td align="center">7</td>
+<td align="center">EA</td>
+<td align="center">中断总允许位。</td>
+</tr>
+</tbody></table>
+<h3 id="定时器模式寄存器TMOD"><a href="#定时器模式寄存器TMOD" class="headerlink" title="定时器模式寄存器TMOD"></a>定时器模式寄存器TMOD</h3><h4 id="TMOD的位分配"><a href="#TMOD的位分配" class="headerlink" title="TMOD的位分配"></a>TMOD的位分配</h4><p><strong>注：</strong>标有<code>T1</code>的符号表示控制定时器<code>T1</code>的位，标有<code>T0</code>的符号表示控制定时器<code>T0</code>的位。</p>
+<table>
+<thead>
+<tr>
+<th align="center">位</th>
+<th align="center">符号</th>
+<th align="center">复位值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">7</td>
+<td align="center">GATE(T1)</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">6</td>
+<td align="center">C/T(T1)</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">5</td>
+<td align="center">M1(T1)</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">4</td>
+<td align="center">M0(T1)</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">3</td>
+<td align="center">GATE(T0)</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">2</td>
+<td align="center">C/T(T0)</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">1</td>
+<td align="center">M1(T0)</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">0</td>
+<td align="center">M0(T0)</td>
+<td align="center">0</td>
+</tr>
+</tbody></table>
+<h4 id="TMOD的位描述"><a href="#TMOD的位描述" class="headerlink" title="TMOD的位描述"></a>TMOD的位描述</h4><table>
+<thead>
+<tr>
+<th align="center">符号</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">GATE</td>
+<td align="center">门控位。当GATE=0时，只要TCON中的TR0或TR1为1，就能启动相应的定时器/计数器；当GATE=1时，只要TCON中的TR0或TR1为1，且外部中断引脚INT0或INT1为高电平时，才能启动相应的定时器/计数器。</td>
+</tr>
+<tr>
+<td align="center">C/T</td>
+<td align="center">定时器/计数器模式选择位。C/T=0为定时器模式；C/T=1为计数器模式。</td>
+</tr>
+</tbody></table>
+<h4 id="TMOD的M1、M0和工作模式"><a href="#TMOD的M1、M0和工作模式" class="headerlink" title="TMOD的M1、M0和工作模式"></a>TMOD的M1、M0和工作模式</h4><table>
+<thead>
+<tr>
+<th align="center">M1</th>
+<th align="center">M0</th>
+<th align="center">工作模式</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">兼容8048单片机的13位定时器。</td>
+</tr>
+<tr>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">THn和TLn组成一个16位的定时器。</td>
+</tr>
+<tr>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">2</td>
+<td align="center">8位自动重装载模式，定时器溢出后把THn重装载到TLn。</td>
+</tr>
+<tr>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">3</td>
+<td align="center">禁用定时器<code>T1</code>，定时器<code>T0</code>变成两个8位定时器。</td>
+</tr>
+</tbody></table>
+<h2 id="外部中断"><a href="#外部中断" class="headerlink" title="外部中断"></a>外部中断</h2><p>STC89C52有两个外部中断源——外部中断0和外部中断1，分别由引脚<code>INT0（P3.2）</code>和<code>INT1（P3.3）</code>的低电平或负跳变触发。</p>
+<p><img src="/images/%E5%AF%B951%E5%8D%95%E7%89%87%E6%9C%BA%E4%B8%AD%E6%96%AD%E7%9A%84%E6%95%B4%E7%90%86%EF%BC%88%E9%9D%9E%E5%85%A8%E9%83%A8%EF%BC%89/MCU.png" alt></p>
+<h3 id="用法"><a href="#用法" class="headerlink" title="用法"></a>用法</h3><p>要使用外部中断，需要对<strong>IE</strong>和<strong>TCON</strong>这两个特殊功能寄存器进行初始化操作：</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"><span class="number">1.</span> 开启中断总允许位EA</span><br><span class="line"><span class="number">2.</span> 开启外部中断允许位EX</span><br><span class="line"><span class="number">3.</span> 设置外部中断触发方式</span><br></pre></td></tr></table></figure>
+
+<h3 id="举个栗子"><a href="#举个栗子" class="headerlink" title="举个栗子"></a>举个栗子</h3><figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">#include&lt;reg51.h&gt;</span><br><span class="line">sbit D8=P2^<span class="number">7</span>;</span><br><span class="line">sbit K5=P3^<span class="number">5</span>;</span><br><span class="line">sbit x=P3^<span class="number">2</span>;		<span class="comment">//把触发外部中断0的引脚定义为x</span></span><br><span class="line"><span class="built_in">void</span> Delay10ms()</span><br><span class="line">&#123;</span><br><span class="line">	unsigned char i=<span class="number">20</span>,j=<span class="number">113</span>;</span><br><span class="line">	<span class="keyword">do</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">while</span>(--j);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">while</span>(--i);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">void</span> Interrupt()		<span class="comment">//对相关的特殊功能寄存器进行初始化操作</span></span><br><span class="line">&#123;</span><br><span class="line">	EA=<span class="number">1</span>;		<span class="comment">//开启中断总允许位EA</span></span><br><span class="line">	EX0=<span class="number">1</span>;		<span class="comment">//开启外部中断0允许位EX0</span></span><br><span class="line">	IT0=<span class="number">1</span>;		<span class="comment">//设置外部中断0的触发方式为负跳变触发</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">void</span> Int0() <span class="built_in">int</span>errupt <span class="number">0</span>		<span class="comment">//定义外部中断0的中断函数Int0，“interrupt”后的“0”为中断号</span></span><br><span class="line">&#123;</span><br><span class="line">	D8=~D8;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">void</span> main()</span><br><span class="line">&#123;</span><br><span class="line">  <span class="built_in">int</span> Key=<span class="number">0</span>;</span><br><span class="line">  Interrupt();</span><br><span class="line">  <span class="keyword">while</span>(<span class="number">1</span>)</span><br><span class="line">  &#123;</span><br><span class="line">		<span class="keyword">if</span>(K5==<span class="number">0</span>&amp;&amp;Key==<span class="number">0</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			Delay10ms();</span><br><span class="line">            Key=<span class="number">1</span>;</span><br><span class="line">			<span class="keyword">if</span>(K5==<span class="number">0</span>)</span><br><span class="line">			&#123;</span><br><span class="line">				x=<span class="number">1</span>;		<span class="comment">//产生负跳变信号</span></span><br><span class="line">				x=<span class="number">0</span>;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(K5==<span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">      Key=<span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行结果：初次按下独立按键<code>K5</code>，LED<code>D8</code>亮；再次按下独立按键<code>K5</code>，LED<code>D8</code>灭。</p>
+<h2 id="定时器中断"><a href="#定时器中断" class="headerlink" title="定时器中断"></a>定时器中断</h2><p>当定时器的计数值溢出时，就能够触发定时器中断。</p>
+<h3 id="用法-1"><a href="#用法-1" class="headerlink" title="用法"></a>用法</h3><p>要使用定时器中断，需要对<strong>TCON</strong>、<strong>IE</strong>和<strong>TMOD</strong>这三个特殊功能寄存器进行初始化操作：</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"><span class="number">1.</span> 开启中断总允许位EA</span><br><span class="line"><span class="number">2.</span> 开启定时器中断允许位ET</span><br><span class="line"><span class="number">3.</span> 设置定时器的工作模式</span><br><span class="line"><span class="number">4.</span> 确定THn和TLn的初值</span><br><span class="line"><span class="number">5.</span> 开启定时器</span><br></pre></td></tr></table></figure>
+
+<h3 id="举个栗子-1"><a href="#举个栗子-1" class="headerlink" title="举个栗子"></a>举个栗子</h3><figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">#include&lt;reg51.h&gt;</span><br><span class="line">sbit D8=P2^<span class="number">7</span>;</span><br><span class="line"><span class="built_in">void</span> Time0()		<span class="comment">//对相关的特殊功能寄存器进行初始化操作</span></span><br><span class="line">&#123;</span><br><span class="line">	EA=<span class="number">1</span>;		<span class="comment">//开启中断总允许位EA</span></span><br><span class="line">	ET0=<span class="number">1</span>;		<span class="comment">//开启定时器中断允许位ET0</span></span><br><span class="line">	TMOD=<span class="number">1</span>;		<span class="comment">//设置定时器T0的工作模式为1</span></span><br><span class="line">	TH0=<span class="number">0xB8</span>;		<span class="comment">//对TH0和TL0赋初值</span></span><br><span class="line">	TL0=<span class="number">0x00</span>;</span><br><span class="line">	TR0=<span class="number">1</span>;		<span class="comment">//开启定时器T0</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">void</span> Timeinterrupt0() <span class="built_in">int</span>errupt <span class="number">1</span>		<span class="comment">//定义触发定时器中断0的中断函数</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="built_in">int</span> i;</span><br><span class="line">	TH0=<span class="number">0xB8</span>;</span><br><span class="line">	TL0=<span class="number">0x00</span>;</span><br><span class="line">	i++;</span><br><span class="line">	<span class="keyword">if</span>(i==<span class="number">50</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		D8=~D8;</span><br><span class="line">		i=<span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">void</span> main()</span><br><span class="line">&#123;</span><br><span class="line">	Time0();</span><br><span class="line">	<span class="keyword">while</span>(<span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行结果：开发板上编号为<code>D8</code>的LED以先点亮1秒后熄灭1秒的规律来循环亮灭。</p>
+<h2 id="附注"><a href="#附注" class="headerlink" title="附注"></a>附注</h2><table>
+<thead>
+<tr>
+<th align="center">中断源</th>
+<th align="center">中断号</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">外部中断0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">定时器中断0</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">外部中断1</td>
+<td align="center">2</td>
+</tr>
+<tr>
+<td align="center">定时器中断1</td>
+<td align="center">3</td>
+</tr>
+<tr>
+<td align="center">串口中断</td>
+<td align="center">4</td>
+</tr>
+</tbody></table>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/51%E5%8D%95%E7%89%87%E6%9C%BA/" rel="tag"># 51单片机</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/11/05/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88%E7%8B%AC%E7%AB%8B%E6%8C%89%E9%94%AE%EF%BC%89/" rel="prev" title="51单片机程序（独立按键）">
+      <i class="fa fa-chevron-left"></i> 51单片机程序（独立按键）
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/12/03/Java%E7%AC%94%E8%AE%B0%E2%80%94%E2%80%94%E7%B1%BB%E4%B8%8E%E5%AF%B9%E8%B1%A1%EF%BC%88%E4%BA%8C%EF%BC%89/" rel="next" title="Java笔记——类与对象（二）">
+      Java笔记——类与对象（二） <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#相关的特殊功能寄存器"><span class="nav-number">1.</span> <span class="nav-text">相关的特殊功能寄存器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#定时器控制寄存器TCON"><span class="nav-number">1.1.</span> <span class="nav-text">定时器控制寄存器TCON</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#中断允许寄存器IE"><span class="nav-number">1.2.</span> <span class="nav-text">中断允许寄存器IE</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#定时器模式寄存器TMOD"><span class="nav-number">1.3.</span> <span class="nav-text">定时器模式寄存器TMOD</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#TMOD的位分配"><span class="nav-number">1.3.1.</span> <span class="nav-text">TMOD的位分配</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TMOD的位描述"><span class="nav-number">1.3.2.</span> <span class="nav-text">TMOD的位描述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TMOD的M1、M0和工作模式"><span class="nav-number">1.3.3.</span> <span class="nav-text">TMOD的M1、M0和工作模式</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#外部中断"><span class="nav-number">2.</span> <span class="nav-text">外部中断</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#用法"><span class="nav-number">2.1.</span> <span class="nav-text">用法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#举个栗子"><span class="nav-number">2.2.</span> <span class="nav-text">举个栗子</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定时器中断"><span class="nav-number">3.</span> <span class="nav-text">定时器中断</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#用法-1"><span class="nav-number">3.1.</span> <span class="nav-text">用法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#举个栗子-1"><span class="nav-number">3.2.</span> <span class="nav-text">举个栗子</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#附注"><span class="nav-number">4.</span> <span class="nav-text">附注</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="NIMITIZ"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">NIMITIZ</p>
+  <div class="site-description" itemprop="description">生命不息，折腾不止</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/NIMITIZ" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;NIMITIZ" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:cwn3234733323@gmail.com" title="E-Mail → mailto:cwn3234733323@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+      
+           
+         
+         <div style="">
+  <canvas id="canvas" style="width:60%;">当前浏览器不支持canvas，请更换浏览器后再试</canvas>
+</div>
+<script>
+(function(){
+
+   var digit=
+    [
+        [
+            [0,0,1,1,1,0,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,0,1,1,0],
+            [0,0,1,1,1,0,0]
+        ],//0
+        [
+            [0,0,0,1,1,0,0],
+            [0,1,1,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [1,1,1,1,1,1,1]
+        ],//1
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,1,1],
+            [1,1,1,1,1,1,1]
+        ],//2
+        [
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//3
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,0],
+            [0,0,1,1,1,1,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,1,1,0],
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,1]
+        ],//4
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,1,1,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//5
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//6
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0]
+        ],//7
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//8
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,1,1,0,0,0,0]
+        ],//9
+        [
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0]
+        ]//:
+    ];
+
+var canvas = document.getElementById('canvas');
+
+if(canvas.getContext){
+    var cxt = canvas.getContext('2d');
+    //声明canvas的宽高
+    var H = 100,W = 700;
+    canvas.height = H;
+    canvas.width = W;
+    cxt.fillStyle = '#f00';
+    cxt.fillRect(10,10,50,50);
+
+    //存储时间数据
+    var data = [];
+    //存储运动的小球
+    var balls = [];
+    //设置粒子半径
+    var R = canvas.height/20-1;
+    (function(){
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        //存储时间数字，由十位小时、个位小时、冒号、十位分钟、个位分钟、冒号、十位秒钟、个位秒钟这7个数字组成
+        data.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+    })();
+
+    /*生成点阵数字*/
+    function renderDigit(index,num){
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    cxt.beginPath();
+                    cxt.arc(14*(R+2)*index + j*2*(R+1)+(R+1),i*2*(R+1)+(R+1),R,0,2*Math.PI);
+                    cxt.closePath();
+                    cxt.fill();
+                }
+            }
+        }
+    }
+
+    /*更新时钟*/
+    function updateDigitTime(){
+        var changeNumArray = [];
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        var NewData = [];
+        NewData.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+        for(var i = data.length-1; i >=0 ; i--){
+            //时间发生变化
+            if(NewData[i] !== data[i]){
+                //将变化的数字值和在data数组中的索引存储在changeNumArray数组中
+                changeNumArray.push(i+'_'+(Number(data[i])+1)%10);
+            }
+        }
+        //增加小球
+        for(var i = 0; i< changeNumArray.length; i++){
+            addBalls.apply(this,changeNumArray[i].split('_'));
+        }
+        data = NewData.concat();
+    }
+
+    /*更新小球状态*/
+    function updateBalls(){
+        for(var i = 0; i < balls.length; i++){
+            balls[i].stepY += balls[i].disY;
+            balls[i].x += balls[i].stepX;
+            balls[i].y += balls[i].stepY;
+            if(balls[i].x > W + R || balls[i].y > H + R){
+                balls.splice(i,1);
+                i--;
+            }
+        }
+    }
+
+    /*增加要运动的小球*/
+    function addBalls(index,num){
+        var numArray = [1,2,3];
+        var colorArray =  ["#3BE","#09C","#A6C","#93C","#9C0","#690","#FB3","#F80","#F44","#C00"];
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    var ball = {
+                        x:14*(R+2)*index + j*2*(R+1)+(R+1),
+                        y:i*2*(R+1)+(R+1),
+                        stepX:Math.floor(Math.random() * 4 -2),
+                        stepY:-2*numArray[Math.floor(Math.random()*numArray.length)],
+                        color:colorArray[Math.floor(Math.random()*colorArray.length)],
+                        disY:1
+                    };
+                    balls.push(ball);
+                }
+            }
+        }
+    }
+
+    /*渲染*/
+    function render(){
+        //重置画布宽度，达到清空画布的效果
+        canvas.height = 100;
+        //渲染时钟
+        for(var i = 0; i < data.length; i++){
+            renderDigit(i,data[i]);
+        }
+        //渲染小球
+        for(var i = 0; i < balls.length; i++){
+            cxt.beginPath();
+            cxt.arc(balls[i].x,balls[i].y,R,0,2*Math.PI);
+            cxt.fillStyle = balls[i].color;
+            cxt.closePath();
+            cxt.fill();
+        }
+    }
+
+    clearInterval(oTimer);
+    var oTimer = setInterval(function(){
+        //更新时钟
+        updateDigitTime();
+        //更新小球状态
+        updateBalls();
+        //渲染
+        render();
+    },50);
+}
+
+})();
+</script>
+   </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">NIMITIZ</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">91k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">1:23</span>
+</div>
+
+<br /> #换行
+<!-- 网站运行时间的设置 -->
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("04/15/2020 00:00:00");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'm4huKMbJFhxPsNBUaRNaSsxb-gzGzoHsz',
+      appKey     : 'ikUKWElVr7k7aYAm1PspteAw',
+      placeholder: "ヾﾉ≧∀≦)o 来呀！吐槽一番吧！",
+      avatar     : 'monsterid',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+  
+
+  <script src="/js/activate-power-mode.min.js"></script>
+  <script>
+    POWERMODE.colorful = true;
+    POWERMODE.shake = false;
+    document.body.addEventListener('input', POWERMODE);
+  </script>
+
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>
+
+<!--浏览器搞笑标题-->
+<script type="text/javascript" src="/js/funny_title.js"></script>
+
+<!--动态线条背景-->
+<script type="text/javascript"
+color="220,220,220" opacity='0.9' zIndex="-1" count="200" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+</script>

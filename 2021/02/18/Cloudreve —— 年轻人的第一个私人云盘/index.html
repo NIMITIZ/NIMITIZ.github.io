@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-bounce.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.nimitiz.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":"ture","trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"./public/search.xml"};
+  </script>
+
+  <meta name="description" content="一周前在一台瘦客户机升腾C92上借助Cloudreve搭建了一个私人云盘来玩一玩(〃´∀｀)，今天来记录一下。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cloudreve —— 年轻人的第一个私人云盘">
+<meta property="og:url" content="https://www.nimitiz.cn/2021/02/18/Cloudreve%20%E2%80%94%E2%80%94%20%E5%B9%B4%E8%BD%BB%E4%BA%BA%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%A7%81%E4%BA%BA%E4%BA%91%E7%9B%98/index.html">
+<meta property="og:site_name" content="小浣熊的技术小站">
+<meta property="og:description" content="一周前在一台瘦客户机升腾C92上借助Cloudreve搭建了一个私人云盘来玩一玩(〃´∀｀)，今天来记录一下。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/02/18/Cloudreve%20%E2%80%94%E2%80%94%20%E5%B9%B4%E8%BD%BB%E4%BA%BA%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%A7%81%E4%BA%BA%E4%BA%91%E7%9B%98/%E4%BF%A1%E6%81%AF.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/02/18/Cloudreve%20%E2%80%94%E2%80%94%20%E5%B9%B4%E8%BD%BB%E4%BA%BA%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%A7%81%E4%BA%BA%E4%BA%91%E7%9B%98/%E8%B4%AD%E4%B9%B0%E9%9A%A7%E9%81%93.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/02/18/Cloudreve%20%E2%80%94%E2%80%94%20%E5%B9%B4%E8%BD%BB%E4%BA%BA%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%A7%81%E4%BA%BA%E4%BA%91%E7%9B%98/%E6%9C%AC%E5%9C%B0%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/02/18/Cloudreve%20%E2%80%94%E2%80%94%20%E5%B9%B4%E8%BD%BB%E4%BA%BA%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%A7%81%E4%BA%BA%E4%BA%91%E7%9B%98/%E6%88%91%E7%9A%84%E9%9A%A7%E9%81%93.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/02/18/Cloudreve%20%E2%80%94%E2%80%94%20%E5%B9%B4%E8%BD%BB%E4%BA%BA%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%A7%81%E4%BA%BA%E4%BA%91%E7%9B%98/%E8%BF%90%E8%A1%8C%E5%AE%A2%E6%88%B7%E7%AB%AF.png">
+<meta property="article:published_time" content="2021-02-18T02:55:53.000Z">
+<meta property="article:modified_time" content="2021-02-18T03:15:14.000Z">
+<meta property="article:author" content="NIMITIZ">
+<meta property="article:tag" content="私有云存储">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.nimitiz.cn/2021/02/18/Cloudreve%20%E2%80%94%E2%80%94%20%E5%B9%B4%E8%BD%BB%E4%BA%BA%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%A7%81%E4%BA%BA%E4%BA%91%E7%9B%98/%E4%BF%A1%E6%81%AF.png">
+
+<link rel="canonical" href="https://www.nimitiz.cn/2021/02/18/Cloudreve%20%E2%80%94%E2%80%94%20%E5%B9%B4%E8%BD%BB%E4%BA%BA%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%A7%81%E4%BA%BA%E4%BA%91%E7%9B%98/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Cloudreve —— 年轻人的第一个私人云盘 | 小浣熊的技术小站</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+  
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">小浣熊的技术小站</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-友链">
+
+    <a href="/links/" rel="section"><i class="fa fa-link fa-fw"></i>友链</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/NIMITIZ" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.nimitiz.cn/2021/02/18/Cloudreve%20%E2%80%94%E2%80%94%20%E5%B9%B4%E8%BD%BB%E4%BA%BA%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%A7%81%E4%BA%BA%E4%BA%91%E7%9B%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="NIMITIZ">
+      <meta itemprop="description" content="生命不息，折腾不止">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小浣熊的技术小站">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Cloudreve —— 年轻人的第一个私人云盘
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-02-18 10:55:53 / 修改时间：11:15:14" itemprop="dateCreated datePublished" datetime="2021-02-18T10:55:53+08:00">2021-02-18</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/02/18/Cloudreve%20%E2%80%94%E2%80%94%20%E5%B9%B4%E8%BD%BB%E4%BA%BA%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%A7%81%E4%BA%BA%E4%BA%91%E7%9B%98/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/02/18/Cloudreve%20%E2%80%94%E2%80%94%20%E5%B9%B4%E8%BD%BB%E4%BA%BA%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%A7%81%E4%BA%BA%E4%BA%91%E7%9B%98/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.6k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>一周前在一台瘦客户机升腾C92上借助<a href="https://cloudreve.org/" target="_blank" rel="noopener">Cloudreve</a>搭建了一个私人云盘来玩一玩(〃´∀｀)，今天来记录一下。</p>
+<a id="more"></a>
+
+
+
+
+
+<h2 id="Cloudreve特性"><a href="#Cloudreve特性" class="headerlink" title="Cloudreve特性"></a>Cloudreve特性</h2><ul>
+<li>☁️ 支持本机、从机、七牛、阿里云 OSS、腾讯云 COS、又拍云、OneDrive (包括世纪互联版) 作为存储端</li>
+<li>📤 上传/下载 支持客户端直传，支持下载限速</li>
+<li>💾 可对接 Aria2 离线下载</li>
+<li>📚 在线 压缩/解压缩、多文件打包下载</li>
+<li>💻 覆盖全部存储策略的 WebDAV 协议支持</li>
+<li>⚡ 拖拽上传、目录上传、流式上传处理</li>
+<li>🗃️ 文件拖拽管理</li>
+<li>👩‍👧‍👦 多用户、用户组</li>
+<li>🔗 创建文件、目录的分享链接，可设定自动过期</li>
+<li>👁️‍🗨️ 视频、图像、音频、文本、Office 文档在线预览</li>
+<li>🎨 自定义配色、黑暗模式、PWA 应用、全站单页应用</li>
+<li>🚀 All-In-One 打包，开箱即用</li>
+</ul>
+<h2 id="Cloudreve部署"><a href="#Cloudreve部署" class="headerlink" title="Cloudreve部署"></a>Cloudreve部署</h2><p>首先需要从<a href="https://github.com/cloudreve/Cloudreve" target="_blank" rel="noopener">Cloudreve项目的GitHub地址</a>获取适用于目标服务器的操作系统类型与CPU架构的Cloudreve程序；我的瘦客户机升腾C92的CPU架构为64位的x86，我选用的操作系统是Debian 10，Cloudreve版本为3.2.1。</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">wget https:<span class="regexp">//gi</span>thub.com<span class="regexp">/cloudreve/</span>Cloudreve<span class="regexp">/releases/</span>download<span class="regexp">/3.2.1/</span>cloudreve_3.<span class="number">2.1</span>_linux_amd64.tar.gz</span><br></pre></td></tr></table></figure>
+
+<p>下载完成后，在当前路径下新建一个目录，把压缩包移动至该目录内再解压和运行，这样可以避免当前路径在将来变得乱糟糟的(((ﾟдﾟ)))。</p>
+<p>新建一个目录，命名为<code>Cloudreve</code>；</p>
+<figure class="highlight arduino"><table><tr><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> Cloudreve</span><br></pre></td></tr></table></figure>
+
+<p>将压缩包移动至目录<code>Cloudreve</code>；</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">mv</span> <span class="selector-tag">cloudreve_3</span><span class="selector-class">.2</span><span class="selector-class">.1_linux_amd64</span><span class="selector-class">.tar</span><span class="selector-class">.gz</span> <span class="selector-tag">Cloudreve</span></span><br></pre></td></tr></table></figure>
+
+<p>进入目录<code>Cloudreve</code>；</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> Cloudreve</span><br></pre></td></tr></table></figure>
+
+<p>解压压缩包；</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">tar</span> <span class="selector-tag">-zxvf</span> <span class="selector-tag">cloudreve_3</span><span class="selector-class">.2</span><span class="selector-class">.1_linux_amd64</span><span class="selector-class">.tar</span><span class="selector-class">.gz</span></span><br></pre></td></tr></table></figure>
+
+<p>给可执行文件<code>cloudreve</code>授予执行权限；</p>
+<figure class="highlight gml"><table><tr><td class="code"><pre><span class="line">chmod +<span class="symbol">x</span> ./cloudreve</span><br></pre></td></tr></table></figure>
+
+<p>Cloudreve默认监听端口<code>5212</code>，部分操作系统可能会默认禁用该端口，需要予以放行；我在Debian 10下使用防火墙管理工具<code>UFW</code>启用<code>5212</code>端口；</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">ufw allow <span class="number">5212</span></span><br></pre></td></tr></table></figure>
+
+<p>运行Cloudreve；</p>
+<figure class="highlight jboss-cli"><table><tr><td class="code"><pre><span class="line"><span class="string">./cloudreve</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/02/18/Cloudreve%20%E2%80%94%E2%80%94%20%E5%B9%B4%E8%BD%BB%E4%BA%BA%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%A7%81%E4%BA%BA%E4%BA%91%E7%9B%98/%E4%BF%A1%E6%81%AF.png" alt></p>
+<p>这样就能在浏览器上访问<code>&lt;服务器IP&gt;:5212</code>来使用Cloudreve。</p>
+<h3 id="进程守护"><a href="#进程守护" class="headerlink" title="进程守护"></a>进程守护</h3><p>使用文本编辑器<code>vim</code>编辑配置文件；</p>
+<figure class="highlight crystal"><table><tr><td class="code"><pre><span class="line">vim /usr/<span class="class"><span class="keyword">lib</span>/<span class="title">systemd</span>/<span class="title">system</span>/<span class="title">cloudreve</span>.<span class="title">service</span></span></span><br></pre></td></tr></table></figure>
+
+<p>添加如下内容：（需要将文本中的<code>PATH_TO_CLOUDREVE</code>替换为可执行文件<code>cloudreve</code>所在的目录）</p>
+<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"><span class="section">[Unit]</span></span><br><span class="line"><span class="attr">Description</span>=Cloudreve</span><br><span class="line"><span class="attr">Documentation</span>=https://docs.cloudreve.org</span><br><span class="line"><span class="attr">After</span>=network.target</span><br><span class="line"><span class="attr">After</span>=mysqld.service</span><br><span class="line"><span class="attr">Wants</span>=network.target</span><br><span class="line"></span><br><span class="line"><span class="section">[Service]</span></span><br><span class="line"><span class="attr">WorkingDirectory</span>=/PATH_TO_CLOUDREVE</span><br><span class="line"><span class="attr">ExecStart</span>=/PATH_TO_CLOUDREVE/cloudreve</span><br><span class="line"><span class="attr">Restart</span>=<span class="literal">on</span>-abnormal</span><br><span class="line"><span class="attr">RestartSec</span>=<span class="number">5</span>s</span><br><span class="line"><span class="attr">KillMode</span>=mixed</span><br><span class="line"></span><br><span class="line"><span class="attr">StandardOutput</span>=null</span><br><span class="line"><span class="attr">StandardError</span>=syslog</span><br><span class="line"></span><br><span class="line"><span class="section">[Install]</span></span><br><span class="line"><span class="attr">WantedBy</span>=multi-user.target</span><br></pre></td></tr></table></figure>
+
+<p>更新配置；</p>
+<figure class="highlight ebnf"><table><tr><td class="code"><pre><span class="line"><span class="attribute">systemctl daemon-reload</span></span><br></pre></td></tr></table></figure>
+
+<p>启动服务；</p>
+<figure class="highlight crmsh"><table><tr><td class="code"><pre><span class="line">systemctl <span class="literal">start</span> cloudreve</span><br></pre></td></tr></table></figure>
+
+<p>设置开机启动。</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">systemctl <span class="builtin-name">enable</span> cloudreve</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="管理命令"><a href="#管理命令" class="headerlink" title="管理命令"></a>管理命令</h3><ul>
+<li><p>启动服务</p>
+<figure class="highlight crmsh"><table><tr><td class="code"><pre><span class="line">systemctl <span class="literal">start</span> cloudreve</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>停止服务</p>
+<figure class="highlight arduino"><table><tr><td class="code"><pre><span class="line">systemctl <span class="built_in">stop</span> cloudreve</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>重启服务</p>
+<figure class="highlight ebnf"><table><tr><td class="code"><pre><span class="line"><span class="attribute">systemctl restart cloudreve</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看状态</p>
+<figure class="highlight ebnf"><table><tr><td class="code"><pre><span class="line"><span class="attribute">systemctl status cloudreve</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+</li>
+</ul>
+<h2 id="内网穿透"><a href="#内网穿透" class="headerlink" title="内网穿透"></a>内网穿透</h2><p>如果把Cloudreve直接部署在公网服务器，则可直接在公网环境下访问，但因为我是部署在局域网环境下的瘦客户机上，所以如果需要在公网环境下访问，就需要将该瘦客户机的IP与Cloudreve监听的端口映射到一台公网服务器上，通过访问该公网服务器即可访问到局域网下的瘦客户机；常用的内网穿透工具有ngrok、frp、NATAPP等，考虑到访问速度和开箱即用，我选用的是在国内运营的<a href="https://natapp.cn/" target="_blank" rel="noopener">NATAPP</a>。</p>
+<h3 id="账号注册与方案选购"><a href="#账号注册与方案选购" class="headerlink" title="账号注册与方案选购"></a>账号注册与方案选购</h3><p>NATAPP提供多种方案的服务，按照自己的实际需求来选购就可以了，反正我现在只是拿来玩一玩( ～’ω’)～，就选用<code>免费隧道(注册用户)</code>。</p>
+<p><code>隧道协议</code>选择<code>Web</code>，<code>本地端口</code>设置为Cloudreve监听的端口，若是默认监听端口，即为<code>5212</code>。</p>
+<p><img src="/2021/02/18/Cloudreve%20%E2%80%94%E2%80%94%20%E5%B9%B4%E8%BD%BB%E4%BA%BA%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%A7%81%E4%BA%BA%E4%BA%91%E7%9B%98/%E8%B4%AD%E4%B9%B0%E9%9A%A7%E9%81%93.png" alt></p>
+<h3 id="客户端安装与运行"><a href="#客户端安装与运行" class="headerlink" title="客户端安装与运行"></a>客户端安装与运行</h3><p>在自己的服务器上新建一个目录，我将其命名为<code>NATAPP</code>。</p>
+<p>进入目录<code>NATAPP</code>，下载NATAPP的客户端<code>natapp</code>和本地配置文件<code>config.ini</code>；</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">wget http:<span class="regexp">//</span>download.natapp.cn<span class="regexp">/assets/</span>downloads<span class="regexp">/clients/</span><span class="number">2</span>_3_9<span class="regexp">/natapp_linux_amd64/</span>natapp</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">wget http:<span class="regexp">//</span>download.natapp.cn<span class="regexp">/assets/</span>downloads<span class="regexp">/config.ini</span></span><br></pre></td></tr></table></figure>
+
+<p>使用文本编辑器<code>vim</code>编辑<code>config.ini</code>；</p>
+<figure class="highlight arduino"><table><tr><td class="code"><pre><span class="line">vim <span class="built_in">config</span>.ini</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/02/18/Cloudreve%20%E2%80%94%E2%80%94%20%E5%B9%B4%E8%BD%BB%E4%BA%BA%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%A7%81%E4%BA%BA%E4%BA%91%E7%9B%98/%E6%9C%AC%E5%9C%B0%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6.png" alt></p>
+<p>在NATAPP官网的<code>会员中心</code>→<code>我的隧道</code>下即可找到刚才选购的隧道方案的<code>authtoken</code>并复制粘贴到本地配置文件<code>config.ini</code>的<code>authtoken</code>一项中；</p>
+<p><img src="/2021/02/18/Cloudreve%20%E2%80%94%E2%80%94%20%E5%B9%B4%E8%BD%BB%E4%BA%BA%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%A7%81%E4%BA%BA%E4%BA%91%E7%9B%98/%E6%88%91%E7%9A%84%E9%9A%A7%E9%81%93.png" alt></p>
+<p>为可执行文件<code>natapp</code>授予执行权限；</p>
+<figure class="highlight gml"><table><tr><td class="code"><pre><span class="line">chmod a+<span class="symbol">x</span> natapp</span><br></pre></td></tr></table></figure>
+
+<p>运行客户端；</p>
+<figure class="highlight jboss-cli"><table><tr><td class="code"><pre><span class="line"><span class="string">./natapp</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/02/18/Cloudreve%20%E2%80%94%E2%80%94%20%E5%B9%B4%E8%BD%BB%E4%BA%BA%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%A7%81%E4%BA%BA%E4%BA%91%E7%9B%98/%E8%BF%90%E8%A1%8C%E5%AE%A2%E6%88%B7%E7%AB%AF.png" alt></p>
+<p>在列出的信息中，<code>Forwarding</code>一项给出的域名即为内网服务器的5212端口的公网映射；在局域网或公网下访问该域名即可访问已在局域网下部署的Cloudreve。</p>
+<p>至此，年轻人的第一个私人云盘已初步部署完毕，可以投入实际使用了（゜▽＾*））。</p>
+<hr>
+<p><strong>参考资料</strong></p>
+<p><a href="https://github.com/cloudreve/Cloudreve" target="_blank" rel="noopener">Cloudreve项目的GitHub地址</a></p>
+<p><a href="https://docs.cloudreve.org/" target="_blank" rel="noopener">Cloudreve官方文档</a></p>
+<p><a href="https://natapp.cn/article/natapp_newbie" target="_blank" rel="noopener">NATAPP1分钟快速新手图文教程</a></p>
+<p><a href="https://natapp.cn/article/config_ini" target="_blank" rel="noopener">使用本地配置文件config.ini</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%A7%81%E6%9C%89%E4%BA%91%E5%AD%98%E5%82%A8/" rel="tag"># 私有云存储</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/01/24/%E6%96%90%E8%AE%AFN1%E6%8A%98%E8%85%BE%E8%AE%B0%E5%BD%95%EF%BC%88%E4%B8%80%EF%BC%89/" rel="prev" title="斐讯N1折腾记录（一）">
+      <i class="fa fa-chevron-left"></i> 斐讯N1折腾记录（一）
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/" rel="next" title="51单片机程序（LCD1602）">
+      51单片机程序（LCD1602） <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Cloudreve特性"><span class="nav-number">1.</span> <span class="nav-text">Cloudreve特性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cloudreve部署"><span class="nav-number">2.</span> <span class="nav-text">Cloudreve部署</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#进程守护"><span class="nav-number">2.1.</span> <span class="nav-text">进程守护</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#管理命令"><span class="nav-number">2.2.</span> <span class="nav-text">管理命令</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内网穿透"><span class="nav-number">3.</span> <span class="nav-text">内网穿透</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#账号注册与方案选购"><span class="nav-number">3.1.</span> <span class="nav-text">账号注册与方案选购</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#客户端安装与运行"><span class="nav-number">3.2.</span> <span class="nav-text">客户端安装与运行</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="NIMITIZ"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">NIMITIZ</p>
+  <div class="site-description" itemprop="description">生命不息，折腾不止</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/NIMITIZ" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;NIMITIZ" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:cwn3234733323@gmail.com" title="E-Mail → mailto:cwn3234733323@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+      
+           
+         
+         <div style="">
+  <canvas id="canvas" style="width:60%;">当前浏览器不支持canvas，请更换浏览器后再试</canvas>
+</div>
+<script>
+(function(){
+
+   var digit=
+    [
+        [
+            [0,0,1,1,1,0,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,0,1,1,0],
+            [0,0,1,1,1,0,0]
+        ],//0
+        [
+            [0,0,0,1,1,0,0],
+            [0,1,1,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [1,1,1,1,1,1,1]
+        ],//1
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,1,1],
+            [1,1,1,1,1,1,1]
+        ],//2
+        [
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//3
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,0],
+            [0,0,1,1,1,1,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,1,1,0],
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,1]
+        ],//4
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,1,1,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//5
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//6
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0]
+        ],//7
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//8
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,1,1,0,0,0,0]
+        ],//9
+        [
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0]
+        ]//:
+    ];
+
+var canvas = document.getElementById('canvas');
+
+if(canvas.getContext){
+    var cxt = canvas.getContext('2d');
+    //声明canvas的宽高
+    var H = 100,W = 700;
+    canvas.height = H;
+    canvas.width = W;
+    cxt.fillStyle = '#f00';
+    cxt.fillRect(10,10,50,50);
+
+    //存储时间数据
+    var data = [];
+    //存储运动的小球
+    var balls = [];
+    //设置粒子半径
+    var R = canvas.height/20-1;
+    (function(){
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        //存储时间数字，由十位小时、个位小时、冒号、十位分钟、个位分钟、冒号、十位秒钟、个位秒钟这7个数字组成
+        data.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+    })();
+
+    /*生成点阵数字*/
+    function renderDigit(index,num){
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    cxt.beginPath();
+                    cxt.arc(14*(R+2)*index + j*2*(R+1)+(R+1),i*2*(R+1)+(R+1),R,0,2*Math.PI);
+                    cxt.closePath();
+                    cxt.fill();
+                }
+            }
+        }
+    }
+
+    /*更新时钟*/
+    function updateDigitTime(){
+        var changeNumArray = [];
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        var NewData = [];
+        NewData.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+        for(var i = data.length-1; i >=0 ; i--){
+            //时间发生变化
+            if(NewData[i] !== data[i]){
+                //将变化的数字值和在data数组中的索引存储在changeNumArray数组中
+                changeNumArray.push(i+'_'+(Number(data[i])+1)%10);
+            }
+        }
+        //增加小球
+        for(var i = 0; i< changeNumArray.length; i++){
+            addBalls.apply(this,changeNumArray[i].split('_'));
+        }
+        data = NewData.concat();
+    }
+
+    /*更新小球状态*/
+    function updateBalls(){
+        for(var i = 0; i < balls.length; i++){
+            balls[i].stepY += balls[i].disY;
+            balls[i].x += balls[i].stepX;
+            balls[i].y += balls[i].stepY;
+            if(balls[i].x > W + R || balls[i].y > H + R){
+                balls.splice(i,1);
+                i--;
+            }
+        }
+    }
+
+    /*增加要运动的小球*/
+    function addBalls(index,num){
+        var numArray = [1,2,3];
+        var colorArray =  ["#3BE","#09C","#A6C","#93C","#9C0","#690","#FB3","#F80","#F44","#C00"];
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    var ball = {
+                        x:14*(R+2)*index + j*2*(R+1)+(R+1),
+                        y:i*2*(R+1)+(R+1),
+                        stepX:Math.floor(Math.random() * 4 -2),
+                        stepY:-2*numArray[Math.floor(Math.random()*numArray.length)],
+                        color:colorArray[Math.floor(Math.random()*colorArray.length)],
+                        disY:1
+                    };
+                    balls.push(ball);
+                }
+            }
+        }
+    }
+
+    /*渲染*/
+    function render(){
+        //重置画布宽度，达到清空画布的效果
+        canvas.height = 100;
+        //渲染时钟
+        for(var i = 0; i < data.length; i++){
+            renderDigit(i,data[i]);
+        }
+        //渲染小球
+        for(var i = 0; i < balls.length; i++){
+            cxt.beginPath();
+            cxt.arc(balls[i].x,balls[i].y,R,0,2*Math.PI);
+            cxt.fillStyle = balls[i].color;
+            cxt.closePath();
+            cxt.fill();
+        }
+    }
+
+    clearInterval(oTimer);
+    var oTimer = setInterval(function(){
+        //更新时钟
+        updateDigitTime();
+        //更新小球状态
+        updateBalls();
+        //渲染
+        render();
+    },50);
+}
+
+})();
+</script>
+   </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">NIMITIZ</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">91k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">1:23</span>
+</div>
+
+<br /> #换行
+<!-- 网站运行时间的设置 -->
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("04/15/2020 00:00:00");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'm4huKMbJFhxPsNBUaRNaSsxb-gzGzoHsz',
+      appKey     : 'ikUKWElVr7k7aYAm1PspteAw',
+      placeholder: "ヾﾉ≧∀≦)o 来呀！吐槽一番吧！",
+      avatar     : 'monsterid',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+  
+
+  <script src="/js/activate-power-mode.min.js"></script>
+  <script>
+    POWERMODE.colorful = true;
+    POWERMODE.shake = false;
+    document.body.addEventListener('input', POWERMODE);
+  </script>
+
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>
+
+<!--浏览器搞笑标题-->
+<script type="text/javascript" src="/js/funny_title.js"></script>
+
+<!--动态线条背景-->
+<script type="text/javascript"
+color="220,220,220" opacity='0.9' zIndex="-1" count="200" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+</script>

@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-bounce.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.nimitiz.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":"ture","trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"./public/search.xml"};
+  </script>
+
+  <meta name="description" content="简单整理一下之前用51单片机玩UART通信的笔记(๑¯∀¯๑)。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="51单片机——UART通信简单记录">
+<meta property="og:url" content="https://www.nimitiz.cn/2021/03/03/51%E5%8D%95%E7%89%87%E6%9C%BA%E2%80%94%E2%80%94UART%E9%80%9A%E4%BF%A1%E7%AE%80%E5%8D%95%E8%AE%B0%E5%BD%95/index.html">
+<meta property="og:site_name" content="小浣熊的技术小站">
+<meta property="og:description" content="简单整理一下之前用51单片机玩UART通信的笔记(๑¯∀¯๑)。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/03/03/51%E5%8D%95%E7%89%87%E6%9C%BA%E2%80%94%E2%80%94UART%E9%80%9A%E4%BF%A1%E7%AE%80%E5%8D%95%E8%AE%B0%E5%BD%95/%E4%B8%B2%E8%A1%8C%E6%8E%A7%E5%88%B6%E5%AF%84%E5%AD%98%E5%99%A8.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/03/03/51%E5%8D%95%E7%89%87%E6%9C%BA%E2%80%94%E2%80%94UART%E9%80%9A%E4%BF%A1%E7%AE%80%E5%8D%95%E8%AE%B0%E5%BD%95/%E5%B7%A5%E4%BD%9C%E6%96%B9%E5%BC%8F.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/03/03/51%E5%8D%95%E7%89%87%E6%9C%BA%E2%80%94%E2%80%94UART%E9%80%9A%E4%BF%A1%E7%AE%80%E5%8D%95%E8%AE%B0%E5%BD%95/PCON.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/03/03/51%E5%8D%95%E7%89%87%E6%9C%BA%E2%80%94%E2%80%94UART%E9%80%9A%E4%BF%A1%E7%AE%80%E5%8D%95%E8%AE%B0%E5%BD%95/%E5%8E%9F%E7%90%86%E5%9B%BE.png">
+<meta property="article:published_time" content="2021-03-03T01:40:59.000Z">
+<meta property="article:modified_time" content="2021-04-10T11:22:54.000Z">
+<meta property="article:author" content="NIMITIZ">
+<meta property="article:tag" content="51单片机">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.nimitiz.cn/2021/03/03/51%E5%8D%95%E7%89%87%E6%9C%BA%E2%80%94%E2%80%94UART%E9%80%9A%E4%BF%A1%E7%AE%80%E5%8D%95%E8%AE%B0%E5%BD%95/%E4%B8%B2%E8%A1%8C%E6%8E%A7%E5%88%B6%E5%AF%84%E5%AD%98%E5%99%A8.png">
+
+<link rel="canonical" href="https://www.nimitiz.cn/2021/03/03/51%E5%8D%95%E7%89%87%E6%9C%BA%E2%80%94%E2%80%94UART%E9%80%9A%E4%BF%A1%E7%AE%80%E5%8D%95%E8%AE%B0%E5%BD%95/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>51单片机——UART通信简单记录 | 小浣熊的技术小站</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+  
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">小浣熊的技术小站</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-友链">
+
+    <a href="/links/" rel="section"><i class="fa fa-link fa-fw"></i>友链</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/NIMITIZ" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.nimitiz.cn/2021/03/03/51%E5%8D%95%E7%89%87%E6%9C%BA%E2%80%94%E2%80%94UART%E9%80%9A%E4%BF%A1%E7%AE%80%E5%8D%95%E8%AE%B0%E5%BD%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="NIMITIZ">
+      <meta itemprop="description" content="生命不息，折腾不止">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小浣熊的技术小站">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          51单片机——UART通信简单记录
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-03-03 09:40:59" itemprop="dateCreated datePublished" datetime="2021-03-03T09:40:59+08:00">2021-03-03</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-04-10 19:22:54" itemprop="dateModified" datetime="2021-04-10T19:22:54+08:00">2021-04-10</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/03/03/51%E5%8D%95%E7%89%87%E6%9C%BA%E2%80%94%E2%80%94UART%E9%80%9A%E4%BF%A1%E7%AE%80%E5%8D%95%E8%AE%B0%E5%BD%95/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/03/03/51%E5%8D%95%E7%89%87%E6%9C%BA%E2%80%94%E2%80%94UART%E9%80%9A%E4%BF%A1%E7%AE%80%E5%8D%95%E8%AE%B0%E5%BD%95/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2.6k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>简单整理一下之前用51单片机玩UART通信的笔记(๑¯∀¯๑)。</p>
+<a id="more"></a>
+
+<p>单片机：STC89C52RC</p>
+<h2 id="UART相关"><a href="#UART相关" class="headerlink" title="UART相关"></a>UART相关</h2><h3 id="概括"><a href="#概括" class="headerlink" title="概括"></a>概括</h3><p>UART（Universal Asynchronous Receiver/Transmitter的缩写，中文名称：通用异步收发传输器）包括了RS232、RS449、RS423、RS422和RS485等接口标准规范和总线标准规范（<strong>UART不是通信协议，而是MCU中相对独立的电路模块</strong>），它将需要传输的数据在串行通信与并行通信之间加以转换：发送端的UART将来自控制设备（例如CPU）的并行数据转换为串行数据，以串行方式将其发送到接收端的UART，随后接收端的UART将串行数据转换为并行数据传递给接收端的控制设备。</p>
+<h3 id="协议层"><a href="#协议层" class="headerlink" title="协议层"></a>协议层</h3><p>UART将需要传输的数据封装为数据包，每个数据包包含1个起始位，5~9个数据位（取决于UART的具体设置），一个可选的校验位，1个到2个停止位（1位、1.5位、2位）。</p>
+<h4 id="起始位"><a href="#起始位" class="headerlink" title="起始位"></a>起始位</h4><p>发送端与接收端之间的UART传输总线通常在不传输数据时保持在高电平；在开始传输数据前，发送端的UART在一个时钟周期内将传输总线从高电平拉低到低电平；当接收端的UART检测到传输总线由高电平转换到低电平时，将以波特率的频率读取数据位中的每一位数据。</p>
+<h4 id="数据位"><a href="#数据位" class="headerlink" title="数据位"></a>数据位</h4><p>数据位包含接收端的控制设备实际需要的数据，数据位的长度可以是5、6、7、8，9位（<strong>如果使用校验位，则可以是5位，最多8位；如果不使用校验位，数据帧的长度可以是9位（此时可以把校验位当作数据位来使用）</strong>），一般为8位，因为一个ASCII码的长度为8位。</p>
+<p>数据位从低有效位到高有效位依次发送。</p>
+<h4 id="校验位"><a href="#校验位" class="headerlink" title="校验位"></a>校验位</h4><p>校验位可以是奇校验、偶校验、1校验、0校验，也可以没有校验位。</p>
+<ul>
+<li>奇校验：校验位为1，数据位与校验位的高逻辑位的位数之和为奇数；</li>
+<li>偶校验：校验位为0，数据位与校验位的高逻辑位的位数之和位偶数；</li>
+<li>1校验：强行将校验位设置为高逻辑位，仅通过检查校验位的值是否被修改为依据来判断是否有噪声干扰了通信或者数据的发送和接收是否同步；</li>
+<li>0校验：强行将校验位设置为低逻辑位，效果同上。</li>
+</ul>
+<h4 id="停止位"><a href="#停止位" class="headerlink" title="停止位"></a>停止位</h4><p>发送端的UART将传输总线拉高到高电平，持续1到2个传输位的时间，以此来通知接收端的UART停止接收；同时给发送端和接收端提供了同步时钟的机会，停止位的位数越多，时钟同步的容错性越好，但数据传输越慢。</p>
+<h3 id="优、缺点"><a href="#优、缺点" class="headerlink" title="优、缺点"></a>优、缺点</h3><h4 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h4><ul>
+<li>占用的引脚少，除电源部分外，只需要两条数据传输线即可进行通信；</li>
+<li>无需时钟信号；</li>
+<li>有校验位，有利于检查数据是否完整无修改；</li>
+<li>只需要在发送端和接收端设置好数据包结构，即可稳定通信。</li>
+</ul>
+<h4 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h4><ul>
+<li>数据帧最大只支持9位数据；</li>
+<li>不支持多主机或多从机的主从系统。</li>
+</ul>
+<h2 id="51单片机UART的使用"><a href="#51单片机UART的使用" class="headerlink" title="51单片机UART的使用"></a>51单片机UART的使用</h2><p>与51单片机UART通信相关的特殊功能寄存器有串行控制寄存器<code>SCON</code>、电源控制寄存器<code>PCON</code>、定时器模式寄存器<code>TMOD</code>。</p>
+<h3 id="串行控制寄存器SCON"><a href="#串行控制寄存器SCON" class="headerlink" title="串行控制寄存器SCON"></a>串行控制寄存器SCON</h3><p>串行控制寄存器<code>SCON</code>用于选择串行通信的工作方式和某些控制功能。</p>
+<p><img src="/2021/03/03/51%E5%8D%95%E7%89%87%E6%9C%BA%E2%80%94%E2%80%94UART%E9%80%9A%E4%BF%A1%E7%AE%80%E5%8D%95%E8%AE%B0%E5%BD%95/%E4%B8%B2%E8%A1%8C%E6%8E%A7%E5%88%B6%E5%AF%84%E5%AD%98%E5%99%A8.png" alt></p>
+<p>各位地址为0x98~0x9f，可位寻址。</p>
+<h4 id="SM0-amp-SM1"><a href="#SM0-amp-SM1" class="headerlink" title="SM0&amp;SM1"></a>SM0&amp;SM1</h4><p>通过<code>SM0</code>和<code>SM1</code>的组合可选择串行通信的工作方式：</p>
+<p><img src="/2021/03/03/51%E5%8D%95%E7%89%87%E6%9C%BA%E2%80%94%E2%80%94UART%E9%80%9A%E4%BF%A1%E7%AE%80%E5%8D%95%E8%AE%B0%E5%BD%95/%E5%B7%A5%E4%BD%9C%E6%96%B9%E5%BC%8F.png" alt></p>
+<ul>
+<li><strong>方式0</strong>：在方式0下，数据从<code>RXD</code>端串行输出或输入，以8位数据为一帧，没有起始位和停止位，同步信号从<code>TXD</code>端输出，波特率固定不变，为晶振频率的1/12；常用于串口外接移位寄存器以拓展并行I/O，不适用于两个51单片机之间的串行通信。</li>
+<li><strong>方式1</strong>：真正用于数据的串行发送和接收，<code>TXD</code>端和<code>RXD</code>端分别用于发送和接收数据；一帧数据为10位，包括1个起始位、8个数据位、1个停止位。</li>
+<li><strong>方式2</strong>：当串口工作于方式2时，被定义为9位异步通信接口，每帧数据均为11位，包括1个起始位、8个数据位、1个校验位、1个停止位；第9位数据可通过软件控制，与<code>SCON</code>中的<code>SM2</code>位配合可使串口用于多机通信；波特率固定不变，为晶振频率的1/64或1/32，由<code>PCON</code>的最高位控制。</li>
+<li><strong>方式3</strong>：与方式2类似，但方式3的波特率可变，也适用于多机通信。</li>
+</ul>
+<h4 id="SM2"><a href="#SM2" class="headerlink" title="SM2"></a>SM2</h4><p>多机通信控制位；主要用于方式2和方式3；若<code>SM2=1</code>，则允许多机通信；若<code>SM2=0</code>，则不允许多机通信，在接收完一帧数据后，置<code>RI</code>为1，同时把接收到的数据写入<code>SBUF</code>，在方式0中，<code>SM2</code>必须置0，在方式1中，若<code>SM2=1</code>，只有接收到有效停止位时，<code>RI</code>才置1。</p>
+<h4 id="REN"><a href="#REN" class="headerlink" title="REN"></a>REN</h4><p>允许接收控制位；由软件置1或清零；当<code>REN=1</code>时，允许接收；当<code>REN=0</code>时，禁止接收。</p>
+<h4 id="TB8"><a href="#TB8" class="headerlink" title="TB8"></a>TB8</h4><p>将待发送数据的第9位写入<code>TB8</code>，可以在多机通信中作为发送地址帧或数据帧的标志位。</p>
+<h4 id="RB8"><a href="#RB8" class="headerlink" title="RB8"></a>RB8</h4><p>将接收到的数据的第9位写入<code>RB8</code>，类似于<code>TB8</code>。</p>
+<h4 id="TI"><a href="#TI" class="headerlink" title="TI"></a>TI</h4><p>发送中断标志位；一帧数据准备发送时，该帧数据会被写入一个用作发送缓冲的<code>SBUF</code>等待马上被读取，当该帧数据发送完后，<code>TI</code>被置1，申请中断，表示该用作发送缓冲的<code>SBUF</code>已空，可以准备发送下一帧数据；<code>TI</code>不会自动清零，必须软件清零。</p>
+<h4 id="RI"><a href="#RI" class="headerlink" title="RI"></a>RI</h4><p>接收中断标志位；当接收完一帧数据并且该帧数据被写入一个用作接收缓冲的<code>SBUF</code>后，<code>RI</code>被置1，申请中断，表示数据必须要马上被读取；<code>RI</code>也必须软件清零。<strong><code>RI</code>与<code>TI</code>是同一中断源，CPU一开始并不知道是发送还是接收产生的中断请求，必须在中断服务程序中通过是<code>TI==1</code>还是<code>RI==1</code>来判别。</strong></p>
+<h3 id="电源控制寄存器PCON"><a href="#电源控制寄存器PCON" class="headerlink" title="电源控制寄存器PCON"></a>电源控制寄存器PCON</h3><p>电源控制寄存器<code>PCON</code>中只有<code>SMOD</code>位与串口运行有关，不可位寻址。</p>
+<p><img src="/2021/03/03/51%E5%8D%95%E7%89%87%E6%9C%BA%E2%80%94%E2%80%94UART%E9%80%9A%E4%BF%A1%E7%AE%80%E5%8D%95%E8%AE%B0%E5%BD%95/PCON.png" alt></p>
+<ul>
+<li>SMOD：波特率倍增位；在方式1、2、3中，当<code>SMOD</code>=1时，波特率增加一倍。</li>
+</ul>
+<h3 id="SBUF"><a href="#SBUF" class="headerlink" title="SBUF"></a>SBUF</h3><p>UART支持全双工的串口通信，可以同时接收和发送，待发送和已接收的数据分别写入两个不同的<code>SBUF</code>中暂存，这两个寄存器<strong>在物理上是相对独立的，但共用同一地址0x99</strong>。两个<code>SBUF</code>每次都只能暂存一个数据帧，只有暂存在SBUF中的数据帧被读取后，才能暂存下一数据帧；数据帧被写入<code>SBUF</code>后，必须要被马上读取，否则将被下一数据帧覆写。</p>
+<h2 id="举个栗子"><a href="#举个栗子" class="headerlink" title="举个栗子"></a>举个栗子</h2><figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"><span class="comment">//51单片机与PC进行串口通信：PC向51单片机发送字符，51单片机将接收到的字符返回给PC</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#include&lt;reg51.h&gt;</span><br><span class="line"></span><br><span class="line"><span class="built_in">void</span> UART_init()		<span class="comment">//初始化串口，波特率9600，晶振频率11.0592MHz</span></span><br><span class="line">&#123;</span><br><span class="line">	PCON=<span class="number">0x80</span>;		<span class="comment">//使能波特率倍增位SMOD</span></span><br><span class="line">	SCON=<span class="number">0x50</span>;		<span class="comment">//设置串口工作于方式1，不允许多机通信</span></span><br><span class="line">	TMOD=<span class="number">0x20</span>;		<span class="comment">//设置定时器1为8位自动重载模式，STC89C52RC的定时器0不能用作波特率发生器</span></span><br><span class="line">	TL1=<span class="number">0xfa</span>;		<span class="comment">//设置定时器1的初值</span></span><br><span class="line">	TH1=<span class="number">0xfa</span>;		<span class="comment">//设置定时器1的重载值</span></span><br><span class="line">	TR1=<span class="number">1</span>;		<span class="comment">//开启定时器1</span></span><br><span class="line">	ES=<span class="number">1</span>;		<span class="comment">//开启串口中断</span></span><br><span class="line">	EA=<span class="number">1</span>;		<span class="comment">//开启总中断</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">void</span> UART() <span class="built_in">int</span>errupt <span class="number">4</span></span><br><span class="line">&#123;</span><br><span class="line">	char temp;</span><br><span class="line">	<span class="keyword">if</span>(RI==<span class="number">1</span>)		<span class="comment">//当软件判别是串口接收产生的中断请求的时候</span></span><br><span class="line">	&#123;</span><br><span class="line">		temp=SBUF;		<span class="comment">//将接收到的数据赋值给变量temp</span></span><br><span class="line">		RI=<span class="number">0</span>;		<span class="comment">//软件清零</span></span><br><span class="line">		SBUF=temp;<span class="comment">//将变量的值写入SBUF，准备发送</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">while</span>(TI==<span class="number">0</span>);		<span class="comment">//等待数据发送完毕</span></span><br><span class="line">	TI=<span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">void</span> main()</span><br><span class="line">&#123;</span><br><span class="line">	UART_init();</span><br><span class="line">	<span class="keyword">while</span>(<span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="双机通信"><a href="#双机通信" class="headerlink" title="双机通信"></a>双机通信</h3><p>补充一个在两片51单片机之间进行双机通信的例子。</p>
+<p>若主机的按键从未被按下，则从机的数码管显示数字“0“；当主机的按键K1被按下后，从机的数码管刷新显示数字“1”；当主机的按键K2被按下后，从机的数码管刷新显示数字“2”；当主机的按键K3被按下后，从机的数码管刷新显示数字“3”。</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"><span class="comment">//主机程序</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#include&lt;reg51.h&gt;</span><br><span class="line"></span><br><span class="line">sbit Key1=P1^<span class="number">0</span>;</span><br><span class="line">sbit Key2=P1^<span class="number">1</span>;</span><br><span class="line">sbit Key3=P1^<span class="number">2</span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">void</span> Delaytime(unsigned char i)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">while</span>(i--);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">void</span> UART_init()		<span class="comment">//串口初始化，串口工作方式1，定时器工作方式2，波特率9600</span></span><br><span class="line">&#123;</span><br><span class="line">	SCON=<span class="number">0x50</span>;</span><br><span class="line">	TMOD=<span class="number">0x20</span>;</span><br><span class="line">	TH1=<span class="number">0xfd</span>;</span><br><span class="line">	TL1=<span class="number">0xfd</span>;</span><br><span class="line">	TR1=<span class="number">1</span>;</span><br><span class="line">	ES=<span class="number">0</span>;</span><br><span class="line">	EA=<span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">void</span> UART_TX(unsigned char p)		<span class="comment">//串口输出数据</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span>(p!=<span class="number">0</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		SBUF=p;</span><br><span class="line">		<span class="keyword">while</span>(TI==<span class="number">0</span>);</span><br><span class="line">		TI=<span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">unsigned char KEY()		<span class="comment">//按键扫描；无按键被按下，则返回数值0；按下按键K1，则返回数值1；按下按键K2，则返回数值2；按下按键K3，则返回数值3</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="built_in">int</span> key=<span class="number">0</span>;</span><br><span class="line">	<span class="keyword">if</span>(key==<span class="number">0</span>&amp;&amp;(Key1==<span class="number">0</span>||Key2==<span class="number">0</span>||Key3==<span class="number">0</span>))</span><br><span class="line">	&#123;</span><br><span class="line">		Delaytime(<span class="number">100</span>);</span><br><span class="line">		key=<span class="number">1</span>;</span><br><span class="line">		<span class="keyword">if</span>(Key1==<span class="number">0</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span>(Key2==<span class="number">0</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="number">2</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span>(Key3==<span class="number">0</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="number">3</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">if</span>(Key1==<span class="number">1</span>&amp;&amp;Key2==<span class="number">1</span>&amp;&amp;Key3==<span class="number">1</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		key=<span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">void</span> main()</span><br><span class="line">&#123;</span><br><span class="line">	unsigned char num;</span><br><span class="line">	UART_init();</span><br><span class="line">	<span class="keyword">while</span>(<span class="number">1</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		num=KEY();</span><br><span class="line">		<span class="keyword">if</span>(num)		<span class="comment">//当有按键被按下时，则将相应的数值发送给从机</span></span><br><span class="line">		&#123;</span><br><span class="line">			UART_TX(num);</span><br><span class="line">		&#125;</span><br><span class="line">		Delaytime(<span class="number">1000</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"><span class="comment">//从机程序</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#include&lt;reg51.h&gt;</span><br><span class="line"></span><br><span class="line">unsigned char LEDS[]=&#123;<span class="number">0xc0</span>,<span class="number">0xf9</span>,<span class="number">0xa4</span>,<span class="number">0xb0</span>&#125;;		<span class="comment">//数码管段码，分别显示数值0、1、2、3</span></span><br><span class="line">unsigned char num=<span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">void</span> Delaytime(unsigned char i)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">while</span>(i--);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">void</span> UART_init()		<span class="comment">//串口初始化</span></span><br><span class="line">&#123;</span><br><span class="line">	SCON=<span class="number">0x50</span>;</span><br><span class="line">	TMOD=<span class="number">0x20</span>;</span><br><span class="line">	TH1=<span class="number">0xfd</span>;</span><br><span class="line">	TL1=<span class="number">0xfd</span>;</span><br><span class="line">	TR1=<span class="number">1</span>;</span><br><span class="line">	ES=<span class="number">1</span>;</span><br><span class="line">	EA=<span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">void</span> UART() <span class="built_in">int</span>errupt <span class="number">4</span></span><br><span class="line">&#123;</span><br><span class="line">	num=SBUF;		<span class="comment">//获取主机按键值</span></span><br><span class="line">	RI=<span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">void</span> main()</span><br><span class="line">&#123;</span><br><span class="line">	UART_init();</span><br><span class="line">	<span class="keyword">while</span>(<span class="number">1</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		P0=LEDS[num];</span><br><span class="line">		Delaytime(<span class="number">1000</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/03/03/51%E5%8D%95%E7%89%87%E6%9C%BA%E2%80%94%E2%80%94UART%E9%80%9A%E4%BF%A1%E7%AE%80%E5%8D%95%E8%AE%B0%E5%BD%95/%E5%8E%9F%E7%90%86%E5%9B%BE.png" alt></p>
+<hr>
+<p>如有错误，请在评论区多多指教，非常感谢！</p>
+<p><strong>参考资料：</strong></p>
+<p><a href="https://mp.weixin.qq.com/s/kFtex1Hr28xa8KXlcrSl1Q" target="_blank" rel="noopener">UART串口通信的基本应用</a></p>
+<p><a href="https://mp.weixin.qq.com/s/4bPFQT1-mJIfLGdKjSPNog" target="_blank" rel="noopener">我打赌！你还不会UART！不信，你看看~</a></p>
+<p><a href="http://www.stcmcudata.com/datasheet/stc/STC-AD-PDF/STC89C51RC-RD.pdf" target="_blank" rel="noopener">STC89C52RC官方技术文档</a></p>
+<p><a href="https://blog.csdn.net/wait_for_taht_day5/article/details/50564331" target="_blank" rel="noopener">【51单片机】（手把手教你）串口通信-基础篇</a></p>
+<p><a href="https://blog.csdn.net/qq_27485531/article/details/81293188" target="_blank" rel="noopener">51单片机串口通讯UART</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/51%E5%8D%95%E7%89%87%E6%9C%BA/" rel="tag"># 51单片机</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/02/20/51%E5%8D%95%E7%89%87%E6%9C%BA%E7%A8%8B%E5%BA%8F%EF%BC%88LCD1602%EF%BC%89/" rel="prev" title="51单片机程序（LCD1602）">
+      <i class="fa fa-chevron-left"></i> 51单片机程序（LCD1602）
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/03/06/51%E5%8D%95%E7%89%87%E6%9C%BA%E4%B8%AD%E6%96%AD%E4%BC%98%E5%85%88%E7%BA%A7/" rel="next" title="51单片机中断优先级">
+      51单片机中断优先级 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#UART相关"><span class="nav-number">1.</span> <span class="nav-text">UART相关</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#概括"><span class="nav-number">1.1.</span> <span class="nav-text">概括</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#协议层"><span class="nav-number">1.2.</span> <span class="nav-text">协议层</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#起始位"><span class="nav-number">1.2.1.</span> <span class="nav-text">起始位</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#数据位"><span class="nav-number">1.2.2.</span> <span class="nav-text">数据位</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#校验位"><span class="nav-number">1.2.3.</span> <span class="nav-text">校验位</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#停止位"><span class="nav-number">1.2.4.</span> <span class="nav-text">停止位</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优、缺点"><span class="nav-number">1.3.</span> <span class="nav-text">优、缺点</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#优点"><span class="nav-number">1.3.1.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#缺点"><span class="nav-number">1.3.2.</span> <span class="nav-text">缺点</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#51单片机UART的使用"><span class="nav-number">2.</span> <span class="nav-text">51单片机UART的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#串行控制寄存器SCON"><span class="nav-number">2.1.</span> <span class="nav-text">串行控制寄存器SCON</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#SM0-amp-SM1"><span class="nav-number">2.1.1.</span> <span class="nav-text">SM0&amp;SM1</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SM2"><span class="nav-number">2.1.2.</span> <span class="nav-text">SM2</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#REN"><span class="nav-number">2.1.3.</span> <span class="nav-text">REN</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TB8"><span class="nav-number">2.1.4.</span> <span class="nav-text">TB8</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RB8"><span class="nav-number">2.1.5.</span> <span class="nav-text">RB8</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TI"><span class="nav-number">2.1.6.</span> <span class="nav-text">TI</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RI"><span class="nav-number">2.1.7.</span> <span class="nav-text">RI</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#电源控制寄存器PCON"><span class="nav-number">2.2.</span> <span class="nav-text">电源控制寄存器PCON</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SBUF"><span class="nav-number">2.3.</span> <span class="nav-text">SBUF</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#举个栗子"><span class="nav-number">3.</span> <span class="nav-text">举个栗子</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#双机通信"><span class="nav-number">3.1.</span> <span class="nav-text">双机通信</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="NIMITIZ"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">NIMITIZ</p>
+  <div class="site-description" itemprop="description">生命不息，折腾不止</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/NIMITIZ" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;NIMITIZ" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:cwn3234733323@gmail.com" title="E-Mail → mailto:cwn3234733323@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+      
+           
+         
+         <div style="">
+  <canvas id="canvas" style="width:60%;">当前浏览器不支持canvas，请更换浏览器后再试</canvas>
+</div>
+<script>
+(function(){
+
+   var digit=
+    [
+        [
+            [0,0,1,1,1,0,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,0,1,1,0],
+            [0,0,1,1,1,0,0]
+        ],//0
+        [
+            [0,0,0,1,1,0,0],
+            [0,1,1,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [1,1,1,1,1,1,1]
+        ],//1
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,1,1],
+            [1,1,1,1,1,1,1]
+        ],//2
+        [
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//3
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,0],
+            [0,0,1,1,1,1,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,1,1,0],
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,1]
+        ],//4
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,1,1,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//5
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//6
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0]
+        ],//7
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//8
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,1,1,0,0,0,0]
+        ],//9
+        [
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0]
+        ]//:
+    ];
+
+var canvas = document.getElementById('canvas');
+
+if(canvas.getContext){
+    var cxt = canvas.getContext('2d');
+    //声明canvas的宽高
+    var H = 100,W = 700;
+    canvas.height = H;
+    canvas.width = W;
+    cxt.fillStyle = '#f00';
+    cxt.fillRect(10,10,50,50);
+
+    //存储时间数据
+    var data = [];
+    //存储运动的小球
+    var balls = [];
+    //设置粒子半径
+    var R = canvas.height/20-1;
+    (function(){
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        //存储时间数字，由十位小时、个位小时、冒号、十位分钟、个位分钟、冒号、十位秒钟、个位秒钟这7个数字组成
+        data.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+    })();
+
+    /*生成点阵数字*/
+    function renderDigit(index,num){
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    cxt.beginPath();
+                    cxt.arc(14*(R+2)*index + j*2*(R+1)+(R+1),i*2*(R+1)+(R+1),R,0,2*Math.PI);
+                    cxt.closePath();
+                    cxt.fill();
+                }
+            }
+        }
+    }
+
+    /*更新时钟*/
+    function updateDigitTime(){
+        var changeNumArray = [];
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        var NewData = [];
+        NewData.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+        for(var i = data.length-1; i >=0 ; i--){
+            //时间发生变化
+            if(NewData[i] !== data[i]){
+                //将变化的数字值和在data数组中的索引存储在changeNumArray数组中
+                changeNumArray.push(i+'_'+(Number(data[i])+1)%10);
+            }
+        }
+        //增加小球
+        for(var i = 0; i< changeNumArray.length; i++){
+            addBalls.apply(this,changeNumArray[i].split('_'));
+        }
+        data = NewData.concat();
+    }
+
+    /*更新小球状态*/
+    function updateBalls(){
+        for(var i = 0; i < balls.length; i++){
+            balls[i].stepY += balls[i].disY;
+            balls[i].x += balls[i].stepX;
+            balls[i].y += balls[i].stepY;
+            if(balls[i].x > W + R || balls[i].y > H + R){
+                balls.splice(i,1);
+                i--;
+            }
+        }
+    }
+
+    /*增加要运动的小球*/
+    function addBalls(index,num){
+        var numArray = [1,2,3];
+        var colorArray =  ["#3BE","#09C","#A6C","#93C","#9C0","#690","#FB3","#F80","#F44","#C00"];
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    var ball = {
+                        x:14*(R+2)*index + j*2*(R+1)+(R+1),
+                        y:i*2*(R+1)+(R+1),
+                        stepX:Math.floor(Math.random() * 4 -2),
+                        stepY:-2*numArray[Math.floor(Math.random()*numArray.length)],
+                        color:colorArray[Math.floor(Math.random()*colorArray.length)],
+                        disY:1
+                    };
+                    balls.push(ball);
+                }
+            }
+        }
+    }
+
+    /*渲染*/
+    function render(){
+        //重置画布宽度，达到清空画布的效果
+        canvas.height = 100;
+        //渲染时钟
+        for(var i = 0; i < data.length; i++){
+            renderDigit(i,data[i]);
+        }
+        //渲染小球
+        for(var i = 0; i < balls.length; i++){
+            cxt.beginPath();
+            cxt.arc(balls[i].x,balls[i].y,R,0,2*Math.PI);
+            cxt.fillStyle = balls[i].color;
+            cxt.closePath();
+            cxt.fill();
+        }
+    }
+
+    clearInterval(oTimer);
+    var oTimer = setInterval(function(){
+        //更新时钟
+        updateDigitTime();
+        //更新小球状态
+        updateBalls();
+        //渲染
+        render();
+    },50);
+}
+
+})();
+</script>
+   </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">NIMITIZ</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">91k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">1:23</span>
+</div>
+
+<br /> #换行
+<!-- 网站运行时间的设置 -->
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("04/15/2020 00:00:00");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'm4huKMbJFhxPsNBUaRNaSsxb-gzGzoHsz',
+      appKey     : 'ikUKWElVr7k7aYAm1PspteAw',
+      placeholder: "ヾﾉ≧∀≦)o 来呀！吐槽一番吧！",
+      avatar     : 'monsterid',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+  
+
+  <script src="/js/activate-power-mode.min.js"></script>
+  <script>
+    POWERMODE.colorful = true;
+    POWERMODE.shake = false;
+    document.body.addEventListener('input', POWERMODE);
+  </script>
+
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>
+
+<!--浏览器搞笑标题-->
+<script type="text/javascript" src="/js/funny_title.js"></script>
+
+<!--动态线条背景-->
+<script type="text/javascript"
+color="220,220,220" opacity='0.9' zIndex="-1" count="200" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+</script>
