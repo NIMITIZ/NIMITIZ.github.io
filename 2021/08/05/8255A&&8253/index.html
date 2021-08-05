@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-bounce.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.nimitiz.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":"ture","trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"./public/search.xml"};
+  </script>
+
+  <meta name="description" content="对Intel的可编程并行I&#x2F;O接口芯片8255和可编程计数器&#x2F;定时器8253的笔记。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="8255A&amp;&amp;8253">
+<meta property="og:url" content="https://www.nimitiz.cn/2021/08/05/8255A&&8253/index.html">
+<meta property="og:site_name" content="小浣熊的技术小站">
+<meta property="og:description" content="对Intel的可编程并行I&#x2F;O接口芯片8255和可编程计数器&#x2F;定时器8253的笔记。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/08/05/8255A&&8253/%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/08/05/8255A&&8253/%E5%BC%95%E8%84%9A%E5%8A%9F%E8%83%BD.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/08/05/8255A&&8253/%E8%AF%BB%E5%86%99%E6%8E%A7%E5%88%B6%E9%80%BB%E8%BE%91.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/08/05/8255A&&8253/1%E8%BE%93%E5%85%A5.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/08/05/8255A&&8253/1%E8%BE%93%E5%87%BA.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/08/05/8255A&&8253/%E6%96%B9%E5%BC%8F2.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/08/05/8255A&&8253/%E6%96%B9%E5%BC%8F%E9%80%89%E6%8B%A9%E6%8E%A7%E5%88%B6%E5%AD%97.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/08/05/8255A&&8253/%E7%AB%AF%E5%8F%A3C%E6%8E%A7%E5%88%B6%E5%AD%97.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/08/05/8255A&&8253/8253%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/08/05/8255A&&8253/8253%E5%BC%95%E8%84%9A%E5%8A%9F%E8%83%BD.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/08/05/8255A&&8253/8253%E6%96%B9%E5%BC%8F0.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/08/05/8255A&&8253/8253%E6%96%B9%E5%BC%8F1.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/08/05/8255A&&8253/8253%E6%96%B9%E5%BC%8F2.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/08/05/8255A&&8253/8253%E6%96%B9%E5%BC%8F3.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/08/05/8255A&&8253/8253%E6%96%B9%E5%BC%8F4.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/08/05/8255A&&8253/8253%E6%96%B9%E5%BC%8F5.png">
+<meta property="og:image" content="https://www.nimitiz.cn/2021/08/05/8255A&&8253/8253%E6%96%B9%E5%BC%8F%E6%8E%A7%E5%88%B6%E5%AD%97.png">
+<meta property="article:published_time" content="2021-08-05T15:30:12.000Z">
+<meta property="article:modified_time" content="2021-08-05T15:31:21.353Z">
+<meta property="article:author" content="NIMITIZ">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.nimitiz.cn/2021/08/05/8255A&&8253/%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84.png">
+
+<link rel="canonical" href="https://www.nimitiz.cn/2021/08/05/8255A&&8253/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>8255A&&8253 | 小浣熊的技术小站</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+  
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">小浣熊的技术小站</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-友链">
+
+    <a href="/links/" rel="section"><i class="fa fa-link fa-fw"></i>友链</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/NIMITIZ" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.nimitiz.cn/2021/08/05/8255A&&8253/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="NIMITIZ">
+      <meta itemprop="description" content="生命不息，折腾不止">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小浣熊的技术小站">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          8255A&&8253
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-08-05 23:30:12 / 修改时间：23:31:21" itemprop="dateCreated datePublished" datetime="2021-08-05T23:30:12+08:00">2021-08-05</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A1%AC%E4%BB%B6/" itemprop="url" rel="index"><span itemprop="name">计算机硬件</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/08/05/8255A&&8253/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/08/05/8255A&&8253/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.6k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>对Intel的可编程并行I/O接口芯片8255和可编程计数器/定时器8253的笔记。</p>
+<a id="more"></a>
+
+
+
+
+
+
+
+<h2 id="8255A（8255的改进型）"><a href="#8255A（8255的改进型）" class="headerlink" title="8255A（8255的改进型）"></a>8255A（8255的改进型）</h2><p>8255芯片是Intel公司生产的可编程并行I/O接口芯片，有3个8位并行I/O口。具有3个通道3种工作方式的可编程并行接口芯片（40引脚）。 其各口功能可由软件选择，使用灵活，通用性强。8255可作为单片机与多种外设连接时的中间接口电路。</p>
+<h3 id="内部结构"><a href="#内部结构" class="headerlink" title="内部结构"></a>内部结构</h3><p><img src="/2021/08/05/8255A&&8253/%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84.png" alt></p>
+<p>8255A由<code>数据总线缓冲器</code>、<code>数据端口A</code>、<code>数据端口B</code>、<code>数据端口C</code>、<code>A组控制电路</code>、<code>B组控制电路</code>和<code>读/写控制电路</code>组成。</p>
+<h3 id="引脚功能"><a href="#引脚功能" class="headerlink" title="引脚功能"></a>引脚功能</h3><p><img src="/2021/08/05/8255A&&8253/%E5%BC%95%E8%84%9A%E5%8A%9F%E8%83%BD.png" alt></p>
+<ul>
+<li>可存取数据的端口<code>A</code>、端口<code>B</code>、端口<code>C</code>，分别对应<code>PA</code>、<code>PB</code>、<code>PC</code>；</li>
+<li><code>RESET</code>：复位引脚，低电平有效；当该引脚检测到<strong>低电平</strong>信号时，8255A<strong>内部寄存器清零</strong>，<code>PA</code>、<code>PB</code>、<code>PC</code>端口被设置为<strong>输入状态</strong>；</li>
+<li><code>CS&#39;</code>：片选引脚，低电平有效；地址总线的高位译码后连接该引脚，用于选中8255A。引脚上的信号有效时，才可以对8255A进行读、写等操作；</li>
+<li><code>RD&#39;</code>：<code>读</code>控制，低电平有效；用于CPU从8255A读取数据或状态；</li>
+<li><code>WR&#39;</code>：<code>写</code>控制，低电平有效；用于CPU向8255A写入数据或控制字；</li>
+<li><code>D0~D7</code>：与数据总线相连，CPU通过这8个引脚与8255A进行数据通信；</li>
+<li><code>A0、A1</code>：用于<code>A</code>、<code>B</code>、<code>C</code>端口与控制寄存器的选择。</li>
+</ul>
+<h3 id="读写-amp-控制逻辑"><a href="#读写-amp-控制逻辑" class="headerlink" title="读写&amp;控制逻辑"></a>读写&amp;控制逻辑</h3><p><img src="/2021/08/05/8255A&&8253/%E8%AF%BB%E5%86%99%E6%8E%A7%E5%88%B6%E9%80%BB%E8%BE%91.png" alt></p>
+<h3 id="工作方式"><a href="#工作方式" class="headerlink" title="工作方式"></a>工作方式</h3><ul>
+<li>端口<code>A</code>可工作于方式0、方式1、方式2；</li>
+<li>端口<code>B</code>可工作于方式0、方式1；</li>
+<li>端口<code>C</code>只能工作于方式0。</li>
+</ul>
+<h4 id="方式0——基本输入输出"><a href="#方式0——基本输入输出" class="headerlink" title="方式0——基本输入输出"></a>方式0——基本输入输出</h4><p>每一个端口都作为基本的I/O口，端口<code>C</code>的高4位、端口<code>C</code>的低4位、端口<code>A</code>和端口<code>B</code>均可独立设置为I/O口。</p>
+<p>CPU可采用<strong>无条件传输方式</strong>与8255A进行数据交换。</p>
+<p>方式0<strong>输出</strong>时<strong>有</strong>锁存能力，<strong>输入</strong>时<strong>无</strong>锁存能力。</p>
+<h4 id="方式1——单向选通输入输出"><a href="#方式1——单向选通输入输出" class="headerlink" title="方式1——单向选通输入输出"></a>方式1——单向选通输入输出</h4><p>三个数据端口分为A、B两组，当端口<code>A</code>工作于方式1时，<code>PC3</code>、<code>PC4</code>、<code>PC5</code>用于端口<code>A</code>的选通控制信号；当端口<code>B</code>工作于方式1时，<code>PC0</code>、<code>PC1</code>、<code>PC2</code>用于端口<code>B</code>的选通控制信号；<code>PC6</code>、<code>PC7</code>可工作于方式0。</p>
+<p><code>PC6</code>和<code>PC7</code>由方式选择控制字中的<strong><code>D3</code></strong>位来定义其<strong>传送方向</strong>，当<code>D3</code>为<strong><code>1</code></strong>时，用于<strong>输入</strong>；当<code>D3</code>为<strong><code>0</code></strong>时，用于<strong>输出</strong>。</p>
+<p>方式1适合用于<strong>中断方式</strong>下的输入输出。</p>
+<p>方式1<strong>输入和输出</strong>时均<strong>有</strong>锁存能力。</p>
+<h5 id="方式1：输入"><a href="#方式1：输入" class="headerlink" title="方式1：输入"></a>方式1：输入</h5><p><img src="/2021/08/05/8255A&&8253/1%E8%BE%93%E5%85%A5.png" alt></p>
+<h5 id="方式1：输出"><a href="#方式1：输出" class="headerlink" title="方式1：输出"></a>方式1：输出</h5><p><img src="/2021/08/05/8255A&&8253/1%E8%BE%93%E5%87%BA.png" alt></p>
+<h4 id="方式2——双向选通输入输出"><a href="#方式2——双向选通输入输出" class="headerlink" title="方式2——双向选通输入输出"></a>方式2——双向选通输入输出</h4><p>在用作输入的同时，又能用作输出，<strong>只有端口<code>A</code>可工作于方式2</strong>，占用端口<code>C</code>的<strong>5位</strong>用作<strong>选通控制</strong>。</p>
+<p>方式2可采用<strong>查询方式</strong>和<strong>中断方式</strong>进行数据传输。</p>
+<p>当端口<code>A</code>工作于方式2、端口<code>B</code>工作于方式1时，<code>PC7~PC3</code>作为端口<code>A</code>的联络信号，<code>PC2~PC0</code>作为端口<code>B</code>的联络信号；</p>
+<p>当端口<code>A</code>工作于方式2、端口<code>B</code>工作于方式0时，<code>PC7~PC3</code>作为端口<code>A</code>的联络信号，<code>PC2~PC0</code>可工作于方式0。</p>
+<p><img src="/2021/08/05/8255A&&8253/%E6%96%B9%E5%BC%8F2.png" alt></p>
+<h3 id="控制字"><a href="#控制字" class="headerlink" title="控制字"></a>控制字</h3><h4 id="方式选择控制字"><a href="#方式选择控制字" class="headerlink" title="方式选择控制字"></a>方式选择控制字</h4><p><img src="/2021/08/05/8255A&&8253/%E6%96%B9%E5%BC%8F%E9%80%89%E6%8B%A9%E6%8E%A7%E5%88%B6%E5%AD%97.png" alt></p>
+<h4 id="端口C置位-复位控制字"><a href="#端口C置位-复位控制字" class="headerlink" title="端口C置位/复位控制字"></a>端口C置位/复位控制字</h4><p><img src="/2021/08/05/8255A&&8253/%E7%AB%AF%E5%8F%A3C%E6%8E%A7%E5%88%B6%E5%AD%97.png" alt></p>
+<h3 id="举个栗子"><a href="#举个栗子" class="headerlink" title="举个栗子"></a>举个栗子</h3><p>设某8255的控制端口地址为63H，若要其端口A工作于方式1输出，允许中断，则必须使INTE（PC6）为1，为此，可向控制字寄存器写入按位置位/复位操作命令：</p>
+<figure class="highlight x86asm"><table><tr><td class="code"><pre><span class="line"><span class="keyword">MOV</span>	<span class="built_in">AL</span>,<span class="number">00001101B</span></span><br><span class="line"><span class="keyword">OUT</span>	<span class="number">63H</span>,<span class="built_in">AL</span></span><br></pre></td></tr></table></figure>
+
+<p>若要端口B工作于方式1输入，允许中断，则必须使INTE（PC2）为1，为此，可向控制字寄存器写入以下的按位置位/复位操作命令：</p>
+<figure class="highlight x86asm"><table><tr><td class="code"><pre><span class="line"><span class="keyword">MOV</span>	<span class="built_in">AL</span>,<span class="number">00000101B</span></span><br><span class="line"><span class="keyword">OUT</span>	<span class="number">63H</span>,<span class="built_in">AL</span></span><br></pre></td></tr></table></figure>
+
+<p>若将8255A的端口A作为输出，端口B作为输入，端口A和端口B均工作于方式0。已知8255A端口地址为60H～63H，则对8255A进行初始化，并将PC1置位，PC2复位的操作命令如下：</p>
+<figure class="highlight x86asm"><table><tr><td class="code"><pre><span class="line"><span class="keyword">MOV</span>	<span class="built_in">AL</span>,<span class="number">82H</span>		<span class="comment">;方式选择控制字10000010B=82H</span></span><br><span class="line"><span class="keyword">OUT</span>	<span class="number">63H</span>,<span class="built_in">AL</span>		<span class="comment">;将控制字写入8255A控制端口,设置各端口工作方式</span></span><br><span class="line"><span class="keyword">MOV</span>	<span class="built_in">AL</span>,<span class="number">03H</span>		<span class="comment">;端口C置位控制字00000011B=03H,设置PC1=1</span></span><br><span class="line"><span class="keyword">OUT</span>	<span class="number">63H</span>,<span class="built_in">AL</span>		<span class="comment">;将控制字写入8255A控制端口</span></span><br><span class="line"><span class="keyword">MOV</span>	<span class="built_in">AL</span>,<span class="number">04H</span>		<span class="comment">;端口C置位控制字00000100B=04H,设置PC2=0</span></span><br><span class="line"><span class="keyword">OUT</span>	<span class="number">63H</span>,<span class="built_in">AL</span>		<span class="comment">;将控制字写入8255A控制端口</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="8253"><a href="#8253" class="headerlink" title="8253"></a>8253</h2><p>8253芯片是可编程计数器/定时器。8253的读/写操作对系统时钟没有特殊的要求，可应用于由任何一种微处理器组成的系统中，可作为可编程的方波频率发生器、分频器、实时时钟和单脉冲发生器等。</p>
+<h3 id="内部结构-1"><a href="#内部结构-1" class="headerlink" title="内部结构"></a>内部结构</h3><p>每片8253有3个独立的16位计数通道，每个计数通道最高计数速率可达2.6MHZ。每个计数器可编程设定6种工作方式，使用时可以根据需要选择其中的一种工作方式。每个计数通道可按<strong>二进制</strong>或<strong>十进制</strong>来计数。</p>
+<p><img src="/2021/08/05/8255A&&8253/8253%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84.png" alt></p>
+<h3 id="引脚功能-1"><a href="#引脚功能-1" class="headerlink" title="引脚功能"></a>引脚功能</h3><p><img src="/2021/08/05/8255A&&8253/8253%E5%BC%95%E8%84%9A%E5%8A%9F%E8%83%BD.png" alt></p>
+<ul>
+<li><code>D7~D0</code>：8位三态双向缓冲器，与系统的数据总线连接，接收CPU送来的计数值和控制字，高阻态时隔离8253与系统总线；</li>
+<li><code>WR&#39;</code>：<code>写</code>信号输入引脚，低电平有效；</li>
+<li><code>RD&#39;</code>：<code>读</code>信号输入引脚，低电平有效；</li>
+<li><code>CS&#39;</code>：片选信号输入引脚，低电平有效；</li>
+<li><code>A1、A0</code>：端口选择信号输入引脚。</li>
+</ul>
+<h3 id="工作方式-1"><a href="#工作方式-1" class="headerlink" title="工作方式"></a>工作方式</h3><h4 id="方式0"><a href="#方式0" class="headerlink" title="方式0"></a>方式0</h4><p>8253完成计数功能，且<strong>只作一遍计数</strong>。控制字写入后，输出端<code>OUT</code>变为低电平；计数初值写入后，下一个<code>CLK</code>脉冲的下降沿，开始计数，输出端<code>OUT</code>维持低电平。</p>
+<p>当计数值减到<strong>0</strong>时，输出端<strong><code>OUT</code></strong>变为<strong>高电平</strong>，可作为中断请求信号，并可保持到重新写入新的控制字或新的计数初值为止。</p>
+<p>在计数过程中，若<strong><code>GATE</code></strong>信号变为<strong>低电平</strong>，则<strong>暂停计数</strong>；当<strong><code>GATE</code></strong>信号<strong>重新变为高电平</strong>时，则<strong>从暂停时的计数值开始继续计数</strong>；若<strong>写入新的计数初值</strong>，则<strong>在下一个<code>CLK</code>脉冲的下降沿</strong>，以新的计数初值重新开始计数。</p>
+<p><img src="/2021/08/05/8255A&&8253/8253%E6%96%B9%E5%BC%8F0.png" alt></p>
+<h4 id="方式1"><a href="#方式1" class="headerlink" title="方式1"></a>方式1</h4><p>方式1是硬件触发单稳态方式，<strong>输出单个负脉冲信号</strong>，脉冲宽度为可编程。</p>
+<p>写入控制字后，输出端<strong><code>OUT</code></strong>变为<strong>高电平</strong>并保持此状态。写入计数初值后，在<strong><code>GATE</code>信号的上升沿之后的下一个<code>CLK</code>脉冲的下降沿</strong>，输出端<strong><code>OUT</code></strong>变为<strong>低电平</strong>，开始计数。</p>
+<p>当计数值减到<strong>0</strong>时，输出端<strong><code>OUT</code></strong>变为<strong>高电平</strong>。</p>
+<p>计数过程中，若CPU送来<strong>新的计数初值</strong>，<strong>不影响当前的计数过程</strong>；直到计数值减到<strong>0</strong>时，输出端<strong><code>OUT</code></strong>输出<strong>高电平</strong>且出现<strong>新的一次<code>GATE</code>信号的触发</strong>时，才会<strong>开始新的计数</strong>。</p>
+<p>如果在输出端<strong><code>OUT</code>输出低电平期间，接收到一个<code>GATE</code>信号上升沿触发，则在下一个<code>CLK</code>脉冲的下降沿重新开始计数</strong>。</p>
+<p><img src="/2021/08/05/8255A&&8253/8253%E6%96%B9%E5%BC%8F1.png" alt></p>
+<h4 id="方式2"><a href="#方式2" class="headerlink" title="方式2"></a>方式2</h4><p>方式2可产生<strong>连续的负脉冲信号</strong>，可用作频率发生器。<strong>负脉冲宽度为一个时钟周期</strong>。</p>
+<p>写入控制字后，输出端<strong><code>OUT</code></strong>变为<strong>高电平</strong>。若<code>GATE</code>为高电平，则在写入计数初值后，在<strong>下一个<code>CLK</code>脉冲的下降沿</strong>开始计数。当计数值减为<strong>1</strong>时，输出端<strong><code>OUT</code></strong>输出<strong>低电平</strong>，经过<strong>一个<code>CLK</code>时钟周期</strong>，输出端<strong><code>OUT</code></strong>输出<strong>高电平</strong>，并<strong>自动开始一个新的计数过程</strong>。</p>
+<p>在计数过程中，若计数值<strong>未减到1</strong>时，<strong><code>GATE</code></strong>信号<strong>由高电平变为低电平</strong>，则<strong>停止计数</strong>；但当<code>GATE</code>信号<strong>由低电平变为高电平</strong>时，则<strong>从计数初值开始重新计数</strong>。</p>
+<p>若<strong><code>GATE</code>信号保持高电平</strong>，<strong>在计数过程中重新写入计数初值</strong>，则要<strong>在该轮计数结束并输出一个<code>CLK</code>周期的负脉冲后</strong>，才以<strong>新的计数初值</strong>进行计数。</p>
+<p><img src="/2021/08/05/8255A&&8253/8253%E6%96%B9%E5%BC%8F2.png" alt></p>
+<h4 id="方式3"><a href="#方式3" class="headerlink" title="方式3"></a>方式3</h4><p>方式3可产生<strong>连续的方波信号</strong>，可用作方波发生器。计数初值为<strong>偶数</strong>时，输出<strong>对称方波</strong>；计数初值为<strong>奇数</strong>时，输出<strong>不对称方波</strong>。</p>
+<p>控制字写入后，输出端<code>OUT</code>输出高电平。当写入计数初值后，在下一个<code>CLK</code>脉冲的下降沿开始计数。计数值减为计数初值的<strong>1/2</strong>时，<strong>输出端<code>OUT</code>变为低电平</strong>。此时<strong>继续计数</strong>，当计数值减为<strong>0</strong>时，<strong>输出端<code>OUT</code>变为高电平</strong>。之后，自动开始一个新的计数过程。</p>
+<p>在计数过程中，若<strong><code>GATE</code>信号变为低电平</strong>，则<strong>停止计数</strong>；当<strong><code>GATE</code>信号由低电平变为高电平</strong>时，则<strong>从计数初值开始计数</strong>。若在<strong>输出端<code>OUT</code>为低电平</strong>时，<strong><code>GATE</code>信号变为低电平</strong>，则<strong>停止计数</strong>，同时<strong>输出端<code>OUT</code>立即变为高电平</strong>。<strong>在<code>GATE</code>信号又变为高电平后的下一个时钟脉冲的下降沿，重新开始计数</strong>。</p>
+<p>在计数过程中，若写入新的计数初值，不影响当前输出周期。但若在<strong>写入新的计数初值</strong>后，又受到<strong><code>GATE</code>信号上升沿</strong>的触发，则<strong>结束当前输出周期</strong>，而在下一个时钟脉冲的下降沿，以新的计数初值开始计数。</p>
+<p><img src="/2021/08/05/8255A&&8253/8253%E6%96%B9%E5%BC%8F3.png" alt></p>
+<h4 id="方式4"><a href="#方式4" class="headerlink" title="方式4"></a>方式4</h4><p>方式4可产生<strong>软件触发</strong>的<strong>单个负脉冲信号</strong>，负脉冲宽度为<strong>一个时钟周期</strong>。</p>
+<p>写入控制字后，输出端<code>OUT</code>变为高电平，若<code>GATE</code>信号为高电平，则在写入计数初值后的下一个<code>CLK</code>下降沿开始计数。当计数值减为0时，输出端<code>OUT</code>变为低电平，在一个<code>CLK</code>时钟周期后，输出端<code>OUT</code>变为高电平。</p>
+<p>若在计数过程中，写入新的计数初值，则在下一个<code>CLK</code>脉冲的下降沿以新的计数初值开始计数。</p>
+<p><img src="/2021/08/05/8255A&&8253/8253%E6%96%B9%E5%BC%8F4.png" alt></p>
+<h5 id="方式5"><a href="#方式5" class="headerlink" title="方式5"></a>方式5</h5><p>方式5可产生<strong>硬件触发</strong>的<strong>单个负脉冲信号</strong>，负脉冲宽度为<strong>一个时钟周期</strong>。</p>
+<p>方式5的计数过程由<code>GATE</code>信号的上升沿触发。当控制字写入后，输出端<code>OUT</code>输出高电平并保持此状态。写入计数初值后，只有在<code>GATE</code>信号的上升沿之后的下一个<code>CLK</code>脉冲下降沿开始计数。当计数值减为<strong>0</strong>时，<strong>输出端<code>OUT</code>变为低电平并持续一个<code>CLK</code>周期</strong>，随后<strong>自动变为高电平</strong>。</p>
+<p>在计数过程中，若<code>GATE</code>引脚接收到一个上升沿触发，则在下一个<code>CLK</code>脉冲下降沿重新开始计数。</p>
+<p>在计数过程中，若<strong>写入新的计数初值，但没有触发脉冲，则当前输出周期不受影响</strong>；当前周期结束后，在再次触发的情况下，才以新的计数初值开始计数；若<strong>写入新的计数初值，并在当前周期结束前受到触发</strong>，则在<strong>下一个<code>CLK</code>脉冲下降沿</strong>以新的计数初值开始计数。</p>
+<p><img src="/2021/08/05/8255A&&8253/8253%E6%96%B9%E5%BC%8F5.png" alt></p>
+<h3 id="方式控制字"><a href="#方式控制字" class="headerlink" title="方式控制字"></a>方式控制字</h3><p><img src="/2021/08/05/8255A&&8253/8253%E6%96%B9%E5%BC%8F%E6%8E%A7%E5%88%B6%E5%AD%97.png" alt></p>
+<h3 id="举个栗子-1"><a href="#举个栗子-1" class="headerlink" title="举个栗子"></a>举个栗子</h3><p>在8086系统中，设8253的计数器0工作在方式2，二进制计数，计数初值为2000；8253的计数器1工作在方式3，BCD码计数，计数初值为10，8253端口地址为40H～43H，则初始化如下：</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">;<span class="number">8253</span>计数器<span class="number">0</span>的初始化如下：</span><br><span class="line">MOV	AL,<span class="number">34</span>H		;方式控制字<span class="number">00110100</span>B=<span class="number">34</span>H</span><br><span class="line">OUT	<span class="number">43</span>H,AL		;将控制字送入<span class="number">8253</span>控制端口<span class="number">43</span>H</span><br><span class="line">MOV	AX,<span class="number">2000</span>		;初值送入AX寄存器</span><br><span class="line">OUT	<span class="number">40</span>H,AL		;将初值的低<span class="number">8</span>位输出计数通道<span class="number">0</span>端口<span class="number">40</span>H</span><br><span class="line">MOV	AL,AH		;初值的高<span class="number">8</span>位送入AL寄存器</span><br><span class="line">OUT	<span class="number">40</span>H,AL		;将初值的高<span class="number">8</span>位输出计数通道<span class="number">0</span>端口<span class="number">40</span>H</span><br><span class="line"></span><br><span class="line">;<span class="number">8253</span>计数器<span class="number">1</span>的初始化如下：</span><br><span class="line">MOV	AL,<span class="number">57</span>H		;方式控制字<span class="number">01010111</span>B=<span class="number">57</span>H</span><br><span class="line">OUT	<span class="number">43</span>H,AL		;将控制字送入<span class="number">8253</span>控制端口<span class="number">43</span>H</span><br><span class="line">MOV	AL,<span class="number">10</span>H		;将初值<span class="number">10</span>送入AL寄存器,因为BCD码计数,所以为<span class="number">10</span>H</span><br><span class="line">OUT	<span class="number">41</span>H,AL		;将初值的低<span class="number">8</span>位输出计数通道<span class="number">1</span>端口<span class="number">41</span>H</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<hr>
+<p><strong>参考资料</strong>：</p>
+<p><a href="https://baike.baidu.com/item/8255%E8%8A%AF%E7%89%87/3699882" target="_blank" rel="noopener">8255芯片_百度百科</a></p>
+<p><a href="https://blog.csdn.net/sinat_36945592/article/details/85684680?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522162778376116780274162876%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=162778376116780274162876&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~blog~top_positive~default-1-85684680.pc_v2_rank_blog_default&utm_term=8255&spm=1018.2226.3001.4450" target="_blank" rel="noopener">微机原理笔记（2）——8255A芯片</a></p>
+<p><a href="https://baike.baidu.com/item/8253%E8%8A%AF%E7%89%87/3699917" target="_blank" rel="noopener">8253芯片_百度百科</a></p>
+<p><a href="https://blog.csdn.net/sinat_36945592/article/details/85705184" target="_blank" rel="noopener">微机原理笔记（3）——8253芯片</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/07/15/51%E5%8D%95%E7%89%87%E6%9C%BA%E2%80%94%E2%80%94DS18B20%E7%AE%80%E8%A6%81%E8%AE%B0%E5%BD%95/" rel="prev" title="51单片机——DS18B20简要记录">
+      <i class="fa fa-chevron-left"></i> 51单片机——DS18B20简要记录
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#8255A（8255的改进型）"><span class="nav-number">1.</span> <span class="nav-text">8255A（8255的改进型）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#内部结构"><span class="nav-number">1.1.</span> <span class="nav-text">内部结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#引脚功能"><span class="nav-number">1.2.</span> <span class="nav-text">引脚功能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#读写-amp-控制逻辑"><span class="nav-number">1.3.</span> <span class="nav-text">读写&amp;控制逻辑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#工作方式"><span class="nav-number">1.4.</span> <span class="nav-text">工作方式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#方式0——基本输入输出"><span class="nav-number">1.4.1.</span> <span class="nav-text">方式0——基本输入输出</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#方式1——单向选通输入输出"><span class="nav-number">1.4.2.</span> <span class="nav-text">方式1——单向选通输入输出</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#方式1：输入"><span class="nav-number">1.4.2.1.</span> <span class="nav-text">方式1：输入</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#方式1：输出"><span class="nav-number">1.4.2.2.</span> <span class="nav-text">方式1：输出</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#方式2——双向选通输入输出"><span class="nav-number">1.4.3.</span> <span class="nav-text">方式2——双向选通输入输出</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#控制字"><span class="nav-number">1.5.</span> <span class="nav-text">控制字</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#方式选择控制字"><span class="nav-number">1.5.1.</span> <span class="nav-text">方式选择控制字</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#端口C置位-复位控制字"><span class="nav-number">1.5.2.</span> <span class="nav-text">端口C置位&#x2F;复位控制字</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#举个栗子"><span class="nav-number">1.6.</span> <span class="nav-text">举个栗子</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8253"><span class="nav-number">2.</span> <span class="nav-text">8253</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#内部结构-1"><span class="nav-number">2.1.</span> <span class="nav-text">内部结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#引脚功能-1"><span class="nav-number">2.2.</span> <span class="nav-text">引脚功能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#工作方式-1"><span class="nav-number">2.3.</span> <span class="nav-text">工作方式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#方式0"><span class="nav-number">2.3.1.</span> <span class="nav-text">方式0</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#方式1"><span class="nav-number">2.3.2.</span> <span class="nav-text">方式1</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#方式2"><span class="nav-number">2.3.3.</span> <span class="nav-text">方式2</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#方式3"><span class="nav-number">2.3.4.</span> <span class="nav-text">方式3</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#方式4"><span class="nav-number">2.3.5.</span> <span class="nav-text">方式4</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#方式5"><span class="nav-number">2.3.5.1.</span> <span class="nav-text">方式5</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方式控制字"><span class="nav-number">2.4.</span> <span class="nav-text">方式控制字</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#举个栗子-1"><span class="nav-number">2.5.</span> <span class="nav-text">举个栗子</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="NIMITIZ"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">NIMITIZ</p>
+  <div class="site-description" itemprop="description">生命不息，折腾不止</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">80</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/NIMITIZ" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;NIMITIZ" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:cwn3234733323@gmail.com" title="E-Mail → mailto:cwn3234733323@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+      
+           
+         
+         <div style="">
+  <canvas id="canvas" style="width:60%;">当前浏览器不支持canvas，请更换浏览器后再试</canvas>
+</div>
+<script>
+(function(){
+
+   var digit=
+    [
+        [
+            [0,0,1,1,1,0,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,0,1,1,0],
+            [0,0,1,1,1,0,0]
+        ],//0
+        [
+            [0,0,0,1,1,0,0],
+            [0,1,1,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [1,1,1,1,1,1,1]
+        ],//1
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,1,1],
+            [1,1,1,1,1,1,1]
+        ],//2
+        [
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//3
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,0],
+            [0,0,1,1,1,1,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,1,1,0],
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,1]
+        ],//4
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,1,1,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//5
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//6
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0]
+        ],//7
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//8
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,1,1,0,0,0,0]
+        ],//9
+        [
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0]
+        ]//:
+    ];
+
+var canvas = document.getElementById('canvas');
+
+if(canvas.getContext){
+    var cxt = canvas.getContext('2d');
+    //声明canvas的宽高
+    var H = 100,W = 700;
+    canvas.height = H;
+    canvas.width = W;
+    cxt.fillStyle = '#f00';
+    cxt.fillRect(10,10,50,50);
+
+    //存储时间数据
+    var data = [];
+    //存储运动的小球
+    var balls = [];
+    //设置粒子半径
+    var R = canvas.height/20-1;
+    (function(){
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        //存储时间数字，由十位小时、个位小时、冒号、十位分钟、个位分钟、冒号、十位秒钟、个位秒钟这7个数字组成
+        data.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+    })();
+
+    /*生成点阵数字*/
+    function renderDigit(index,num){
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    cxt.beginPath();
+                    cxt.arc(14*(R+2)*index + j*2*(R+1)+(R+1),i*2*(R+1)+(R+1),R,0,2*Math.PI);
+                    cxt.closePath();
+                    cxt.fill();
+                }
+            }
+        }
+    }
+
+    /*更新时钟*/
+    function updateDigitTime(){
+        var changeNumArray = [];
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        var NewData = [];
+        NewData.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+        for(var i = data.length-1; i >=0 ; i--){
+            //时间发生变化
+            if(NewData[i] !== data[i]){
+                //将变化的数字值和在data数组中的索引存储在changeNumArray数组中
+                changeNumArray.push(i+'_'+(Number(data[i])+1)%10);
+            }
+        }
+        //增加小球
+        for(var i = 0; i< changeNumArray.length; i++){
+            addBalls.apply(this,changeNumArray[i].split('_'));
+        }
+        data = NewData.concat();
+    }
+
+    /*更新小球状态*/
+    function updateBalls(){
+        for(var i = 0; i < balls.length; i++){
+            balls[i].stepY += balls[i].disY;
+            balls[i].x += balls[i].stepX;
+            balls[i].y += balls[i].stepY;
+            if(balls[i].x > W + R || balls[i].y > H + R){
+                balls.splice(i,1);
+                i--;
+            }
+        }
+    }
+
+    /*增加要运动的小球*/
+    function addBalls(index,num){
+        var numArray = [1,2,3];
+        var colorArray =  ["#3BE","#09C","#A6C","#93C","#9C0","#690","#FB3","#F80","#F44","#C00"];
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    var ball = {
+                        x:14*(R+2)*index + j*2*(R+1)+(R+1),
+                        y:i*2*(R+1)+(R+1),
+                        stepX:Math.floor(Math.random() * 4 -2),
+                        stepY:-2*numArray[Math.floor(Math.random()*numArray.length)],
+                        color:colorArray[Math.floor(Math.random()*colorArray.length)],
+                        disY:1
+                    };
+                    balls.push(ball);
+                }
+            }
+        }
+    }
+
+    /*渲染*/
+    function render(){
+        //重置画布宽度，达到清空画布的效果
+        canvas.height = 100;
+        //渲染时钟
+        for(var i = 0; i < data.length; i++){
+            renderDigit(i,data[i]);
+        }
+        //渲染小球
+        for(var i = 0; i < balls.length; i++){
+            cxt.beginPath();
+            cxt.arc(balls[i].x,balls[i].y,R,0,2*Math.PI);
+            cxt.fillStyle = balls[i].color;
+            cxt.closePath();
+            cxt.fill();
+        }
+    }
+
+    clearInterval(oTimer);
+    var oTimer = setInterval(function(){
+        //更新时钟
+        updateDigitTime();
+        //更新小球状态
+        updateBalls();
+        //渲染
+        render();
+    },50);
+}
+
+})();
+</script>
+   </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">NIMITIZ</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">94k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">1:26</span>
+</div>
+
+<br /> #换行
+<!-- 网站运行时间的设置 -->
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("04/15/2020 00:00:00");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'm4huKMbJFhxPsNBUaRNaSsxb-gzGzoHsz',
+      appKey     : 'ikUKWElVr7k7aYAm1PspteAw',
+      placeholder: "ヾﾉ≧∀≦)o 来呀！吐槽一番吧！",
+      avatar     : 'monsterid',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+  
+
+  <script src="/js/activate-power-mode.min.js"></script>
+  <script>
+    POWERMODE.colorful = true;
+    POWERMODE.shake = false;
+    document.body.addEventListener('input', POWERMODE);
+  </script>
+
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>
+
+<!--浏览器搞笑标题-->
+<script type="text/javascript" src="/js/funny_title.js"></script>
+
+<!--动态线条背景-->
+<script type="text/javascript"
+color="220,220,220" opacity='0.9' zIndex="-1" count="200" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+</script>
