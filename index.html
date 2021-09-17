@@ -202,6 +202,210 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.nimitiz.cn/2021/09/17/Linux%E8%AF%BB%E5%86%99&%E6%89%A7%E8%A1%8C%E6%9D%83%E9%99%90%E7%AC%94%E8%AE%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="NIMITIZ">
+      <meta itemprop="description" content="生命不息，折腾不止">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小浣熊的技术小站">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/09/17/Linux%E8%AF%BB%E5%86%99&%E6%89%A7%E8%A1%8C%E6%9D%83%E9%99%90%E7%AC%94%E8%AE%B0/" class="post-title-link" itemprop="url">Linux读写&执行权限笔记</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-09-17 09:31:35 / 修改时间：09:31:53" itemprop="dateCreated datePublished" datetime="2021-09-17T09:31:35+08:00">2021-09-17</time>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/09/17/Linux%E8%AF%BB%E5%86%99&%E6%89%A7%E8%A1%8C%E6%9D%83%E9%99%90%E7%AC%94%E8%AE%B0/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/09/17/Linux%E8%AF%BB%E5%86%99&%E6%89%A7%E8%A1%8C%E6%9D%83%E9%99%90%E7%AC%94%E8%AE%B0/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.3k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ul>
+<li>Linux下文件的权限类型一般可分为<code>读</code>、<code>写</code>、<code>执行</code>，分别对应字母<code>r</code>、<code>w</code>、<code>x</code>；</li>
+<li>Linux下权限的粒度有<code>用户</code>、<code>用户组</code>、<code>其他</code>，每个文件都可以针对三个粒度分别设置不同的权限类型；一般情况下，一个文件仅能归属于一个用户和用户组，若其他用户想获得该文件的权限，可将该用户加入具有权限的用户组，一个用户可同时归属于多个用户组。</li>
+</ul>
+<h2 id="更改文件权限（chmod命令）"><a href="#更改文件权限（chmod命令）" class="headerlink" title="更改文件权限（chmod命令）"></a>更改文件权限（chmod命令）</h2><h3 id="命令格式"><a href="#命令格式" class="headerlink" title="命令格式"></a>命令格式</h3><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">chmod <span class="tag">&lt;<span class="name">可选项</span>&gt;</span> <span class="tag">&lt;<span class="name">权限设定字串</span>&gt;</span> <span class="tag">&lt;<span class="name">文件名</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="参数说明"><a href="#参数说明" class="headerlink" title="参数说明"></a>参数说明</h4><h5 id="常用的可选项"><a href="#常用的可选项" class="headerlink" title="常用的可选项"></a>常用的可选项</h5><ul>
+<li><code>-R</code>：以递归的方式对当前目录下的所有文件与子目录进行相同的权限更改</li>
+</ul>
+<h5 id="权限设定字串"><a href="#权限设定字串" class="headerlink" title="权限设定字串"></a>权限设定字串</h5><figure class="highlight apache"><table><tr><td class="code"><pre><span class="line"><span class="section">&lt;ugoa&gt;</span> <span class="section">&lt;+-=&gt;</span> <span class="section">&lt;rwx&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>u</code>：该文件的拥有者</li>
+<li><code>g</code>：与该文件拥有者同属一个用户组的用户</li>
+<li><code>o</code>：其他用户</li>
+<li><code>a</code>：所有用户</li>
+<li><code>+</code>：授予权限</li>
+<li><code>-</code>：撤销权限</li>
+<li><code>=</code>：唯一设定权限</li>
+<li><code>r</code>：可读取</li>
+<li><code>w</code>：可写入</li>
+<li><code>x</code>：可执行</li>
+</ul>
+<h6 id="备注"><a href="#备注" class="headerlink" title="备注"></a>备注</h6><p>对于目录来说，</p>
+<ul>
+<li><p>拥有<code>r</code>权限可查看该目录下的内容（即可以使用<code>ls</code>命令）</p>
+</li>
+<li><p><code>w</code>权限是最高权限，例如：</p>
+<ul>
+<li>在该目录下新建文件或子目录</li>
+<li>删除该目录下已有的文件或子目录（无视文件和子目录的权限）</li>
+<li>对已有的文件或子目录更名</li>
+<li>移动或复制该目录下的文件/子目录</li>
+</ul>
+</li>
+<li><p>拥有<code>x</code>权限即可进入目录（即可以使用<code>cd</code>命令）</p>
+</li>
+</ul>
+<h5 id="文件名"><a href="#文件名" class="headerlink" title="文件名"></a>文件名</h5><p>支持单个或多个的文件名/目录名</p>
+<h3 id="举个栗子"><a href="#举个栗子" class="headerlink" title="举个栗子"></a>举个栗子</h3><p>向所有用户授予读取文件<code>A.txt</code>的权限</p>
+<figure class="highlight reasonml"><table><tr><td class="code"><pre><span class="line">chmod ugo+r <span class="module-access"><span class="module"><span class="identifier">A</span>.</span></span>txt</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight reasonml"><table><tr><td class="code"><pre><span class="line">chmod a+r <span class="module-access"><span class="module"><span class="identifier">A</span>.</span></span>txt</span><br></pre></td></tr></table></figure>
+
+<p>只向文件<code>B.sh</code>的拥有者授予读写以及执行的权限</p>
+<figure class="highlight reasonml"><table><tr><td class="code"><pre><span class="line">chmod u+rwx <span class="module-access"><span class="module"><span class="identifier">B</span>.</span></span>sh</span><br></pre></td></tr></table></figure>
+
+<p>只向拥有者以及与拥有者同属一个用户组的用户授予读写文件<code>A.txt</code>和<code>B.conf</code>的权限，其他用户可读不可写</p>
+<figure class="highlight reasonml"><table><tr><td class="code"><pre><span class="line">chmod a+r,ug+w,o-w <span class="module-access"><span class="module"><span class="identifier">A</span>.</span></span>txt <span class="module-access"><span class="module"><span class="identifier">B</span>.</span></span>conf</span><br></pre></td></tr></table></figure>
+
+<p>向所有用户授予读写当前路径下所有文件和子目录的权限</p>
+<figure class="highlight livecodeserver"><table><tr><td class="code"><pre><span class="line">chmod -R <span class="keyword">a</span>+rw *</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="文件权限数字表示"><a href="#文件权限数字表示" class="headerlink" title="文件权限数字表示"></a>文件权限数字表示</h2><p>用数字<code>4</code>、<code>2</code>、<code>1</code>分别表示文件的<code>读</code>、<code>写</code>、<code>执行</code>权限，不同的权限组合也由其他八进制数字表示，例如：</p>
+<ul>
+<li><p>读写和执行权限（<code>rwx</code>）为<code>4+2+1=7</code></p>
+</li>
+<li><p>可读写不可执行的权限（<code>rw-</code>）为<code>4+2=6</code></p>
+</li>
+<li><p>可读可执行不可写的权限（<code>r-x</code>）为<code>4+1=5</code></p>
+</li>
+</ul>
+<p>因为每个文件都可针对三个粒度分别授予不同的权限，所以可用3个八进制数分别表示<code>用户</code>、<code>用户组</code>、<code>其他</code>的权限。</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">chmod <span class="tag">&lt;<span class="name">ugo</span>&gt;</span> <span class="tag">&lt;<span class="name">文件名</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>其中，<code>u</code>、<code>g</code>、<code>o</code>分别为表示<code>用户</code>、<code>用户组</code>、<code>其他</code>拥有的权限的八进制数。</p>
+<h3 id="举个栗子-1"><a href="#举个栗子-1" class="headerlink" title="举个栗子"></a>举个栗子</h3><p>授予所有人读写和执行文件<code>x.sh</code>的权限</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">chmod <span class="number">777</span> x.sh</span><br></pre></td></tr></table></figure>
+
+<p>只向拥有者授予可读写文件<code>C.json</code>的权限</p>
+<figure class="highlight reasonml"><table><tr><td class="code"><pre><span class="line">chmod <span class="number">600</span> <span class="module-access"><span class="module"><span class="identifier">C</span>.</span></span>json</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="更改文件拥有者（chown命令）"><a href="#更改文件拥有者（chown命令）" class="headerlink" title="更改文件拥有者（chown命令）"></a>更改文件拥有者（chown命令）</h2><p>一般只有<code>root</code>用户拥有该操作权限。</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">chown <span class="tag">&lt;<span class="name">可选项</span>&gt;</span> <span class="tag">&lt;<span class="name">user</span>&gt;</span><span class="tag">&lt;<span class="name">:group</span>&gt;</span> <span class="tag">&lt;<span class="name">文件名</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>可选项</code>：同<code>chmod</code></li>
+<li><code>user</code>：新的文件拥有者</li>
+<li><code>:group</code>：新的文件拥有者所属的用户组</li>
+</ul>
+<h3 id="举个栗子-2"><a href="#举个栗子-2" class="headerlink" title="举个栗子"></a>举个栗子</h3><p>将文件<code>a.txt</code>和<code>b.json</code>的拥有者更改为用户组<code>users</code>的用户<code>nimitiz</code></p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">chown</span> <span class="selector-tag">nimitiz</span><span class="selector-pseudo">:users</span> <span class="selector-tag">a</span><span class="selector-class">.txt</span> <span class="selector-tag">b</span><span class="selector-class">.json</span></span><br></pre></td></tr></table></figure>
+
+<p>将当前目录下的文件和子目录的所有内容的拥有者更改为用户组<code>users</code>的用户<code>nimitiz</code></p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">chown</span> <span class="selector-tag">-R</span> <span class="selector-tag">nimitiz</span><span class="selector-pseudo">:users</span> *</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="十位权限表示"><a href="#十位权限表示" class="headerlink" title="十位权限表示"></a>十位权限表示</h2><p>十位权限的最高位（第一位）表示的是文件类型：</p>
+<ul>
+<li><code>d</code>：表示的是目录</li>
+<li><code>-</code>：表示的是文件</li>
+<li><code>s</code>：表示的是套接字文件</li>
+<li><code>p</code>：表示的是管道文件或有名管道文件</li>
+<li><code>l</code>：表示的是符号链接文件</li>
+<li><code>b</code>：表示的是面向块的设备文件</li>
+<li><code>c</code>：表示的是面向字符的设备文件</li>
+</ul>
+<p>十位权限的第二位到第四位对应的粒度是<code>用户</code>，第五位到第七位对应的粒度是<code>用户组</code>，第八位到第十位对应的粒度是<code>其他</code>。</p>
+<h3 id="举个栗子-3"><a href="#举个栗子-3" class="headerlink" title="举个栗子"></a>举个栗子</h3><figure class="highlight ada"><table><tr><td class="code"><pre><span class="line">-rw<span class="comment">-------</span></span><br></pre></td></tr></table></figure>
+
+<p>只向拥有者授予读写权限。</p>
+<figure class="highlight diff"><table><tr><td class="code"><pre><span class="line"><span class="deletion">-rwxr-xr-x</span></span><br></pre></td></tr></table></figure>
+
+<p>向<code>用户</code>授予读写和执行权限，向<code>用户组</code>和<code>其他</code>只授予读和执行的权限。</p>
+<hr>
+<p><strong>参考资料</strong>：</p>
+<p><a href="https://blog.csdn.net/u013197629/article/details/73608613?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522163183772616780264041879%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=163183772616780264041879&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_positive~default-1-73608613.first_rank_v2_pc_rank_v29&utm_term=Linux%E6%9D%83%E9%99%90&spm=1018.2226.3001.4187" target="_blank" rel="noopener">Linux权限详解（chmod、600、644、666、700、711、755、777、4755、6755、7755）</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://www.nimitiz.cn/2021/08/20/SPI%E5%8D%8F%E8%AE%AE%E7%AE%80%E7%AC%94/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1100,115 +1304,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://www.nimitiz.cn/2021/05/23/TCP%E5%92%8CUDP%E7%9A%84%E7%AE%80%E8%A6%81%E6%95%B4%E7%90%86/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="NIMITIZ">
-      <meta itemprop="description" content="生命不息，折腾不止">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小浣熊的技术小站">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/05/23/TCP%E5%92%8CUDP%E7%9A%84%E7%AE%80%E8%A6%81%E6%95%B4%E7%90%86/" class="post-title-link" itemprop="url">TCP&UDP简要整理</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-05-23 08:20:21" itemprop="dateCreated datePublished" datetime="2021-05-23T08:20:21+08:00">2021-05-23</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-06-25 21:22:16" itemprop="dateModified" datetime="2021-06-25T21:22:16+08:00">2021-06-25</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2021/05/23/TCP%E5%92%8CUDP%E7%9A%84%E7%AE%80%E8%A6%81%E6%95%B4%E7%90%86/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/05/23/TCP%E5%92%8CUDP%E7%9A%84%E7%AE%80%E8%A6%81%E6%95%B4%E7%90%86/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>4k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>4 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>简要记录一下TCP/IP模型、TCP的三次握手与四次挥手、TCP&amp;UDP的比较。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/05/23/TCP%E5%92%8CUDP%E7%9A%84%E7%AE%80%E8%A6%81%E6%95%B4%E7%90%86/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1280,7 +1375,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">82</span>
+          <span class="site-state-item-count">83</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1604,13 +1699,13 @@ if(canvas.getContext){
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">96k</span>
+    <span title="站点总字数">97k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">1:27</span>
+    <span title="站点阅读时长">1:28</span>
 </div>
 
 <br /> #换行
