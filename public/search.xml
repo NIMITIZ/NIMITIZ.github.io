@@ -4,6 +4,25 @@
   
     
     <entry>
+      <title>STM32——GPIO工作模式简记</title>
+      <link href="/2021/09/29/STM32%E2%80%94%E2%80%94GPIO%E5%B7%A5%E4%BD%9C%E6%A8%A1%E5%BC%8F%E7%AE%80%E8%AE%B0/"/>
+      <url>/2021/09/29/STM32%E2%80%94%E2%80%94GPIO%E5%B7%A5%E4%BD%9C%E6%A8%A1%E5%BC%8F%E7%AE%80%E8%AE%B0/</url>
+      
+        <content type="html"><![CDATA[<p>初次接触STM32，对GPIO的工作模式有时一脸懵，在此作个简记。</p><a id="more"></a><h2 id="GPIO工作模式"><a href="#GPIO工作模式" class="headerlink" title="GPIO工作模式"></a>GPIO工作模式</h2><p>STM32的GPIO有4种输入模式（<strong>浮空输入</strong>、<strong>上拉输入</strong>、<strong>下拉输入</strong>、<strong>模拟输入</strong>），4种输出模式（<strong>开漏输出</strong>、<strong>复用开漏输出</strong>、<strong>推挽输出</strong>、<strong>复用推挽输出</strong>）。</p><h3 id="浮空输入"><a href="#浮空输入" class="headerlink" title="浮空输入"></a>浮空输入</h3><p>在该模式下，I/O口的电平信号直接进入<code>GPIO端口输入数据寄存器（GPIOx_IDR）</code>，MCU直接读取I/O口的电平，<strong>I/O口的电平状态完全由外部输入来决定</strong>；若该<strong>引脚悬空</strong>（无信号输入），读取到的<strong>电平状态为不确定</strong>。</p><h3 id="上拉输入"><a href="#上拉输入" class="headerlink" title="上拉输入"></a>上拉输入</h3><p>I/O口内部接上拉电阻，若引脚悬空或I/O口外部没有信号输入，I/O口<strong>默认为高电平</strong>；若I/O口输入低电平，则引脚为低电平，MCU读取到的就是低电平。</p><h3 id="下拉输入"><a href="#下拉输入" class="headerlink" title="下拉输入"></a>下拉输入</h3><p>I/O口内部接下拉电阻，若引脚悬空或I/O口外部没有信号输入，I/O口<strong>默认为低电平</strong>；若I/O口输入高电平，则引脚就为高电平，MCU读取到的就是高电平。</p><h3 id="模拟输入"><a href="#模拟输入" class="headerlink" title="模拟输入"></a>模拟输入</h3><p>在该模式下，<code>GPIOx_IDR</code>为空，引脚的<strong>上拉/下拉电阻不起作用</strong>（即使配置了上拉/下拉模式）。</p><h3 id="开漏输出"><a href="#开漏输出" class="headerlink" title="开漏输出"></a>开漏输出</h3><p>在该模式下，若<strong>控制输出为低电平</strong>，I/O口处于<strong>低电平</strong>状态；若<strong>控制输出为高电平</strong>，I/O口的电平状态<strong>由I/O口外部的上拉/下拉电阻来决定</strong>，若无上拉/下拉，I/O口处于悬空状态。</p><p>在该模式下，输入可用，可通过<code>GPIOx_IDR</code>读取I/O口的实际状态，I/O口的电平<strong>不一定</strong>是输出的电平。</p><h3 id="复用开漏输出"><a href="#复用开漏输出" class="headerlink" title="复用开漏输出"></a>复用开漏输出</h3><p>GPIO复用为其他外设，<code>GPIO端口输出数据寄存器（GPIOx_ODR）</code>无效；输出的高/低电平来源于其它外设，输入可用，可通过<code>GPIOx_IDR</code>获取I/O实际状态，除了输出信号的来源改变外，其它与开漏输出模式功能相同。</p><h3 id="推挽输出"><a href="#推挽输出" class="headerlink" title="推挽输出"></a>推挽输出</h3><p>在该模式下，若<strong>控制输出为低电平</strong>，I/O口处于<strong>低电平</strong>状态；若<strong>控制输出为高电平</strong>，I/O口处于<strong>高电平</strong>状态，外部上拉/下拉可控制在没有输出时I/O口的电平。</p><p>在该模式下，输入可用，可通过<code>GPIOx_IDR</code>读取I/O口的实际状态，I/O口的电平<strong>一定</strong>是输出的电平。</p><h3 id="复用推挽输出"><a href="#复用推挽输出" class="headerlink" title="复用推挽输出"></a>复用推挽输出</h3><p>GPIO复用为其他外设，<code>GPIOx_ODR</code>无效；输出的高/低电平来源于其它外设，输入可用，可通过<code>GPIOx_IDR</code>获取I/O实际状态，除了输出信号的来源改变外，其它与推挽输出模式功能相同。</p><h4 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h4><ul><li><p>推挽输出模式可以输出强高/强低电平，连接数字器件；</p></li><li><p>开漏输出模式可以输出强低电平，需要外接上拉电阻才能实现输出高电平；</p></li><li><p>任何一种<strong>开漏模式</strong>，都需要接<strong>上拉电阻</strong>，否则只能输出低电平。</p></li><li><p>上拉输入/下拉输入可用于检测外部信号（例如，按键）；</p></li><li><p>开漏输出一般应用于IIC等需要<code>线与</code>功能的总线电路中；</p></li><li><p>复用开漏输出/复用推挽输出应用于片内外设；</p></li><li><p>STM32的GPIO输出，除了必须用开漏模式的场合，一般都使用推挽模式。</p></li></ul>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> STM32 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>STM32-HAL折腾杂记（一）</title>
       <link href="/2021/09/28/STM32-HAL%E6%8A%98%E8%85%BE%E6%9D%82%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/"/>
       <url>/2021/09/28/STM32-HAL%E6%8A%98%E8%85%BE%E6%9D%82%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/</url>

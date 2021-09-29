@@ -23,17 +23,20 @@
     var CONFIG = {"hostname":"www.nimitiz.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":"ture","trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"./public/search.xml"};
   </script>
 
-  <meta name="description" content="生命不息，折腾不止">
-<meta property="og:type" content="website">
-<meta property="og:title" content="小浣熊的技术小站">
-<meta property="og:url" content="https://www.nimitiz.cn/archives/2020/07/index.html">
+  <meta name="description" content="初次接触STM32，对GPIO的工作模式有时一脸懵，在此作个简记。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="STM32——GPIO工作模式简记">
+<meta property="og:url" content="https://www.nimitiz.cn/2021/09/29/STM32%E2%80%94%E2%80%94GPIO%E5%B7%A5%E4%BD%9C%E6%A8%A1%E5%BC%8F%E7%AE%80%E8%AE%B0/index.html">
 <meta property="og:site_name" content="小浣熊的技术小站">
-<meta property="og:description" content="生命不息，折腾不止">
+<meta property="og:description" content="初次接触STM32，对GPIO的工作模式有时一脸懵，在此作个简记。">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-09-29T09:18:31.000Z">
+<meta property="article:modified_time" content="2021-09-29T09:19:49.965Z">
 <meta property="article:author" content="NIMITIZ">
+<meta property="article:tag" content="STM32">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://www.nimitiz.cn/archives/2020/07/">
+<link rel="canonical" href="https://www.nimitiz.cn/2021/09/29/STM32%E2%80%94%E2%80%94GPIO%E5%B7%A5%E4%BD%9C%E6%A8%A1%E5%BC%8F%E7%AE%80%E8%AE%B0/">
 
 
 <script id="page-configurations">
@@ -41,12 +44,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>归档 | 小浣熊的技术小站</title>
+  <title>STM32——GPIO工作模式简记 | 小浣熊的技术小站</title>
   
 
 
@@ -196,197 +199,155 @@
         <div class="content-wrap">
           
 
-          <div class="content archive">
+          <div class="content post posts-expand">
             
 
+    
   
   
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.nimitiz.cn/2021/09/29/STM32%E2%80%94%E2%80%94GPIO%E5%B7%A5%E4%BD%9C%E6%A8%A1%E5%BC%8F%E7%AE%80%E8%AE%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="NIMITIZ">
+      <meta itemprop="description" content="生命不息，折腾不止">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小浣熊的技术小站">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          STM32——GPIO工作模式简记
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-09-29 17:18:31 / 修改时间：17:19:49" itemprop="dateCreated datePublished" datetime="2021-09-29T17:18:31+08:00">2021-09-29</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
   
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        
-        <span class="collection-header">很好! 目前共计 86 篇日志。 继续努力。</span>
-      </div>
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/09/29/STM32%E2%80%94%E2%80%94GPIO%E5%B7%A5%E4%BD%9C%E6%A8%A1%E5%BC%8F%E7%AE%80%E8%AE%B0/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/09/29/STM32%E2%80%94%E2%80%94GPIO%E5%B7%A5%E4%BD%9C%E6%A8%A1%E5%BC%8F%E7%AE%80%E8%AE%B0/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.1k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2020</span>
-    </div>
+        <p>初次接触STM32，对GPIO的工作模式有时一脸懵，在此作个简记。</p>
+<a id="more"></a>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-07-31T20:16:31+08:00"
-              content="2020-07-31">
-          07-31
-        </time>
-      </div>
 
-      <div class="post-title">
-          <a class="post-title-link" href="/2020/07/31/Linux%E4%B8%8Bsu%E5%92%8Csudo%E5%91%BD%E4%BB%A4%E7%9A%84%E5%8C%BA%E5%88%AB/" itemprop="url">
-            <span itemprop="name">Linux下su和sudo命令的区别</span>
-          </a>
-      </div>
 
-    </header>
-  </article>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-07-31T13:56:45+08:00"
-              content="2020-07-31">
-          07-31
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2020/07/31/Linux%E5%B0%8F%E8%AE%B0%E2%80%94%E2%80%94APT%E5%92%8CDpkg/" itemprop="url">
-            <span itemprop="name">Linux小记——APT和Dpkg</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-07-29T23:39:23+08:00"
-              content="2020-07-29">
-          07-29
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2020/07/29/Termux%E5%B0%8F%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/" itemprop="url">
-            <span itemprop="name">Termux小记（一）</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-07-28T23:00:04+08:00"
-              content="2020-07-28">
-          07-28
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2020/07/28/%E4%BD%BF%E7%94%A8Termux%E4%BC%A0%E8%BE%93%E6%96%87%E4%BB%B6/" itemprop="url">
-            <span itemprop="name">使用Termux传输文件</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-07-26T10:26:03+08:00"
-              content="2020-07-26">
-          07-26
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2020/07/26/Xposed%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/" itemprop="url">
-            <span itemprop="name">Xposed的安装和使用</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-07-17T15:35:32+08:00"
-              content="2020-07-17">
-          07-17
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2020/07/17/TWRP%E5%92%8CMagisk%E7%9A%84%E5%88%9D%E7%BA%A7%E4%BD%BF%E7%94%A8/" itemprop="url">
-            <span itemprop="name">TWRP和Magisk的初级使用</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-07-12T16:21:02+08:00"
-              content="2020-07-12">
-          07-12
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2020/07/12/Android%E6%89%8B%E6%9C%BA%E5%88%B7%E5%85%A5%E7%AC%AC%E4%B8%89%E6%96%B9REC/" itemprop="url">
-            <span itemprop="name">Android手机刷入第三方REC</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-07-10T23:28:45+08:00"
-              content="2020-07-10">
-          07-10
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2020/07/10/Android%E6%89%8B%E6%9C%BA%E5%8F%8C%E6%B8%85%E3%80%81%E4%B8%89%E6%B8%85%E3%80%81%E5%9B%9B%E6%B8%85/" itemprop="url">
-            <span itemprop="name">Android手机双清、三清、四清</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
+<h2 id="GPIO工作模式"><a href="#GPIO工作模式" class="headerlink" title="GPIO工作模式"></a>GPIO工作模式</h2><p>STM32的GPIO有4种输入模式（<strong>浮空输入</strong>、<strong>上拉输入</strong>、<strong>下拉输入</strong>、<strong>模拟输入</strong>），4种输出模式（<strong>开漏输出</strong>、<strong>复用开漏输出</strong>、<strong>推挽输出</strong>、<strong>复用推挽输出</strong>）。</p>
+<h3 id="浮空输入"><a href="#浮空输入" class="headerlink" title="浮空输入"></a>浮空输入</h3><p>在该模式下，I/O口的电平信号直接进入<code>GPIO端口输入数据寄存器（GPIOx_IDR）</code>，MCU直接读取I/O口的电平，<strong>I/O口的电平状态完全由外部输入来决定</strong>；若该<strong>引脚悬空</strong>（无信号输入），读取到的<strong>电平状态为不确定</strong>。</p>
+<h3 id="上拉输入"><a href="#上拉输入" class="headerlink" title="上拉输入"></a>上拉输入</h3><p>I/O口内部接上拉电阻，若引脚悬空或I/O口外部没有信号输入，I/O口<strong>默认为高电平</strong>；若I/O口输入低电平，则引脚为低电平，MCU读取到的就是低电平。</p>
+<h3 id="下拉输入"><a href="#下拉输入" class="headerlink" title="下拉输入"></a>下拉输入</h3><p>I/O口内部接下拉电阻，若引脚悬空或I/O口外部没有信号输入，I/O口<strong>默认为低电平</strong>；若I/O口输入高电平，则引脚就为高电平，MCU读取到的就是高电平。</p>
+<h3 id="模拟输入"><a href="#模拟输入" class="headerlink" title="模拟输入"></a>模拟输入</h3><p>在该模式下，<code>GPIOx_IDR</code>为空，引脚的<strong>上拉/下拉电阻不起作用</strong>（即使配置了上拉/下拉模式）。</p>
+<h3 id="开漏输出"><a href="#开漏输出" class="headerlink" title="开漏输出"></a>开漏输出</h3><p>在该模式下，若<strong>控制输出为低电平</strong>，I/O口处于<strong>低电平</strong>状态；若<strong>控制输出为高电平</strong>，I/O口的电平状态<strong>由I/O口外部的上拉/下拉电阻来决定</strong>，若无上拉/下拉，I/O口处于悬空状态。</p>
+<p>在该模式下，输入可用，可通过<code>GPIOx_IDR</code>读取I/O口的实际状态，I/O口的电平<strong>不一定</strong>是输出的电平。</p>
+<h3 id="复用开漏输出"><a href="#复用开漏输出" class="headerlink" title="复用开漏输出"></a>复用开漏输出</h3><p>GPIO复用为其他外设，<code>GPIO端口输出数据寄存器（GPIOx_ODR）</code>无效；输出的高/低电平来源于其它外设，输入可用，可通过<code>GPIOx_IDR</code>获取I/O实际状态，除了输出信号的来源改变外，其它与开漏输出模式功能相同。</p>
+<h3 id="推挽输出"><a href="#推挽输出" class="headerlink" title="推挽输出"></a>推挽输出</h3><p>在该模式下，若<strong>控制输出为低电平</strong>，I/O口处于<strong>低电平</strong>状态；若<strong>控制输出为高电平</strong>，I/O口处于<strong>高电平</strong>状态，外部上拉/下拉可控制在没有输出时I/O口的电平。</p>
+<p>在该模式下，输入可用，可通过<code>GPIOx_IDR</code>读取I/O口的实际状态，I/O口的电平<strong>一定</strong>是输出的电平。</p>
+<h3 id="复用推挽输出"><a href="#复用推挽输出" class="headerlink" title="复用推挽输出"></a>复用推挽输出</h3><p>GPIO复用为其他外设，<code>GPIOx_ODR</code>无效；输出的高/低电平来源于其它外设，输入可用，可通过<code>GPIOx_IDR</code>获取I/O实际状态，除了输出信号的来源改变外，其它与推挽输出模式功能相同。</p>
+<h4 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h4><ul>
+<li><p>推挽输出模式可以输出强高/强低电平，连接数字器件；</p>
+</li>
+<li><p>开漏输出模式可以输出强低电平，需要外接上拉电阻才能实现输出高电平；</p>
+</li>
+<li><p>任何一种<strong>开漏模式</strong>，都需要接<strong>上拉电阻</strong>，否则只能输出低电平。</p>
+</li>
+<li><p>上拉输入/下拉输入可用于检测外部信号（例如，按键）；</p>
+</li>
+<li><p>开漏输出一般应用于IIC等需要<code>线与</code>功能的总线电路中；</p>
+</li>
+<li><p>复用开漏输出/复用推挽输出应用于片内外设；</p>
+</li>
+<li><p>STM32的GPIO输出，除了必须用开漏模式的场合，一般都使用推挽模式。</p>
+</li>
+</ul>
 
     </div>
-  </div>
-  
-  
-  
 
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/STM32/" rel="tag"># STM32</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/09/28/STM32-HAL%E6%8A%98%E8%85%BE%E6%9D%82%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/" rel="prev" title="STM32-HAL折腾杂记（一）">
+      <i class="fa fa-chevron-left"></i> STM32-HAL折腾杂记（一）
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
   
 
 
 
           </div>
           
+    <div class="comments" id="valine-comments"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -433,6 +394,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#GPIO工作模式"><span class="nav-number">1.</span> <span class="nav-text">GPIO工作模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#浮空输入"><span class="nav-number">1.1.</span> <span class="nav-text">浮空输入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#上拉输入"><span class="nav-number">1.2.</span> <span class="nav-text">上拉输入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#下拉输入"><span class="nav-number">1.3.</span> <span class="nav-text">下拉输入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模拟输入"><span class="nav-number">1.4.</span> <span class="nav-text">模拟输入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开漏输出"><span class="nav-number">1.5.</span> <span class="nav-text">开漏输出</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#复用开漏输出"><span class="nav-number">1.6.</span> <span class="nav-text">复用开漏输出</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#推挽输出"><span class="nav-number">1.7.</span> <span class="nav-text">推挽输出</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#复用推挽输出"><span class="nav-number">1.8.</span> <span class="nav-text">复用推挽输出</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#补充"><span class="nav-number">1.8.1.</span> <span class="nav-text">补充</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
