@@ -4,6 +4,25 @@
   
     
     <entry>
+      <title>STM32时钟系统简记</title>
+      <link href="/2021/10/08/STM32%E6%97%B6%E9%92%9F%E7%B3%BB%E7%BB%9F%E7%AE%80%E8%AE%B0/"/>
+      <url>/2021/10/08/STM32%E6%97%B6%E9%92%9F%E7%B3%BB%E7%BB%9F%E7%AE%80%E8%AE%B0/</url>
+      
+        <content type="html"><![CDATA[<p>STM32的时钟系统如下图所示：</p><a id="more"></a><p><img src="/2021/10/08/STM32%E6%97%B6%E9%92%9F%E7%B3%BB%E7%BB%9F%E7%AE%80%E8%AE%B0/%E6%97%B6%E9%92%9F.png" alt></p><h2 id="时钟源"><a href="#时钟源" class="headerlink" title="时钟源"></a>时钟源</h2><p>STM32的时钟系统有4个独立的时钟源——<code>LSE</code>、<code>LSI</code>、<code>HSI</code>、<code>HSE</code>。</p><ul><li><code>LSE</code>：低速外部时钟，接32.768KHz的石英晶振；</li><li><code>LSI</code>：低速内部时钟，40KHz的RC振荡器，低功耗时钟；</li><li><code>HSI</code>：高速内部时钟，8MHz的RC振荡器，精度不高；</li><li><code>HSE</code>：高速外部时钟，可接石英/陶瓷谐振器，或接外部时钟源，频率范围4MHz~16MHz。</li></ul><p><strong><code>LSI</code>独立使用，是作为独立看门狗（IWDG）时钟源和RTC时钟源</strong>。</p><p>高速内部时钟<code>HSI</code>、高速外部时钟<code>HSE</code>、锁相环源<code>PLL Source Mux</code>经过分频/倍频而作为系统时钟<code>System Clock Mux</code>来使用。</p><p><img src="/2021/10/08/STM32%E6%97%B6%E9%92%9F%E7%B3%BB%E7%BB%9F%E7%AE%80%E8%AE%B0/0.png" alt></p><p><code>PLL Source Mux</code>的时钟输入源可选择<code>HSI</code>/2、<code>HSE</code>或<code>HSE</code>/2，倍频可选择2~16倍。</p><h2 id="USB时钟"><a href="#USB时钟" class="headerlink" title="USB时钟"></a>USB时钟</h2><p>STM32有一个全速的USB模块，需要一个<strong>48MHz</strong>的时钟源，该时钟源<strong>只能从<code>PLL Source Mux</code>获取</strong>，可选择<strong>1分频</strong>或<strong>1.5分频</strong>。</p><p><img src="/2021/10/08/STM32%E6%97%B6%E9%92%9F%E7%B3%BB%E7%BB%9F%E7%AE%80%E8%AE%B0/1.png" alt></p><h2 id="外设时钟"><a href="#外设时钟" class="headerlink" title="外设时钟"></a>外设时钟</h2><p>系统时钟<code>SYSCLK</code>通过<code>AHB Prescaler</code>分频后输送到——</p><ul><li><code>AHB</code>总线、内核、内存和DMA使用的时钟<code>HCLK</code></li><li><code>Cortex</code>的系统定时器时钟</li><li>空闲运行时钟<code>FCLK</code></li><li><strong>APB1</strong>分频器<code>APB1 Prescaler</code>，该分频器可选择1、2、4、8、16分频，其输出一路供APB1外设使用，<strong>最大频率36MHz</strong>；另一路供<strong>通用定时器</strong>使用</li><li><strong>APB2</strong>分频器<code>APB2 Prescaler</code>，该分频器可选择1、2、4、8、16分频，其输出一路供APB2外设使用，<strong>最大频率72MHz</strong>；另一路供<strong>高级定时器</strong>使用；还有一路输出供<strong>ADC分频器</strong><code>ADC Prescaler</code>使用，该分频器可选择2、4、6、8分频</li></ul><p><img src="/2021/10/08/STM32%E6%97%B6%E9%92%9F%E7%B3%BB%E7%BB%9F%E7%AE%80%E8%AE%B0/2.png" alt></p><h2 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h2><ul><li><p>STM32可以选择一个时钟信号输出到MCO引脚（<code>PA8</code>）供外部使用，可选择为<code>PLLCLK</code>/2、<code>HSI</code>、<code>HSE</code>、<code>SYSCLK</code></p><p><img src="/2021/10/08/STM32%E6%97%B6%E9%92%9F%E7%B3%BB%E7%BB%9F%E7%AE%80%E8%AE%B0/3.png" alt></p></li><li><p>STM32提供了一个时钟监视系统<code>CSS</code>，用于监视<code>HSE</code>的工作状态；若<code>HSE</code>失效，会自动切换到<code>HSI</code>作为系统时钟的输入</p><p><img src="/2021/10/08/STM32%E6%97%B6%E9%92%9F%E7%B3%BB%E7%BB%9F%E7%AE%80%E8%AE%B0/4.png" alt></p></li></ul><hr><p><strong>参考资料</strong>：</p><p><a href="https://blog.csdn.net/as480133937/article/details/98845509" target="_blank" rel="noopener">【STM32】系统时钟RCC详解(超详细，超全面)</a></p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> STM32 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>STM32——GPIO工作模式简记</title>
       <link href="/2021/09/29/STM32%E2%80%94%E2%80%94GPIO%E5%B7%A5%E4%BD%9C%E6%A8%A1%E5%BC%8F%E7%AE%80%E8%AE%B0/"/>
       <url>/2021/09/29/STM32%E2%80%94%E2%80%94GPIO%E5%B7%A5%E4%BD%9C%E6%A8%A1%E5%BC%8F%E7%AE%80%E8%AE%B0/</url>
