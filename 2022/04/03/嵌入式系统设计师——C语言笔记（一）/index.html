@@ -23,17 +23,22 @@
     var CONFIG = {"hostname":"www.nimitiz.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":"ture","trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"./public/search.xml"};
   </script>
 
-  <meta name="description" content="生命不息，折腾不止">
-<meta property="og:type" content="website">
-<meta property="og:title" content="小浣熊的技术小站">
-<meta property="og:url" content="https://www.nimitiz.cn/tags/C%E8%AF%AD%E8%A8%80/index.html">
+  <meta name="description" content="数据类型长度和值范围整数类型   类型 存储大小 值范围    char 1 字节 -128 到 127 或 0 到 255   unsigned char 1 字节 0 到 255   signed char 1 字节 -128 到 127   int 2 或 4 字节 -32,768 到 32,767 或 -2,147,483,648 到 2,147,483,647   unsigned in">
+<meta property="og:type" content="article">
+<meta property="og:title" content="嵌入式系统设计师——C语言笔记（一）">
+<meta property="og:url" content="https://www.nimitiz.cn/2022/04/03/%E5%B5%8C%E5%85%A5%E5%BC%8F%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E5%B8%88%E2%80%94%E2%80%94C%E8%AF%AD%E8%A8%80%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/index.html">
 <meta property="og:site_name" content="小浣熊的技术小站">
-<meta property="og:description" content="生命不息，折腾不止">
+<meta property="og:description" content="数据类型长度和值范围整数类型   类型 存储大小 值范围    char 1 字节 -128 到 127 或 0 到 255   unsigned char 1 字节 0 到 255   signed char 1 字节 -128 到 127   int 2 或 4 字节 -32,768 到 32,767 或 -2,147,483,648 到 2,147,483,647   unsigned in">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.nimitiz.cn/2022/04/03/%E5%B5%8C%E5%85%A5%E5%BC%8F%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E5%B8%88%E2%80%94%E2%80%94C%E8%AF%AD%E8%A8%80%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/C%E8%AF%AD%E8%A8%80%E8%BF%90%E7%AE%97%E7%AC%A6%E4%BC%98%E5%85%88%E7%BA%A7%E5%92%8C%E7%BB%93%E5%90%88%E6%80%A7%E4%B8%80%E8%A7%88%E8%A1%A8.png">
+<meta property="article:published_time" content="2022-04-03T11:48:34.000Z">
+<meta property="article:modified_time" content="2022-04-03T11:49:13.222Z">
 <meta property="article:author" content="NIMITIZ">
+<meta property="article:tag" content="嵌入式系统设计师">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.nimitiz.cn/2022/04/03/%E5%B5%8C%E5%85%A5%E5%BC%8F%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E5%B8%88%E2%80%94%E2%80%94C%E8%AF%AD%E8%A8%80%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/C%E8%AF%AD%E8%A8%80%E8%BF%90%E7%AE%97%E7%AC%A6%E4%BC%98%E5%85%88%E7%BA%A7%E5%92%8C%E7%BB%93%E5%90%88%E6%80%A7%E4%B8%80%E8%A7%88%E8%A1%A8.png">
 
-<link rel="canonical" href="https://www.nimitiz.cn/tags/C%E8%AF%AD%E8%A8%80/">
+<link rel="canonical" href="https://www.nimitiz.cn/2022/04/03/%E5%B5%8C%E5%85%A5%E5%BC%8F%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E5%B8%88%E2%80%94%E2%80%94C%E8%AF%AD%E8%A8%80%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/">
 
 
 <script id="page-configurations">
@@ -41,12 +46,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>标签: C语言 | 小浣熊的技术小站</title>
+  <title>嵌入式系统设计师——C语言笔记（一） | 小浣熊的技术小站</title>
   
 
 
@@ -196,243 +201,212 @@
         <div class="content-wrap">
           
 
-          <div class="content tag">
+          <div class="content post posts-expand">
             
 
+    
   
   
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.nimitiz.cn/2022/04/03/%E5%B5%8C%E5%85%A5%E5%BC%8F%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E5%B8%88%E2%80%94%E2%80%94C%E8%AF%AD%E8%A8%80%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="NIMITIZ">
+      <meta itemprop="description" content="生命不息，折腾不止">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小浣熊的技术小站">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          嵌入式系统设计师——C语言笔记（一）
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-04-03 19:48:34 / 修改时间：19:49:13" itemprop="dateCreated datePublished" datetime="2022-04-03T19:48:34+08:00">2022-04-03</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
   
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <h2 class="collection-header">C语言
-          <small>标签</small>
-        </h2>
-      </div>
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/04/03/%E5%B5%8C%E5%85%A5%E5%BC%8F%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E5%B8%88%E2%80%94%E2%80%94C%E8%AF%AD%E8%A8%80%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/04/03/%E5%B5%8C%E5%85%A5%E5%BC%8F%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E5%B8%88%E2%80%94%E2%80%94C%E8%AF%AD%E8%A8%80%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>501</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2021</span>
-    </div>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-04-20T23:19:11+08:00"
-              content="2021-04-20">
-          04-20
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/04/20/C%E8%AF%AD%E8%A8%80%E7%BB%93%E6%9E%84%E4%BD%93%E7%AE%80%E8%A6%81%E7%AC%94%E8%AE%B0/" itemprop="url">
-            <span itemprop="name">C语言结构体简要笔记</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-    <div class="collection-year">
-      <span class="collection-header">2020</span>
-    </div>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-09-13T14:20:13+08:00"
-              content="2020-09-13">
-          09-13
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2020/09/13/Windows%E7%BC%96%E7%A8%8B%E5%B0%8F%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/" itemprop="url">
-            <span itemprop="name">Windows编程小记（一）</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-09-12T10:50:31+08:00"
-              content="2020-09-12">
-          09-12
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2020/09/12/C%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0%E8%BF%9B%E5%88%B6%E8%BD%AC%E6%8D%A2/" itemprop="url">
-            <span itemprop="name">C语言实现进制转换</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-09-04T16:22:21+08:00"
-              content="2020-09-04">
-          09-04
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2020/09/04/C%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%96%87%E4%BB%B6%E7%9A%84%E5%A4%8D%E5%88%B6/" itemprop="url">
-            <span itemprop="name">C语言实现二进制文件的复制</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-09-01T17:04:02+08:00"
-              content="2020-09-01">
-          09-01
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2020/09/01/C%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0%E5%AF%B9%E6%96%87%E6%9C%AC%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9%E7%9A%84%E5%8A%A0%E5%AF%86%E5%92%8C%E8%A7%A3%E5%AF%86/" itemprop="url">
-            <span itemprop="name">C语言实现对文本文件内容的加密和解密</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-08-16T19:57:19+08:00"
-              content="2020-08-16">
-          08-16
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2020/08/16/C%E8%AF%AD%E8%A8%80%E7%AC%94%E8%AE%B0%E2%80%94%E2%80%94fgets()%E5%92%8Cfputs()%E5%87%BD%E6%95%B0/" itemprop="url">
-            <span itemprop="name">C语言笔记——fgets()和fputs()函数</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-08-14T23:09:21+08:00"
-              content="2020-08-14">
-          08-14
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2020/08/14/C%E8%AF%AD%E8%A8%80%E7%AC%94%E8%AE%B0%E2%80%94%E2%80%94fgetc()%E5%92%8Cfputc()%E5%87%BD%E6%95%B0/" itemprop="url">
-            <span itemprop="name">C语言笔记——fgetc()和fputc()函数</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-08-13T23:55:12+08:00"
-              content="2020-08-13">
-          08-13
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2020/08/13/C%E8%AF%AD%E8%A8%80%E6%96%87%E4%BB%B6%E6%93%8D%E4%BD%9C%E2%80%94%E2%80%94fopen()%E5%87%BD%E6%95%B0/" itemprop="url">
-            <span itemprop="name">C语言文件操作——fopen()函数</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-08-11T00:42:07+08:00"
-              content="2020-08-11">
-          08-11
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2020/08/11/C%E8%AF%AD%E8%A8%80%E9%9A%8F%E6%9C%BA%E6%95%B0/" itemprop="url">
-            <span itemprop="name">C语言随机数</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-06-15T10:43:11+08:00"
-              content="2020-06-15">
-          06-15
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2020/06/15/C%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E5%8A%A0%E5%AF%86%E5%92%8C%E8%A7%A3%E5%AF%86/" itemprop="url">
-            <span itemprop="name">C语言实现字符串的加密和解密</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
+        <h2 id="数据类型长度和值范围"><a href="#数据类型长度和值范围" class="headerlink" title="数据类型长度和值范围"></a>数据类型长度和值范围</h2><h3 id="整数类型"><a href="#整数类型" class="headerlink" title="整数类型"></a>整数类型</h3><table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">存储大小</th>
+<th align="center">值范围</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">char</td>
+<td align="center">1 字节</td>
+<td align="center">-128 到 127 或 0 到 255</td>
+</tr>
+<tr>
+<td align="center">unsigned char</td>
+<td align="center">1 字节</td>
+<td align="center">0 到 255</td>
+</tr>
+<tr>
+<td align="center">signed char</td>
+<td align="center">1 字节</td>
+<td align="center">-128 到 127</td>
+</tr>
+<tr>
+<td align="center">int</td>
+<td align="center">2 或 4 字节</td>
+<td align="center">-32,768 到 32,767 或 -2,147,483,648 到 2,147,483,647</td>
+</tr>
+<tr>
+<td align="center">unsigned int</td>
+<td align="center">2 或 4 字节</td>
+<td align="center">0 到 65,535 或 0 到 4,294,967,295</td>
+</tr>
+<tr>
+<td align="center">short</td>
+<td align="center">2 字节</td>
+<td align="center">-32,768 到 32,767</td>
+</tr>
+<tr>
+<td align="center">unsigned short</td>
+<td align="center">2 字节</td>
+<td align="center">0 到 65,535</td>
+</tr>
+<tr>
+<td align="center">long</td>
+<td align="center">4 字节</td>
+<td align="center">-2,147,483,648 到 2,147,483,647</td>
+</tr>
+<tr>
+<td align="center">unsigned long</td>
+<td align="center">4 字节</td>
+<td align="center">0 到 4,294,967,295</td>
+</tr>
+</tbody></table>
+<h3 id="浮点类型"><a href="#浮点类型" class="headerlink" title="浮点类型"></a>浮点类型</h3><table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">存储大小</th>
+<th align="center">值范围</th>
+<th align="center">精度</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">float</td>
+<td align="center">4 字节</td>
+<td align="center">1.2E-38 到 3.4E+38</td>
+<td align="center">6 位有效位</td>
+</tr>
+<tr>
+<td align="center">double</td>
+<td align="center">8 字节</td>
+<td align="center">2.3E-308 到 1.7E+308</td>
+<td align="center">15 位有效位</td>
+</tr>
+<tr>
+<td align="center">long double</td>
+<td align="center">16 字节</td>
+<td align="center">3.4E-4932 到 1.1E+4932</td>
+<td align="center">19 位有效位</td>
+</tr>
+</tbody></table>
+<h2 id="运算符优先级和结合性"><a href="#运算符优先级和结合性" class="headerlink" title="运算符优先级和结合性"></a>运算符优先级和结合性</h2><p><img src="/2022/04/03/%E5%B5%8C%E5%85%A5%E5%BC%8F%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E5%B8%88%E2%80%94%E2%80%94C%E8%AF%AD%E8%A8%80%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/C%E8%AF%AD%E8%A8%80%E8%BF%90%E7%AE%97%E7%AC%A6%E4%BC%98%E5%85%88%E7%BA%A7%E5%92%8C%E7%BB%93%E5%90%88%E6%80%A7%E4%B8%80%E8%A7%88%E8%A1%A8.png" alt></p>
+<ul>
+<li>对于优先级，算术运算符 &gt; 关系运算符 &gt; 逻辑运算符 &gt; 赋值运算符；逻辑运算符中<code>逻辑非 !</code>除外。</li>
+<li>逗号运算符的优先级最低。</li>
+</ul>
+<hr>
+<p><strong>参考资料</strong>：</p>
+<p><a href="https://www.runoob.com/cprogramming/c-data-types.html" target="_blank" rel="noopener">C 数据类型</a></p>
+<p><a href="http://c.biancheng.net/view/161.html" target="_blank" rel="noopener">C语言运算符优先级和结合性一览表</a></p>
 
     </div>
-  </div>
-  
-  
-  
 
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%B5%8C%E5%85%A5%E5%BC%8F%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E5%B8%88/" rel="tag"># 嵌入式系统设计师</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/04/03/%E4%B8%AD%E6%96%AD%E7%9A%84%E5%A4%84%E7%90%86%E8%BF%87%E7%A8%8B/" rel="prev" title="中断的处理过程">
+      <i class="fa fa-chevron-left"></i> 中断的处理过程
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
   
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/tags/C%E8%AF%AD%E8%A8%80/page/2/">2</a><a class="extend next" rel="next" href="/tags/C%E8%AF%AD%E8%A8%80/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
-  </nav>
+  
+  
 
 
 
           </div>
           
+    <div class="comments" id="valine-comments"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -479,6 +453,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据类型长度和值范围"><span class="nav-number">1.</span> <span class="nav-text">数据类型长度和值范围</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#整数类型"><span class="nav-number">1.1.</span> <span class="nav-text">整数类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#浮点类型"><span class="nav-number">1.2.</span> <span class="nav-text">浮点类型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运算符优先级和结合性"><span class="nav-number">2.</span> <span class="nav-text">运算符优先级和结合性</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
